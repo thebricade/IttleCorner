@@ -6,6 +6,7 @@ public class DrawingPad : MonoBehaviour
     public int textureSize = 256;
     private Texture2D drawTexture;
     private RawImage rawImage;
+    private Vector2? lastLocalPoint;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -34,12 +35,41 @@ public class DrawingPad : MonoBehaviour
             bool inside = RectTransformUtility.ScreenPointToLocalPointInRectangle(rt, Input.mousePosition, null, out localPoint);
             if (inside)
             {
-                Debug.Log("Local Point " +localPoint);
-                PaintAtLocalPoint(localPoint,rt);
+                if (lastLocalPoint.HasValue)
+                {
+                    PaintLine(lastLocalPoint.Value, localPoint, rt);
+                }
+                else
+                {
+                    PaintAtLocalPoint(localPoint, rt);
+                }
+                lastLocalPoint = localPoint;
+            }
+            else
+            {
+                {
+                    lastLocalPoint = null;
+                }
             }
         }
-    }
 
+        if (!Input.GetMouseButton(0))
+        {
+            lastLocalPoint = null;
+        }
+    }
+    void PaintLine(Vector2 from, Vector2 to, RectTransform rt)
+    {
+        float distance = Vector2.Distance(from, to);
+        int steps = Mathf.CeilToInt(distance);
+
+        for (int step = 0; step <= steps; step++)
+        {
+            float t = (float)step / steps;
+            Vector2 point = Vector2.Lerp(from, to, t);
+            PaintAtLocalPoint(point, rt);
+        }
+    }
     void PaintAtLocalPoint(Vector2 localPoint, RectTransform rt)
     {
         // convert from "center" to uv range
@@ -68,3 +98,4 @@ public class DrawingPad : MonoBehaviour
         drawTexture.Apply();
     }
 }
+
