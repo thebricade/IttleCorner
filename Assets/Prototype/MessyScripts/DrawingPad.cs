@@ -11,7 +11,15 @@ public class DrawingPad : MonoBehaviour
         Eraser,
     }
 
+    public enum BrushStyle
+    {
+        Big,
+        Medium,
+    }
+
     private DrawingTool currentDrawingTool = DrawingTool.Brush;
+    private BrushStyle currentBrushStyle = BrushStyle.Big;
+    private int brushSize = 4;
     public int textureSize = 256;
     private Texture2D drawTexture;
     private RawImage rawImage;
@@ -89,7 +97,7 @@ public class DrawingPad : MonoBehaviour
         int x = (int)(u * textureSize);
         int y = (int)(v * textureSize);
 
-        int brushSize = 4; //make this changable 
+        //int brushSize = 4; //make this changable 
 
         for (int i = -brushSize; i < brushSize; i++)
         {
@@ -107,9 +115,19 @@ public class DrawingPad : MonoBehaviour
 
                     if (dist <= brushSize)
                     {
-                        if (currentDrawingTool == DrawingTool.Brush)
+                        if (currentDrawingTool == DrawingTool.Brush) // look into reducing nested ifs here clean up
                         {
-                            drawTexture.SetPixel(px, py, brushColor);
+                            //check type of brush
+                            if (currentBrushStyle == BrushStyle.Big)
+                            {
+                                SetBrushSize(8);
+                                drawTexture.SetPixel(px, py, brushColor);
+                            }else if (currentBrushStyle == BrushStyle.Medium)
+                            {
+                                SetBrushSize(4);
+                                drawTexture.SetPixel(px, py, brushColor); 
+                            }
+                            
                         }
                         else if (currentDrawingTool == DrawingTool.Eraser)
                         {
@@ -130,6 +148,24 @@ public class DrawingPad : MonoBehaviour
     public void SetDrawingTool(DrawingTool tool)
     {
         currentDrawingTool = tool;
+    }
+
+    public void setBrushStyle(BrushStyle style)
+    {
+        currentBrushStyle = style;
+    }
+
+    public void SetBrushSize(int size)
+    {
+        brushSize = size;
+    }
+
+    public Texture2D GetCurrentTextureCopy()
+    {
+        Texture2D copy = new Texture2D(textureSize, textureSize);
+        copy.SetPixels(drawTexture.GetPixels());
+        copy.Apply();
+        return copy;
     }
 }
 
