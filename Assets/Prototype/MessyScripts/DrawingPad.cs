@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 
 public class DrawingPad : MonoBehaviour
 {
@@ -7,6 +9,7 @@ public class DrawingPad : MonoBehaviour
     private Texture2D drawTexture;
     private RawImage rawImage;
     private Vector2? lastLocalPoint;
+    private Color brushColor = Color.black; // starting brush color
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -91,11 +94,25 @@ public class DrawingPad : MonoBehaviour
                 //make sure we don't crashout near an edge
                 if (px >= 0 && px < textureSize && py >= 0 && py < textureSize)
                 {
-                    drawTexture.SetPixel(px,py,Color.black);
+                    float dist = Mathf.Sqrt(i*i+j*j); // this is what helps make it circle 
+                    //kinda in the same brain we could have maybe a texture2d image here that is in greyscale
+                    //this would allow us to have crayon texture/ pencil/paint
+
+                    if (dist <= brushSize)
+                    {
+                        drawTexture.SetPixel(px, py, brushColor);
+                    }
                 }
             }
         }
         drawTexture.Apply();
     }
+    
+    public void SetBrushColor(Color newColor)
+    {
+        brushColor = newColor;
+        Debug.Log("SetBrushColor" + brushColor);
+    }
+    
 }
 
