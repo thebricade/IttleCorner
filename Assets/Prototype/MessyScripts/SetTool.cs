@@ -1,10 +1,9 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SetColor : MonoBehaviour
+public class SetTool : MonoBehaviour
 {
-    public Color buttonColor;
+    public DrawingPad.DrawingTool toolType;
     public DrawingPad drawingPad;
 
     private void Start()
@@ -16,6 +15,6 @@ public class SetColor : MonoBehaviour
 
     void OnClick()
     {
-        drawingPad.SetBrushColor(buttonColor);
+        drawingPad.SetDrawingTool(toolType);
     }
 }

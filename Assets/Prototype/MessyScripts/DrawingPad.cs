@@ -5,6 +5,13 @@ using Debug = UnityEngine.Debug;
 
 public class DrawingPad : MonoBehaviour
 {
+    public enum DrawingTool
+    {
+        Brush,
+        Eraser,
+    }
+
+    private DrawingTool currentDrawingTool = DrawingTool.Brush;
     public int textureSize = 256;
     private Texture2D drawTexture;
     private RawImage rawImage;
@@ -100,7 +107,14 @@ public class DrawingPad : MonoBehaviour
 
                     if (dist <= brushSize)
                     {
-                        drawTexture.SetPixel(px, py, brushColor);
+                        if (currentDrawingTool == DrawingTool.Brush)
+                        {
+                            drawTexture.SetPixel(px, py, brushColor);
+                        }
+                        else if (currentDrawingTool == DrawingTool.Eraser)
+                        {
+                            drawTexture.SetPixel(px, py, Color.clear); //transparency when eraser is selected
+                        }
                     }
                 }
             }
@@ -111,8 +125,11 @@ public class DrawingPad : MonoBehaviour
     public void SetBrushColor(Color newColor)
     {
         brushColor = newColor;
-        Debug.Log("SetBrushColor" + brushColor);
     }
-    
+
+    public void SetDrawingTool(DrawingTool tool)
+    {
+        currentDrawingTool = tool;
+    }
 }
 
