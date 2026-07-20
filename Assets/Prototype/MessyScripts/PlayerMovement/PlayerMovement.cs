@@ -15,6 +15,10 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameModeManager.Instance.currentMode != GameMode.Explore)
+        {
+            return;
+        }
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical"); // this may need to be looked at with the new input system
         Vector3 moveDirection = new Vector3(horizontal, 0f, vertical);
