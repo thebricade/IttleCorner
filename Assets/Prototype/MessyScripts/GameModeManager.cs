@@ -4,6 +4,7 @@ public enum GameMode
 {
     Explore,
     Drawing,
+    Placing,
     Sticker
 }
 public class GameModeManager : MonoBehaviour
@@ -15,6 +16,7 @@ public class GameModeManager : MonoBehaviour
     public GameObject exploreScreen;
     public GameObject drawingScreen;
     public GameObject stickerScreen;
+    public GameObject placingScreen;
 
     void Awake()
     {
@@ -26,8 +28,9 @@ public class GameModeManager : MonoBehaviour
         currentMode = mode;
         
         //dictating what is turned on based off the current mode you are working on
-        exploreScreen.SetActive(mode==GameMode.Explore || mode==GameMode.Sticker);
+        exploreScreen.SetActive(mode==GameMode.Explore || mode==GameMode.Sticker||mode==GameMode.Placing);
         drawingScreen.SetActive(mode==GameMode.Drawing);
-        stickerScreen.SetActive(mode==GameMode.Sticker)                                     ;
+        stickerScreen.SetActive(mode==GameMode.Sticker);
+        placingScreen.SetActive(mode==GameMode.Placing);
     }
 }
