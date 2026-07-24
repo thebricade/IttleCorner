@@ -2,10 +2,10 @@ using UnityEngine;
 
 public enum GameMode
 {
-    Explore,
-    Drawing,
-    Placing,
-    Sticker
+    Explore, //player walking around
+    Drawing, //player making drawings
+    Placing, //player placing creations
+    Sticker //player browsing creations
 }
 public class GameModeManager : MonoBehaviour
 {
@@ -13,7 +13,7 @@ public class GameModeManager : MonoBehaviour
     public GameMode currentMode = GameMode.Explore;
 
     //what would be turned on for each mode change
-    public GameObject exploreScreen;
+    public GameObject exploreScreen; 
     public GameObject drawingScreen;
     public GameObject stickerScreen;
     public GameObject placingScreen;
