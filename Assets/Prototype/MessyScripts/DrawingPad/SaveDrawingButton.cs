@@ -15,6 +15,7 @@ public class SaveDrawingButton : MonoBehaviour
     void OnClick()
     {
         Texture2D snapshot = drawingPad.GetCurrentTextureCopy();
-        DrawingManager.Instance.SaveDrawing(snapshot,"Drawing "+(DrawingManager.Instance.savedDrawings.Count+1));
+        Texture2D cropped = drawingPad.CropToContent(snapshot);
+        DrawingManager.Instance.SaveDrawing(cropped, "Drawing " + (DrawingManager.Instance.savedDrawings.Count + 1));
     }
 }

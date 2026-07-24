@@ -26,7 +26,7 @@ public class GameModeManager : MonoBehaviour
     public void SetGameMode(GameMode mode)
     {
         currentMode = mode;
-        
+        Debug.Log("Switching to mode: " + mode);
         //dictating what is turned on based off the current mode you are working on
         exploreScreen.SetActive(mode==GameMode.Explore || mode==GameMode.Sticker||mode==GameMode.Placing);
         drawingScreen.SetActive(mode==GameMode.Drawing);

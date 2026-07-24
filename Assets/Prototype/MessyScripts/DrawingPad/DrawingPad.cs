@@ -167,5 +167,47 @@ public class DrawingPad : MonoBehaviour
         copy.Apply();
         return copy;
     }
+    
+    public Texture2D CropToContent(Texture2D source)
+    {
+        int minX = source.width;
+        int minY = source.height;
+        int maxX = 0;
+        int maxY = 0;
+
+        Color[] pixels = source.GetPixels();
+
+        for (int y = 0; y < source.height; y++)
+        {
+            for (int x = 0; x < source.width; x++)
+            {
+                Color pixel = pixels[y * source.width + x];
+
+                if (pixel.a > 0.01f) // not transparent
+                {
+                    if (x < minX) minX = x;
+                    if (x > maxX) maxX = x;
+                    if (y < minY) minY = y;
+                    if (y > maxY) maxY = y;
+                }
+            }
+        }
+
+        // nothing was drawn at all - avoid crashing
+        if (maxX < minX || maxY < minY)
+        {
+            return source;
+        }
+
+        int croppedWidth = (maxX - minX) + 1;
+        int croppedHeight = (maxY - minY) + 1;
+
+        Texture2D cropped = new Texture2D(croppedWidth, croppedHeight);
+        Color[] croppedPixels = source.GetPixels(minX, minY, croppedWidth, croppedHeight);
+        cropped.SetPixels(croppedPixels);
+        cropped.Apply();
+
+        return cropped;
+    }
 }
 
