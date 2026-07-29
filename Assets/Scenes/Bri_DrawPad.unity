@@ -477,7 +477,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 250bc6a5bf34073419bff0b1377d6526, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SetColor
-  buttonColor: {r: 1, g: 1, b: 1, a: 1}
+  buttonColor:
+    r: 1
+    g: 1
+    b: 1
+    a: 1
   drawingPad: {fileID: 447165277}
 --- !u!114 &152809329
 MonoBehaviour:
@@ -613,7 +617,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 250bc6a5bf34073419bff0b1377d6526, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SetColor
-  buttonColor: {r: 0, g: 0, b: 0, a: 1}
+  buttonColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
   drawingPad: {fileID: 447165277}
 --- !u!114 &167953900
 MonoBehaviour:
@@ -1039,7 +1047,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 250bc6a5bf34073419bff0b1377d6526, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SetColor
-  buttonColor: {r: 0.60062885, g: 0.60062885, b: 0.60062885, a: 1}
+  buttonColor:
+    r: 0.60062885
+    g: 0.60062885
+    b: 0.60062885
+    a: 1
   drawingPad: {fileID: 447165277}
 --- !u!114 &287015413
 MonoBehaviour:
@@ -2663,7 +2675,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 250bc6a5bf34073419bff0b1377d6526, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SetColor
-  buttonColor: {r: 1, g: 0.62010765, b: 0, a: 1}
+  buttonColor:
+    r: 1
+    g: 0.62010765
+    b: 0
+    a: 1
   drawingPad: {fileID: 447165277}
 --- !u!114 &594614452
 MonoBehaviour:
@@ -3015,6 +3031,8 @@ GameObject:
   - component: {fileID: 708383980}
   - component: {fileID: 708383984}
   - component: {fileID: 708383983}
+  - component: {fileID: 708383986}
+  - component: {fileID: 708383985}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -3155,6 +3173,43 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   moveSpeed: 5
+--- !u!114 &708383985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708383978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c04fd913fc3ce6409d5f094da5fc1b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClickToMove
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+--- !u!195 &708383986
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708383978}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 1
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &709848866
 GameObject:
   m_ObjectHideFlags: 0
@@ -3770,7 +3825,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 250bc6a5bf34073419bff0b1377d6526, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SetColor
-  buttonColor: {r: 0, g: 0.990566, b: 0.032021612, a: 1}
+  buttonColor:
+    r: 0
+    g: 0.990566
+    b: 0.032021612
+    a: 1
   drawingPad: {fileID: 447165277}
 --- !u!114 &846831914
 MonoBehaviour:
@@ -4127,7 +4186,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 250bc6a5bf34073419bff0b1377d6526, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SetColor
-  buttonColor: {r: 0.0110061765, g: 0.25934154, b: 1, a: 1}
+  buttonColor:
+    r: 0.0110061765
+    g: 0.25934154
+    b: 1
+    a: 1
   drawingPad: {fileID: 447165277}
 --- !u!114 &931227549
 MonoBehaviour:
@@ -4366,7 +4429,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 250bc6a5bf34073419bff0b1377d6526, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SetColor
-  buttonColor: {r: 0.48940247, g: 0.13364768, b: 1, a: 1}
+  buttonColor:
+    r: 0.48940247
+    g: 0.13364768
+    b: 1
+    a: 1
   drawingPad: {fileID: 447165277}
 --- !u!114 &1189601614
 MonoBehaviour:
@@ -4462,8 +4529,9 @@ GameObject:
   - component: {fileID: 1196294692}
   - component: {fileID: 1196294691}
   - component: {fileID: 1196294690}
-  m_Layer: 0
-  m_Name: Plane
+  - component: {fileID: 1196294693}
+  m_Layer: 3
+  m_Name: Ground Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4563,6 +4631,38 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1196294688}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1196294693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1196294688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
+  m_SerializedVersion: 0
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: 1b43710ad8c4f064b984556d059904f7, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!1 &1244544267
 GameObject:
   m_ObjectHideFlags: 0
@@ -4921,7 +5021,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 250bc6a5bf34073419bff0b1377d6526, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SetColor
-  buttonColor: {r: 1, g: 0, b: 0, a: 1}
+  buttonColor:
+    r: 1
+    g: 0
+    b: 0
+    a: 1
   drawingPad: {fileID: 447165277}
 --- !u!114 &1277758627
 MonoBehaviour:
@@ -6542,7 +6646,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 250bc6a5bf34073419bff0b1377d6526, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SetColor
-  buttonColor: {r: 0.96778333, g: 1, b: 0, a: 1}
+  buttonColor:
+    r: 0.96778333
+    g: 1
+    b: 0
+    a: 1
   drawingPad: {fileID: 447165277}
 --- !u!114 &2027045281
 MonoBehaviour:
