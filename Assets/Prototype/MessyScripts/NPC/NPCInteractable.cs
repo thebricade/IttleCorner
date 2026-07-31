@@ -9,8 +9,12 @@ public class NPCInteractable : MonoBehaviour
    {
       if (GameModeManager.Instance.currentMode != GameMode.Explore)
       {
-         return; 
+         return;
       }
-      DialogueManager.Instance.StartDialogue(npcData);
+
+      Debug.Log("NPC clicked, npcData: " + npcData);
+      Debug.Log("DialogueManager instance: " + DialogueManager.Instance);
+
+      DialogueManager.Instance.StartDialogue(npcData, transform.position);
    }
 }

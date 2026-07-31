@@ -14,16 +14,32 @@ public class DialogueManager : MonoBehaviour
 
     private NPCData currentNPC;
     private DialogueLine currentLine;
+    private Vector3 currentNPCPosition;
 
     void Awake()
     {
         Instance = this;
     }
 
-    public void StartDialogue(NPCData npc)
+    public void StartDialogue(NPCData npc, Vector3 npcPosition)
     {
         currentNPC = npc;
-        ShowLine(npc.startingLine);
+        currentNPCPosition = npcPosition;
+
+        Debug.Log("StartDialogue called. npc: " + npc + " | npcNameText: " + npcNameText);
+
+        NPCRuntimeState npcState = DrawingManager.Instance.GetNPCState(npc);
+
+        if (npcState.requestComplete && npc.fulfilledLine != null
+                                    && !string.IsNullOrEmpty(npc.fulfilledLine.npcText))
+        {
+            ShowLine(npc.fulfilledLine);
+        }
+        else
+        {
+            ShowLine(npc.startingLine);
+        }
+
         dialogueCanvas.SetActive(true);
     }
 
@@ -33,13 +49,11 @@ public class DialogueManager : MonoBehaviour
         dialogueText.text = line.npcText;
         npcNameText.text = currentNPC.npcName;
 
-        // clear old choice buttons
         foreach (Transform child in choiceButtonParent)
         {
             Destroy(child.gameObject);
         }
 
-        // create a button for each choice
         foreach (DialogueChoice choice in line.choices)
         {
             GameObject buttonObj = Instantiate(choiceButtonPrefab, choiceButtonParent);
@@ -56,37 +70,69 @@ public class DialogueManager : MonoBehaviour
         if (choice.triggersRequestCheck)
         {
             TryCompleteRequest();
+            return;
+        }
+
+        if (choice.opensDrawingScreen)
+        {
+            OpenDrawingScreen(choice.autoTag);
+            return;
         }
 
         if (choice.endsConversation)
         {
             EndDialogue();
         }
-        else
+        else if (choice.nextLine != null && !string.IsNullOrEmpty(choice.nextLine.npcText))
         {
             ShowLine(choice.nextLine);
         }
+        else
+        {
+            EndDialogue();
+        }
+    }
+
+    void OpenDrawingScreen(string tag)
+    {
+        DrawingManager.Instance.SetPendingTag(tag);
+        EndDialogue();
+        GameModeManager.Instance.SetGameMode(GameMode.Drawing);
     }
 
     void TryCompleteRequest()
     {
-        if (!currentNPC.hasRequest || currentNPC.requestComplete)
+        if (!currentNPC.hasRequest)
         {
+            Debug.Log("NPC has no request");
             return;
         }
 
-        bool hasDrawing = DrawingManager.Instance.savedDrawings.Exists(
-            d => d.drawingName == currentNPC.requiredDrawingName
+        NPCRuntimeState npcState = DrawingManager.Instance.GetNPCState(currentNPC);
+
+        if (npcState.requestComplete)
+        {
+            Debug.Log("Request already complete");
+            return;
+        }
+
+        float proximityRadius = 1000f;
+
+        bool foundNearby = DrawingManager.Instance.placedDrawings.Exists(p =>
+            p.tag == currentNPC.requiredDrawingTag &&
+            Vector3.Distance(p.worldPosition, currentNPCPosition) <= proximityRadius
         );
 
-        if (hasDrawing)
+        if (foundNearby)
         {
-            currentNPC.requestComplete = true;
+            npcState.requestComplete = true;
             Debug.Log("Request complete for " + currentNPC.npcName);
+            ShowLine(currentNPC.fulfilledLine);
         }
         else
         {
-            Debug.Log("Player doesn't have the required drawing yet.");
+            Debug.Log("No matching drawing placed nearby.");
+            EndDialogue();
         }
     }
 

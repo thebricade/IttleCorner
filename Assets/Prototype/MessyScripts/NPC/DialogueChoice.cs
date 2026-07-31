@@ -6,6 +6,8 @@ public class DialogueChoice
 {
     public string choiceText;
     public bool endsConversation;
+    public bool opensDrawingScreen;       new
+    public string autoTag;  
     public DialogueLine nextLine;
     public bool triggersRequestCheck;
 }

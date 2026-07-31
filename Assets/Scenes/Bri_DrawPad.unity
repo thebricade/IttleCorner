@@ -1737,6 +1737,9 @@ MonoBehaviour:
   selectedDrawing:
     drawingName: 
     texture: {fileID: 0}
+  pendingDrawingTag: 
+  placedDrawings: []
+  npcStates: []
 --- !u!114 &335869511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5741,10 +5744,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 618507725760492706, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
+      propertyPath: m_Size.x
+      value: 3.7485287
+      objectReference: {fileID: 0}
+    - target: {fileID: 618507725760492706, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
+      propertyPath: m_Size.y
+      value: 7.6663814
+      objectReference: {fileID: 0}
+    - target: {fileID: 618507725760492706, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
+      propertyPath: m_Center.x
+      value: -0.039352693
+      objectReference: {fileID: 0}
+    - target: {fileID: 618507725760492706, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
+      propertyPath: m_Center.y
+      value: -0.29933918
+      objectReference: {fileID: 0}
     - target: {fileID: 2265585062740713615, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
       propertyPath: m_Name
       value: NPC
       objectReference: {fileID: 0}
+    - target: {fileID: 3852675877057951414, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
+      propertyPath: npcData
+      value: 
+      objectReference: {fileID: 11400000, guid: cc610193866037147a09089093c2de54, type: 2}
     - target: {fileID: 7565970018791816427, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.6138419
@@ -7391,11 +7414,11 @@ MonoBehaviour:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 335869509}
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 1914633577}
   - {fileID: 2023316998}
   - {fileID: 1512377583}
   - {fileID: 210878901}
-  - {fileID: 335869509}
   - {fileID: 1473819952}

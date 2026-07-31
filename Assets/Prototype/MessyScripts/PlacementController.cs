@@ -30,11 +30,20 @@ public class PlacementController : MonoBehaviour
 
     void PlaceSticker(Vector3 position)
     {
+        Drawing selected = DrawingManager.Instance.selectedDrawing;
+
         GameObject newSticker = Instantiate(stickerPrefab, position, Quaternion.identity);
 
         SpriteRenderer sr = newSticker.GetComponent<SpriteRenderer>();
-        Sprite drawingSprite = TextureToSprite(DrawingManager.Instance.selectedDrawing.texture);
+        Sprite drawingSprite = TextureToSprite(selected.texture);
         sr.sprite = drawingSprite;
+
+        // register this placed object with its tag
+        DrawingManager.Instance.RegisterPlacedDrawing(
+            selected.drawingName,
+            position,
+            newSticker
+        );
 
         GameModeManager.Instance.SetGameMode(GameMode.Explore);
     }
