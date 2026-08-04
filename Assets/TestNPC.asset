@@ -13,28 +13,57 @@ MonoBehaviour:
   m_Name: TestNPC
   m_EditorClassIdentifier: Assembly-CSharp::NPCData
   npcName: Ittle
-  startingLine:
-    npcText: Can you make me a tree?
-    choices:
-    - choiceText: Sure!
-      endsConversation: 0
-      opensDrawingScreen: 1
-      autoTag: FirstTree
-      nextLine:
-        npcText: 
-        choices: []
-      triggersRequestCheck: 0
-    - choiceText: I did it
-      endsConversation: 0
-      opensDrawingScreen: 0
-      autoTag: 
-      nextLine:
-        npcText: 
-        choices: []
-      triggersRequestCheck: 1
+  defaultConversationKey: default
+  completionConversationKey: IttleGotHerTree
   hasRequest: 1
   requestDescription: 
   requiredDrawingTag: FirstTree
-  fulfilledLine:
-    npcText: Thank you
-    choices: []
+  conversations:
+  - key: default
+    dialogueLine:
+      npcText: 'Can you make me a tree? '
+      choices:
+      - choiceText: Sure thing
+        endsConversation: 0
+        opensDrawingScreen: 1
+        autoTag: FirstTree
+        setsConversationKey: IttleWaitingForTree
+        nextLine:
+          npcText: 
+          choices: []
+        triggersRequestCheck: 0
+  - key: IttleWaitingForTree
+    dialogueLine:
+      npcText: There used to be a giant pinetree every ittle would decorate for winter.
+      choices:
+      - choiceText: That sounds lovely
+        endsConversation: 1
+        opensDrawingScreen: 0
+        autoTag: 
+        setsConversationKey: IttleWaitingForTree
+        nextLine:
+          npcText: 
+          choices: []
+        triggersRequestCheck: 0
+      - choiceText: I made your tree!
+        endsConversation: 0
+        opensDrawingScreen: 0
+        autoTag: 
+        setsConversationKey: 
+        nextLine:
+          npcText: 
+          choices: []
+        triggersRequestCheck: 1
+  - key: IttleGotHerTree
+    dialogueLine:
+      npcText: I love my tree
+      choices:
+      - choiceText: Your welcome
+        endsConversation: 1
+        opensDrawingScreen: 0
+        autoTag: 
+        setsConversationKey: 
+        nextLine:
+          npcText: 
+          choices: []
+        triggersRequestCheck: 0

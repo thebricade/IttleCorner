@@ -25,21 +25,11 @@ public class DialogueManager : MonoBehaviour
     {
         currentNPC = npc;
         currentNPCPosition = npcPosition;
-
-        Debug.Log("StartDialogue called. npc: " + npc + " | npcNameText: " + npcNameText);
-
+        
         NPCRuntimeState npcState = DrawingManager.Instance.GetNPCState(npc);
+        DialogueLine conversation = npc.GetConversation(npcState.currentConversationKey);
 
-        if (npcState.requestComplete && npc.fulfilledLine != null
-                                    && !string.IsNullOrEmpty(npc.fulfilledLine.npcText))
-        {
-            ShowLine(npc.fulfilledLine);
-        }
-        else
-        {
-            ShowLine(npc.startingLine);
-        }
-
+        ShowLine(conversation);
         dialogueCanvas.SetActive(true);
     }
 
@@ -67,6 +57,12 @@ public class DialogueManager : MonoBehaviour
 
     void OnChoiceSelected(DialogueChoice choice)
     {
+        if (!string.IsNullOrEmpty(choice.setsConversationKey))
+        {
+            NPCRuntimeState npcState = DrawingManager.Instance.GetNPCState(currentNPC);
+            npcState.currentConversationKey = choice.setsConversationKey;
+        }
+        
         if (choice.triggersRequestCheck)
         {
             TryCompleteRequest();
@@ -96,6 +92,7 @@ public class DialogueManager : MonoBehaviour
     void OpenDrawingScreen(string tag)
     {
         DrawingManager.Instance.SetPendingTag(tag);
+        
         EndDialogue();
         GameModeManager.Instance.SetGameMode(GameMode.Drawing);
     }
@@ -110,30 +107,42 @@ public class DialogueManager : MonoBehaviour
 
         NPCRuntimeState npcState = DrawingManager.Instance.GetNPCState(currentNPC);
 
-        if (npcState.requestComplete)
+        if (npcState.currentConversationKey == currentNPC.completionConversationKey)
         {
-            Debug.Log("Request already complete");
+            Debug.Log("NPC has complete request");
             return;
         }
 
-        float proximityRadius = 1000f;
+            Debug.Log("Checking for drawing tag: " + currentNPC.requiredDrawingTag);
+            Debug.Log("Placed drawings count: " + DrawingManager.Instance.placedDrawings.Count);
+            Debug.Log("NPC position: " + currentNPCPosition);
 
-        bool foundNearby = DrawingManager.Instance.placedDrawings.Exists(p =>
-            p.tag == currentNPC.requiredDrawingTag &&
-            Vector3.Distance(p.worldPosition, currentNPCPosition) <= proximityRadius
-        );
+            foreach (var p in DrawingManager.Instance.placedDrawings)
+            {
+                Debug.Log("Placed: " + p.tag + " at " + p.worldPosition +
+                          " | distance: " + Vector3.Distance(p.worldPosition, currentNPCPosition));
+            }
 
-        if (foundNearby)
-        {
-            npcState.requestComplete = true;
-            Debug.Log("Request complete for " + currentNPC.npcName);
-            ShowLine(currentNPC.fulfilledLine);
-        }
-        else
-        {
-            Debug.Log("No matching drawing placed nearby.");
-            EndDialogue();
-        }
+            float proximityRadius = 10f;
+
+            bool foundNearby = DrawingManager.Instance.placedDrawings.Exists(p =>
+                p.tag == currentNPC.requiredDrawingTag &&
+                Vector3.Distance(p.worldPosition, currentNPCPosition) <= proximityRadius
+            );
+
+            Debug.Log("Found nearby: " + foundNearby);
+
+            if (foundNearby)
+            {
+                npcState.currentConversationKey = currentNPC.completionConversationKey;
+                ShowLine(currentNPC.GetConversation(currentNPC.completionConversationKey));
+            }
+            else
+            {
+                Debug.Log("No matching drawing placed nearby.");
+                EndDialogue();
+            }
+     
     }
 
     void EndDialogue()

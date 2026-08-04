@@ -13,7 +13,7 @@ public class PlacedDrawing
 public class NPCRuntimeState
 {
     public string npcName;
-    public bool requestComplete;
+    public string currentConversationKey = "default";
 }
 
 public class DrawingManager : MonoBehaviour
@@ -71,7 +71,7 @@ public class DrawingManager : MonoBehaviour
         {
             state = new NPCRuntimeState();
             state.npcName = npc.npcName;
-            state.requestComplete = false;
+            state.currentConversationKey = "default";
             npcStates.Add(state);
         }
 
