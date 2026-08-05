@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b4da19336b54fa4ebf67db148f50e9c, type: 3}
+  m_Name: TestNPC
+  m_EditorClassIdentifier: Assembly-CSharp::NPCData
+  npcName: Ittle
+  defaultConversationKey: default
+  completionConversationKey: IttleGotHerTree
+  hasRequest: 1
+  requestDescription: 
+  requiredDrawingTag: FirstTree
+  conversations:
+  - key: default
+    dialogueLine:
+      npcText: 'Can you make me a tree? '
+      choices:
+      - choiceText: Sure thing
+        endsConversation: 0
+        opensDrawingScreen: 1
+        autoTag: FirstTree
+        setsConversationKey: IttleWaitingForTree
+        nextLine:
+          npcText: 
+          choices: []
+        triggersRequestCheck: 0
+  - key: IttleWaitingForTree
+    dialogueLine:
+      npcText: There used to be a giant pinetree every ittle would decorate for winter.
+      choices:
+      - choiceText: That sounds lovely
+        endsConversation: 1
+        opensDrawingScreen: 0
+        autoTag: 
+        setsConversationKey: IttleWaitingForTree
+        nextLine:
+          npcText: 
+          choices: []
+        triggersRequestCheck: 0
+      - choiceText: I made your tree!
+        endsConversation: 0
+        opensDrawingScreen: 0
+        autoTag: 
+        setsConversationKey: 
+        nextLine:
+          npcText: 
+          choices: []
+        triggersRequestCheck: 1
+  - key: IttleGotHerTree
+    dialogueLine:
+      npcText: I love my tree
+      choices:
+      - choiceText: Your welcome
+        endsConversation: 1
+        opensDrawingScreen: 0
+        autoTag: 
+        setsConversationKey: 
+        nextLine:
+          npcText: 
+          choices: []
+        triggersRequestCheck: 0
