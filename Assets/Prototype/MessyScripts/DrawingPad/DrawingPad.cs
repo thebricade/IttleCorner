@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,17 +30,12 @@ public class DrawingPad : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        rawImage=  GetComponent<RawImage>();
-        drawTexture = new Texture2D(textureSize, textureSize);
-        //fill with transparent pixels because we'll cut this out later
-        Color[] fillColor = new Color[textureSize * textureSize];
-        for (int i = 0; i < fillColor.Length; i++)
-        {
-            fillColor[i] = Color.clear;
-        }
-        drawTexture.SetPixels(fillColor);
-        drawTexture.Apply();
-        rawImage.texture = drawTexture;
+       
+    }
+
+    private void OnEnable()
+    {
+        ClearDrawBoard();
     }
 
     // Update is called once per frame
@@ -88,6 +84,22 @@ public class DrawingPad : MonoBehaviour
             PaintAtLocalPoint(point, rt);
         }
     }
+
+    void ClearDrawBoard()
+    {
+        rawImage=  GetComponent<RawImage>();
+        drawTexture = new Texture2D(textureSize, textureSize);
+        //fill with transparent pixels because we'll cut this out later
+        Color[] fillColor = new Color[textureSize * textureSize];
+        for (int i = 0; i < fillColor.Length; i++)
+        {
+            fillColor[i] = Color.clear;
+        }
+        drawTexture.SetPixels(fillColor);
+        drawTexture.Apply();
+        rawImage.texture = drawTexture; 
+    }
+    
     void PaintAtLocalPoint(Vector2 localPoint, RectTransform rt)
     {
         // convert from "center" to uv range
@@ -96,10 +108,30 @@ public class DrawingPad : MonoBehaviour
 
         int x = (int)(u * textureSize);
         int y = (int)(v * textureSize);
-
-        //int brushSize = 4; //make this changable 
-
-        for (int i = -brushSize; i < brushSize; i++)
+        
+        Color paintColor = brushColor; // default to the brush color 
+        
+        //up here you are going to check what the current tool or brushsize is. 
+        switch (currentDrawingTool)
+        {
+            case DrawingTool.Brush:
+                if (currentBrushStyle == BrushStyle.Big)
+                {
+                    SetBrushSize(8);
+                }else if (currentBrushStyle == BrushStyle.Medium)
+                {
+                    SetBrushSize(4);
+                }
+                break;
+            case DrawingTool.Eraser:
+                paintColor = Color.clear; // local variable
+                break; 
+            default:
+                Debug.Log("invalid tool");
+                break;
+        }
+        
+        for (int i = -brushSize; i < brushSize; i++) // this is the drawing loop, eventually this could be a method for each different style that varies on how it would draw
         {
             for (int j = -brushSize; j < brushSize; j++)
             {
@@ -115,24 +147,7 @@ public class DrawingPad : MonoBehaviour
 
                     if (dist <= brushSize)
                     {
-                        if (currentDrawingTool == DrawingTool.Brush) // look into reducing nested ifs here clean up
-                        {
-                            //check type of brush
-                            if (currentBrushStyle == BrushStyle.Big)
-                            {
-                                SetBrushSize(8);
-                                drawTexture.SetPixel(px, py, brushColor);
-                            }else if (currentBrushStyle == BrushStyle.Medium)
-                            {
-                                SetBrushSize(4);
-                                drawTexture.SetPixel(px, py, brushColor); 
-                            }
-                            
-                        }
-                        else if (currentDrawingTool == DrawingTool.Eraser)
-                        {
-                            drawTexture.SetPixel(px, py, Color.clear); //transparency when eraser is selected
-                        }
+                        drawTexture.SetPixel(px, py, paintColor);
                     }
                 }
             }

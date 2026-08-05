@@ -58,7 +58,7 @@ MonoBehaviour:
     dialogueLine:
       npcText: I love my tree
       choices:
-      - choiceText: Your welcome
+      - choiceText: You're welcome
         endsConversation: 1
         opensDrawingScreen: 0
         autoTag: 
