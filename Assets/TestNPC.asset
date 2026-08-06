@@ -21,7 +21,7 @@ MonoBehaviour:
   conversations:
   - key: default
     dialogueLine:
-      npcText: 'Can you make me a tree? '
+      npcText: 'Can you make me a home? '
       choices:
       - choiceText: Sure thing
         endsConversation: 0
@@ -34,7 +34,7 @@ MonoBehaviour:
         triggersRequestCheck: 0
   - key: IttleWaitingForTree
     dialogueLine:
-      npcText: There used to be a giant pinetree every ittle would decorate for winter.
+      npcText: I used to have a home that was so me
       choices:
       - choiceText: That sounds lovely
         endsConversation: 1
@@ -45,7 +45,7 @@ MonoBehaviour:
           npcText: 
           choices: []
         triggersRequestCheck: 0
-      - choiceText: I made your tree!
+      - choiceText: I made your home
         endsConversation: 0
         opensDrawingScreen: 0
         autoTag: 
