@@ -110,4 +110,6 @@ ProjectSettings/ProjectSettings.asset
 .idea/.idea.IttleCorner/.idea/inspectionProfiles/Project_Default.xml
 .idea/.idea.IttleCorner/.idea/inspectionProfiles/Project_Default.xml
 .idea/.idea.IttleCorner/.idea/inspectionProfiles/Project_Default.xml
-*.meta
+
+# Unity asset meta files must be tracked (do not blanket-ignore *.meta)
+!/Assets/**/*.meta
