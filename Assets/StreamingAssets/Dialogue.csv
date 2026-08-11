@@ -1,0 +1,4 @@
+npc_name,conversation_key,npc_text,choice1_text,choice1_set_key,choice1_action,choice_1_action_param,choice_1_ends,choice2_text,choice2_set_key,choice2_action,choice2_action_param,choice_2_ends,choice3_text,choice3_set_key,choice3_action,choice3_action_param,choice_3_ends,Notes
+Ittle,default,Can you make me a tree,sure,ittle_waiting_for_tree,OpenDrawingQuest,ittle_tree_quest,FALSE,Maybe later,,,,TRUE,,,,,,
+Ittle,ittle_waiting_for_tree,Did you make my tree yet? ,I made it!,,TriggerQuestCheck,ittle_tree_quest,FALSE,Still working on it...,,,,TRUE,,,,,,
+Ittle,ittle_got_her_tree,Thank you!,you're welcome,,,TRUE,,,,,,,,,,,,

@@ -10,20 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b4da19336b54fa4ebf67db148f50e9c, type: 3}
-  m_Name: TestNPC
+  m_Name: Ittle
   m_EditorClassIdentifier: Assembly-CSharp::NPCData
   npcName: Ittle
   defaultConversationKey: default
-  completionConversationKey: IttleGotHerTree
-  hasRequest: 1
-  requestDescription: 
-  requiredDrawingTag: FirstTree
   conversations:
   - key: default
     dialogueLine:
-      npcText: 'Can you make me a home? '
+      npcText: Can you make me a tree
       choices:
-      - choiceText: Sure thing
+      - choiceText: sure
         endsConversation: 0
         setsConversationKey: ittle_waiting_for_tree
         action: 1
@@ -31,19 +27,19 @@ MonoBehaviour:
         nextLine:
           npcText: 
           choices: []
-  - key: ittle_waiting_for_tree
-    dialogueLine:
-      npcText: I used to have a home that was so me
-      choices:
-      - choiceText: That sounds lovely
+      - choiceText: Maybe later
         endsConversation: 1
-        setsConversationKey: IttleWaitingForTree
+        setsConversationKey: 
         action: 0
         actionParam: 
         nextLine:
           npcText: 
           choices: []
-      - choiceText: I made your home
+  - key: ittle_waiting_for_tree
+    dialogueLine:
+      npcText: Did you make my tree yet?
+      choices:
+      - choiceText: I made it!
         endsConversation: 0
         setsConversationKey: 
         action: 2
@@ -51,15 +47,23 @@ MonoBehaviour:
         nextLine:
           npcText: 
           choices: []
-  - key: ittle_got_her_tree
-    dialogueLine:
-      npcText: I love my tree
-      choices:
-      - choiceText: You're welcome
+      - choiceText: Still working on it...
         endsConversation: 1
         setsConversationKey: 
         action: 0
         actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+  - key: ittle_got_her_tree
+    dialogueLine:
+      npcText: Thank you!
+      choices:
+      - choiceText: you're welcome
+        endsConversation: 0
+        setsConversationKey: 
+        action: 0
+        actionParam: TRUE
         nextLine:
           npcText: 
           choices: []

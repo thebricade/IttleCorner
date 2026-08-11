@@ -13,13 +13,7 @@ public class NPCData : ScriptableObject
 {
     public string npcName;
     public string defaultConversationKey = "default";
-    public string completionConversationKey;
 
-    [Header("Request")]
-    public bool hasRequest;
-    public string requestDescription;
-    public string requiredDrawingTag;
-    
     [Header("Conversations")]
     public List<ConversationEntry> conversations;
 
@@ -31,8 +25,7 @@ public class NPCData : ScriptableObject
         {
             return entry.dialogueLine;
         }
-        
-        //fallback
+
         ConversationEntry defaultEntry = conversations.Find(c => c.key == defaultConversationKey);
         return defaultEntry?.dialogueLine;
     }
