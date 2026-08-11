@@ -60,10 +60,62 @@ MonoBehaviour:
       npcText: Thank you!
       choices:
       - choiceText: you're welcome
+        endsConversation: 1
+        setsConversationKey: ittle_start_flower
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+  - key: ittle_start_flower
+    dialogueLine:
+      npcText: Can you make me a flower?
+      choices:
+      - choiceText: Would love to
+        endsConversation: 0
+        setsConversationKey: ittle_wait_flower
+        action: 1
+        actionParam: ittle_flower_quest
+        nextLine:
+          npcText: 
+          choices: []
+      - choiceText: Not right now
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+  - key: ittle_wait_flower
+    dialogueLine:
+      npcText: Did you make a flower?
+      choices:
+      - choiceText: Check it out
+        endsConversation: 0
+        setsConversationKey: 
+        action: 2
+        actionParam: ittle_flower_quest
+        nextLine:
+          npcText: 
+          choices: []
+      - choiceText: Not yet
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+  - key: ittle_got_her_flower
+    dialogueLine:
+      npcText: Thank you! I love this flower
+      choices:
+      - choiceText: no problem
         endsConversation: 0
         setsConversationKey: 
         action: 0
-        actionParam: TRUE
+        actionParam: 
         nextLine:
           npcText: 
           choices: []

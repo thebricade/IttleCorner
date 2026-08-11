@@ -129,6 +129,13 @@ public class DialogueManager : MonoBehaviour
             EndDialogue();
             return;
         }
+        
+        Debug.Log("Required tag: " + quest.requiredTag);
+        Debug.Log("Placed drawings count: " + DrawingManager.Instance.placedDrawings.Count);
+        foreach (var p in DrawingManager.Instance.placedDrawings)
+        {
+            Debug.Log("Placed tag: '" + p.tag + "' | Required: '" + quest.requiredTag + "' | Match: " + (p.tag == quest.requiredTag));
+        }
 
         if (QuestManager.Instance.IsQuestComplete(questId))
         {
