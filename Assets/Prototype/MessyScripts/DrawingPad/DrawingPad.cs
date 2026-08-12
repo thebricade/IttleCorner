@@ -16,6 +16,7 @@ public class DrawingPad : MonoBehaviour
     {
         Big,
         Medium,
+        Small,
     }
 
     private DrawingTool currentDrawingTool = DrawingTool.Brush;
@@ -121,6 +122,9 @@ public class DrawingPad : MonoBehaviour
                 }else if (currentBrushStyle == BrushStyle.Medium)
                 {
                     SetBrushSize(4);
+                }else if (currentBrushStyle == BrushStyle.Small)
+                {
+                    SetBrushSize(2);
                 }
                 break;
             case DrawingTool.Eraser:
