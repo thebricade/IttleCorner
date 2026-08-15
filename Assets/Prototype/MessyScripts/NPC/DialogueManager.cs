@@ -101,7 +101,7 @@ public class DialogueManager : MonoBehaviour
 
     void OpenDrawingQuest(string questId)
     {
-        //Debug.Log("OpenDrawingQuest called with questId: " + questId);
+        Debug.Log("OpenDrawingQuest called with questId: " + questId);
 
         Quest quest = QuestManager.Instance.GetQuest(questId);
 
@@ -114,6 +114,15 @@ public class DialogueManager : MonoBehaviour
 
         QuestManager.Instance.ActivateQuest(questId);
         DrawingManager.Instance.SetPendingTag(quest.requiredTag);
+
+        if (quest.questType == QuestType.CreateNPC)
+        {
+            DrawingManager.Instance.drawingForNPC = quest.npcName; // get the name of the npc you are drawing for
+        }
+        else
+        {
+            DrawingManager.Instance.drawingForNPC = ""; //clear so it doesn't store
+        }
 
         EndDialogue();
         GameModeManager.Instance.SetGameMode(GameMode.Drawing);

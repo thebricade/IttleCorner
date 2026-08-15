@@ -23,6 +23,7 @@ public class DrawingManager : MonoBehaviour
     public List<Drawing> savedDrawings = new List<Drawing>();
     public Drawing selectedDrawing;
     public string pendingDrawingTag = "";
+    public string drawingForNPC = "";
     public List<PlacedDrawing> placedDrawings = new List<PlacedDrawing>();
     public List<NPCRuntimeState> npcStates = new List<NPCRuntimeState>();
 
