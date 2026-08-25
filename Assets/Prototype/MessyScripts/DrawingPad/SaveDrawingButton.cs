@@ -14,18 +14,23 @@ public class SaveDrawingButton : MonoBehaviour
 
     void OnClick()
     {
-        //grabs the texture and crops anywhere we didn't paint
+        //gets whatever is currently drawn on the canvas
         Texture2D snapshot = drawingPad.GetCurrentTextureCopy();
+        //crops any transparent space 
         Texture2D cropped = drawingPad.CropToContent(snapshot);
+        
         Debug.Log("drawingForNPC: '" + DrawingManager.Instance.drawingForNPC + "'");
-        //names the drawing based off it's current tag if a tag exists
+        
+        //names the drawing, if pendingdrawingtag was set we'll use that name for the quest, otherwise it will auto gen name Drawing 1, Drawing2 ect
         string drawingName = !string.IsNullOrEmpty(DrawingManager.Instance.pendingDrawingTag)
             ? DrawingManager.Instance.pendingDrawingTag
             : "Drawing " + (DrawingManager.Instance.savedDrawings.Count + 1);
-
+        
+        //drawingforNPC is set in opendrawing.quest only when CreateNPC for other quest it stays empty
+        //is this a CreateNPC quest? yes/no
         if (!string.IsNullOrEmpty(DrawingManager.Instance.drawingForNPC))
         {
-            // find the NPC by name using our registry
+            // if yes - find the NPC by name using our registry so we can replace it's sprite
             GameObject npcObject = NPCManager.Instance.FindNPC(DrawingManager.Instance.drawingForNPC);
             Debug.Log("NPC object found: " + (npcObject != null ? npcObject.name : "NULL"));
             if (npcObject != null)
@@ -34,11 +39,13 @@ public class SaveDrawingButton : MonoBehaviour
 
                 if (sr != null)
                 {
+                    //converts the texture2D to a sprite
                     Sprite newSprite = Sprite.Create(
                         cropped,
                         new Rect(0, 0, cropped.width, cropped.height),
                         new Vector2(0.5f, 0f)
                     );
+                    //swap the NPC sprite with the drawing
                     sr.sprite = newSprite;
                     Debug.Log("Applied drawing to NPC: " + DrawingManager.Instance.drawingForNPC);
                 }
@@ -48,8 +55,8 @@ public class SaveDrawingButton : MonoBehaviour
                 Debug.LogWarning("NPC not found: " + DrawingManager.Instance.drawingForNPC);
             }
 
-            // still save the drawing regardless
-            DrawingManager.Instance.SaveDrawing(cropped, drawingName);
+            // does not save the drawing to our Sticker list. We may eventually want another area for saved NPC drawings
+            //DrawingManager.Instance.SaveDrawing(cropped, drawingName);
         }
         else
         {

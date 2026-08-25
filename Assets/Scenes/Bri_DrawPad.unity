@@ -565,20 +565,32 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 68d6173d79c7e4d44a0916a54557d8f3, type: 2}
     - target: {fileID: 5761180914863493613, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
+      propertyPath: m_Size.x
+      value: 5.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 5761180914863493613, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
+      propertyPath: m_Size.y
+      value: 4.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 5761180914863493613, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 8f2698d551c5fcf40af9f538a0f6ec8b, type: 3}
+      objectReference: {fileID: 21300000, guid: 8aef1b3845302944ead364101cdc6dab, type: 3}
     - target: {fileID: 5761180914863493613, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
       propertyPath: m_Color.b
-      value: 0.0049776305
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5761180914863493613, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
       propertyPath: m_Color.g
-      value: 0.00025710388
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5761180914863493613, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
       propertyPath: m_Color.r
-      value: 0.006289184
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5761180914863493613, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7565970018791816427, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
       propertyPath: m_LocalScale.x
@@ -5744,7 +5756,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eff6b5a9669987a45923fd13e628d149, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SetGameMode
-  modeToSet: 3
+  modeToSet: 0
 --- !u!114 &929184424
 MonoBehaviour:
   m_ObjectHideFlags: 0
