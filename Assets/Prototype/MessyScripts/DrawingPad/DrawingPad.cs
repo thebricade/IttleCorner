@@ -27,6 +27,7 @@ public class DrawingPad : MonoBehaviour
     private RawImage rawImage;
     private Vector2? lastLocalPoint;
     private Color brushColor = Color.black; // starting brush color
+    private bool justEnabled = false;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -36,6 +37,7 @@ public class DrawingPad : MonoBehaviour
 
     private void OnEnable()
     {
+        justEnabled = true;
         ClearDrawBoard();
     }
 
@@ -44,6 +46,12 @@ public class DrawingPad : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
+            if (justEnabled)
+            {
+                justEnabled = false;
+                return; // kinda safeguard for the first frame going (0,0) 
+            }
+            
             Vector2 localPoint;
             RectTransform rt = GetComponent<RectTransform>();
             
