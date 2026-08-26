@@ -25,8 +25,9 @@ public class PlayerMovement : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit,groundLayer))
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, groundLayer))
             {
+                //Debug.Log("Hit point: " + hit.point + " | Player pos: " + transform.position);
                 targetPosition = hit.point;
                 hasTarget = true;
             }
