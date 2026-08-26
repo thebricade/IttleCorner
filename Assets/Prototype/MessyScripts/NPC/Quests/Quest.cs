@@ -3,7 +3,8 @@ using UnityEngine;
 //this is if we eventually have more quests types
 public enum QuestType
 {
-    DrawSomething
+    DrawSomething,
+    CreateNPC,
 }
 
 [CreateAssetMenu(fileName = "New Quest", menuName = "Game/Quest")]

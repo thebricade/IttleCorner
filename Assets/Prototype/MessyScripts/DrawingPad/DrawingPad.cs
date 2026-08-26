@@ -3,6 +3,7 @@ using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
+using UnityEngine.EventSystems;
 
 public class DrawingPad : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class DrawingPad : MonoBehaviour
     private RawImage rawImage;
     private Vector2? lastLocalPoint;
     private Color brushColor = Color.black; // starting brush color
+    private bool justEnabled = false;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -36,14 +38,30 @@ public class DrawingPad : MonoBehaviour
 
     private void OnEnable()
     {
+        justEnabled = true;
         ClearDrawBoard();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (justEnabled)
+        {
+            justEnabled = false;
+            return; // kinda safeguard for the first frame going (0,0) 
+        }
+        
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                return; // click was on UI, skip this frame
+            }
+        }
+        
         if (Input.GetMouseButton(0))
         {
+            
             Vector2 localPoint;
             RectTransform rt = GetComponent<RectTransform>();
             
