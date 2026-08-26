@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
 using UnityEngine.EventSystems;
 
-public class DrawingPad : MonoBehaviour
+public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public enum DrawingTool
     {
@@ -26,67 +26,87 @@ public class DrawingPad : MonoBehaviour
     public int textureSize = 256;
     private Texture2D drawTexture;
     private RawImage rawImage;
+    private RectTransform rectTransform;
     private Vector2? lastLocalPoint;
     private Color brushColor = Color.black; // starting brush color
-    private bool justEnabled = false;
-    
+    private bool isDrawing = false;
+    private Camera pressCamera;
+
+    private void Awake()
+    {
+        rectTransform = GetComponent<RectTransform>();
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-       
+
     }
 
     private void OnEnable()
     {
-        justEnabled = true;
+        isDrawing = false;
+        lastLocalPoint = null;
         ClearDrawBoard();
+    }
+
+    private void OnDisable()
+    {
+        isDrawing = false;
+        lastLocalPoint = null;
+    }
+
+    // Only fires when uGUI's raycaster resolves the pointer-down onto this RawImage itself -
+    // a click on a color/tool button never reaches here, so there's no frame where a stray
+    // paint can sneak through while the pointer is actually over other UI.
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        pressCamera = eventData.pressEventCamera;
+        Vector2 localPoint;
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, eventData.position, pressCamera, out localPoint))
+        {
+            isDrawing = true;
+            PaintAtLocalPoint(localPoint, rectTransform);
+            lastLocalPoint = localPoint;
+        }
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        isDrawing = false;
+        lastLocalPoint = null;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (justEnabled)
+        if (!isDrawing)
         {
-            justEnabled = false;
-            return; // kinda safeguard for the first frame going (0,0) 
-        }
-        
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (EventSystem.current.IsPointerOverGameObject())
-            {
-                return; // click was on UI, skip this frame
-            }
-        }
-        
-        if (Input.GetMouseButton(0))
-        {
-            
-            Vector2 localPoint;
-            RectTransform rt = GetComponent<RectTransform>();
-            
-            bool inside = RectTransformUtility.ScreenPointToLocalPointInRectangle(rt, Input.mousePosition, null, out localPoint);
-            if (inside)
-            {
-                if (lastLocalPoint.HasValue)
-                {
-                    PaintLine(lastLocalPoint.Value, localPoint, rt);
-                }
-                else
-                {
-                    PaintAtLocalPoint(localPoint, rt);
-                }
-                lastLocalPoint = localPoint;
-            }
-            else
-            {
-                {
-                    lastLocalPoint = null;
-                }
-            }
+            return;
         }
 
         if (!Input.GetMouseButton(0))
+        {
+            isDrawing = false;
+            lastLocalPoint = null;
+            return;
+        }
+
+        Vector2 localPoint;
+        bool inside = RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mousePosition, pressCamera, out localPoint);
+        if (inside)
+        {
+            if (lastLocalPoint.HasValue)
+            {
+                PaintLine(lastLocalPoint.Value, localPoint, rectTransform);
+            }
+            else
+            {
+                PaintAtLocalPoint(localPoint, rectTransform);
+            }
+            lastLocalPoint = localPoint;
+        }
+        else
         {
             lastLocalPoint = null;
         }
@@ -95,6 +115,14 @@ public class DrawingPad : MonoBehaviour
     {
         float distance = Vector2.Distance(from, to);
         int steps = Mathf.CeilToInt(distance);
+
+        if (steps <= 0)
+        {
+            // from == to (mouse hasn't moved since the last sample) - painting a "line" here
+            // would divide by zero (step / steps), so just paint the single point.
+            PaintAtLocalPoint(to, rt);
+            return;
+        }
 
         for (int step = 0; step <= steps; step++)
         {
@@ -127,8 +155,8 @@ public class DrawingPad : MonoBehaviour
 
         int x = (int)(u * textureSize);
         int y = (int)(v * textureSize);
-        
-        Color paintColor = brushColor; // default to the brush color 
+
+        Color paintColor = brushColor; // default to the brush color
         
         //up here you are going to check what the current tool or brushsize is. 
         switch (currentDrawingTool)
