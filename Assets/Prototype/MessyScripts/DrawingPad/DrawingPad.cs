@@ -54,6 +54,16 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private float stationaryHoldTime = 0f;
     private const float StationaryMoveThreshold = 1.5f; // local-space pixels
 
+    // Current stroke direction (radians), used to orient the stamp texture. Only updated
+    // when the pointer actually moves, so it stays put while held still instead of
+    // rerolling every frame (which is what made a held stamp flicker between orientations).
+    private float strokeDirectionAngle = 0f;
+
+    // How many watercolor dabs have been laid down so far in the CURRENT stroke - a proxy
+    // for "how far the brush has dragged," used to simulate a loaded brush running dry:
+    // strong at the start of a stroke, feathering/patching out toward the tail.
+    private int strokeDabIndex = 0;
+
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
@@ -107,6 +117,8 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
         strokeGrainOffset = new Vector2(UnityEngine.Random.Range(0f, 1000f), UnityEngine.Random.Range(0f, 1000f));
         stationaryHoldTime = 0f;
+        strokeDirectionAngle = 0f;
+        strokeDabIndex = 0;
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -153,8 +165,21 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
     void PaintLine(Vector2 from, Vector2 to, RectTransform rt)
     {
-        float distance = Vector2.Distance(from, to);
-        int steps = Mathf.CeilToInt(distance);
+        Vector2 direction = to - from;
+        float distance = direction.magnitude;
+
+        // only update the stamp's orientation when there's an actual direction to take -
+        // this is what keeps a held-still dab's orientation stable instead of rerolling
+        if (distance > 0.001f)
+        {
+            strokeDirectionAngle = Mathf.Atan2(direction.y, direction.x);
+        }
+
+        // watercolor brushes space dabs out (instead of stamping ~every pixel) so a fast
+        // drag doesn't cram dozens of near-identical overlapping stamps into a straight
+        // streak - see PaintWatercolorDab for the per-dab opacity/color variation
+        float spacing = GetDabSpacingLocalUnits(rt);
+        int steps = spacing > 0f ? Mathf.CeilToInt(distance / spacing) : Mathf.CeilToInt(distance);
 
         if (steps <= 0)
         {
@@ -170,6 +195,30 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             Vector2 point = Vector2.Lerp(from, to, t);
             PaintAtLocalPoint(point, rt);
         }
+    }
+
+    float GetDabSpacingLocalUnits(RectTransform rt)
+    {
+        float factor;
+        if (currentDrawingTool != DrawingTool.Brush)
+        {
+            return 0f; // eraser: dense, no spacing
+        }
+
+        switch (currentBrushStyle)
+        {
+            case BrushStyle.Watercolor:
+                factor = WatercolorPresetV1.dabSpacingFactor;
+                break;
+            case BrushStyle.Watercolor2:
+                factor = WatercolorPresetV2.dabSpacingFactor;
+                break;
+            default:
+                return 0f; // hard brush styles: dense, no spacing
+        }
+
+        float texelsToLocalUnits = rt.rect.width / textureSize;
+        return Mathf.Max(1f, brushSize * factor) * texelsToLocalUnits;
     }
 
     void ClearDrawBoard()
@@ -299,6 +348,12 @@ private struct WatercolorParams
     public float bloomMin;
     public float bloomMax;
     public bool pigmentMix;        // true = multiply-mix with existing color (lets it show through as a tint/mix rather than a flat overlay)
+    public float dabSpacingFactor; // min distance between dabs along a drag, as a fraction of brushSize
+    public float hueJitter;        // color dynamics: per-dab random HSV drift off brushColor
+    public float saturationJitter;
+    public float brightnessJitter;
+    public float smudgeAmount;   // 0-1: how much existing canvas color gets dragged forward per dab
+    public float smudgeDistance; // texels behind the dab to sample the dragged color from
 }
 
 // Watercolor: a soft, capped translucent wash. Underlying color reads through as a tint.
@@ -322,6 +377,12 @@ private static readonly WatercolorParams WatercolorPresetV1 = new WatercolorPara
     bloomMin = 0.02f,
     bloomMax = 0.05f,
     pigmentMix = false,
+    dabSpacingFactor = 0.28f,
+    hueJitter = 0.015f,
+    saturationJitter = 0.08f,
+    brightnessJitter = 0.08f,
+    smudgeAmount = 0.45f,
+    smudgeDistance = 5f,
 };
 
 // Watercolor 2: heavier pigment-mixing wash. Overlapping colors multiply together
@@ -347,6 +408,12 @@ private static readonly WatercolorParams WatercolorPresetV2 = new WatercolorPara
     bloomMin = 0.02f,
     bloomMax = 0.08f,
     pigmentMix = true,
+    dabSpacingFactor = 0.25f,
+    hueJitter = 0.03f,
+    saturationJitter = 0.15f,
+    brightnessJitter = 0.15f,
+    smudgeAmount = 0.55f,
+    smudgeDistance = 7f,
 };
 
 void PaintWatercolor(int centerX, int centerY)
@@ -362,6 +429,7 @@ void PaintWatercolor2(int centerX, int centerY)
 void PaintWatercolorDab(int centerX, int centerY, WatercolorParams p)
 {
     bool useStamp = brushStampTexture != null;
+    strokeDabIndex++;
 
     // held-still bonus: grows the wash's reach the longer the pointer sits in place
     int holdSpreadBonus = Mathf.RoundToInt(stationaryHoldTime * p.holdSpreadRate);
@@ -369,6 +437,19 @@ void PaintWatercolorDab(int centerX, int centerY, WatercolorParams p)
 
     // per-dab random opacity jitter so repeated strokes don't look uniform
     float dabJitter = UnityEngine.Random.Range(p.opacityJitterMin, p.opacityJitterMax);
+
+    // no established drag direction yet on the very first dab of a stroke - skip the
+    // smudge rather than smearing in an arbitrary default direction
+    float effectiveSmudgeAmount = strokeDabIndex <= 1 ? 0f : p.smudgeAmount;
+
+    // color dynamics: a slightly different tint per dab instead of flat brushColor
+    Color dabColor = ApplyColorDynamics(brushColor, p);
+
+    // orient the stamp to the direction of travel. This only changes when strokeDirectionAngle
+    // changes (i.e. the pointer actually moved), so a held-still dab stays visually stable
+    // instead of rerolling every frame.
+    float dabCos = Mathf.Cos(strokeDirectionAngle);
+    float dabSin = Mathf.Sin(strokeDirectionAngle);
 
     for (int i = -spread; i < spread; i++)
     {
@@ -394,9 +475,13 @@ void PaintWatercolorDab(int centerX, int centerY, WatercolorParams p)
                 }
 
                 // sample the stamp image directly for shape + opacity instead of the
-                // procedural circle - white/bright = strong, black/dark = nothing
-                float u = (i / (float)spread) * 0.5f + 0.5f;
-                float v = (j / (float)spread) * 0.5f + 0.5f;
+                // procedural circle - white/bright = strong, black/dark = nothing.
+                // rotated to the stroke direction so it "drags" naturally instead of
+                // sampling the texture identically regardless of where the stroke is going
+                float ri = i * dabCos - j * dabSin;
+                float rj = i * dabSin + j * dabCos;
+                float u = (ri / spread) * 0.5f + 0.5f;
+                float v = (rj / spread) * 0.5f + 0.5f;
                 float mask = brushStampTexture.GetPixelBilinear(u, v).grayscale;
                 if (mask <= 0.02f)
                 {
@@ -453,18 +538,32 @@ void PaintWatercolorDab(int centerX, int centerY, WatercolorParams p)
 
             if (strength > 0f)
             {
-                ApplyWatercolorTexel(idx, px, py, strength, p);
+                ApplyWatercolorTexel(idx, px, py, strength, p, dabColor, dabCos, dabSin, effectiveSmudgeAmount);
             }
         }
     }
     drawTexture.Apply();
 }
 
-void ApplyWatercolorTexel(int idx, int px, int py, float strength, WatercolorParams p)
+// Small random HSV drift off the base brush color, so consecutive dabs aren't
+// perfectly flat/identical in color (Procreate calls this "Color Dynamics").
+Color ApplyColorDynamics(Color baseColor, WatercolorParams p)
+{
+    float h, s, v;
+    Color.RGBToHSV(baseColor, out h, out s, out v);
+    h = Mathf.Repeat(h + UnityEngine.Random.Range(-p.hueJitter, p.hueJitter), 1f);
+    s = Mathf.Clamp01(s + UnityEngine.Random.Range(-p.saturationJitter, p.saturationJitter));
+    v = Mathf.Clamp01(v + UnityEngine.Random.Range(-p.brightnessJitter, p.brightnessJitter));
+    Color result = Color.HSVToRGB(h, s, v);
+    result.a = baseColor.a;
+    return result;
+}
+
+void ApplyWatercolorTexel(int idx, int px, int py, float strength, WatercolorParams p, Color dabColor, float dabCos, float dabSin, float smudgeAmount)
 {
     // clamp this texel's total build-up for the CURRENT stroke, so dragging back and
     // forth doesn't race the wash to full opacity - but holding the brush roughly still
-    // lets the cap itself creep up toward holdMaxCap, like pigment soaking in over time
+    // lets the cap itself creep up toward holdMaxCap, like pigment soaking in over time.
     float holdT = Mathf.Clamp01(stationaryHoldTime / p.holdSaturateSeconds);
     float effectiveCap = Mathf.Lerp(p.strokeCap, p.holdMaxCap, holdT);
 
@@ -478,16 +577,30 @@ void ApplyWatercolorTexel(int idx, int px, int py, float strength, WatercolorPar
 
     Color existing = drawTexture.GetPixel(px, py);
 
+    // smudge: drag a bit of whatever color the brush just passed over forward with it,
+    // like a wet brush smearing paint instead of stamping the same flat color every time
+    Color paintColor = dabColor;
+    if (smudgeAmount > 0f)
+    {
+        int sx = Mathf.Clamp(px - Mathf.RoundToInt(dabCos * p.smudgeDistance), 0, textureSize - 1);
+        int sy = Mathf.Clamp(py - Mathf.RoundToInt(dabSin * p.smudgeDistance), 0, textureSize - 1);
+        Color smudgeSource = drawTexture.GetPixel(sx, sy);
+        if (smudgeSource.a > 0.05f)
+        {
+            paintColor = Color.Lerp(paintColor, new Color(smudgeSource.r, smudgeSource.g, smudgeSource.b, paintColor.a), smudgeAmount);
+        }
+    }
+
     Color newColor;
     if (p.pigmentMix && existing.a > 0.05f)
     {
         // subtractive-style pigment mixing when painting over existing color - this is
         // what makes the underlying color show through as a mix rather than a flat tint
-        newColor = new Color(existing.r * brushColor.r, existing.g * brushColor.g, existing.b * brushColor.b, 1f);
+        newColor = new Color(existing.r * paintColor.r, existing.g * paintColor.g, existing.b * paintColor.b, 1f);
     }
     else
     {
-        newColor = brushColor;
+        newColor = paintColor;
     }
 
     // proper "over" compositing for straight (non-premultiplied) alpha. A plain RGB lerp
@@ -580,6 +693,23 @@ void ApplyWatercolorTexel(int idx, int px, int py, float strength, WatercolorPar
         cropped.Apply();
 
         return cropped;
+    }
+
+    public float GetCoveragePercentage()
+    {
+        Color[] pixels = drawTexture.GetPixels();
+        int nonTransparent = 0;
+        int total = pixels.Length; // same as textureSize * textureSize
+
+        for (int i = 0; i < pixels.Length; i++)
+        {
+            if (pixels[i].a > 0.01f)
+            {
+                nonTransparent++;
+            }
+        }
+
+        return (float)nonTransparent / total;
     }
 }
 
