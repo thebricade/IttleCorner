@@ -18,6 +18,8 @@ public class IntroTracker : MonoBehaviour
     private float elapsedTime = 0f; 
     private int clickCount = 0;
     private bool triggered = false;
+
+    public GameObject brushBuddy;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -28,6 +30,14 @@ public class IntroTracker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        float coverage = drawingPad.GetCoveragePercentage();
+        //Debug.Log("Coverage: " + coverage + " | Threshold: " + coverageTrigger);
+        if (coverage >= coverageTrigger)
+        {
+            TriggerFull();
+            return;
+        }
+        
         if (triggered) return;
         
         // track clicks directly here since whole screen is canvas in intro
@@ -51,13 +61,7 @@ public class IntroTracker : MonoBehaviour
             Trigger("clicks");
             return;
         }
-        float coverage = drawingPad.GetCoveragePercentage();
-        //Debug.Log("Coverage: " + coverage + " | Threshold: " + coverageTrigger);
-        if (coverage >= coverageTrigger)
-        {
-            Trigger("coverage");
-            return;
-        }
+       
         
     }
 
@@ -68,7 +72,14 @@ public class IntroTracker : MonoBehaviour
     public void Trigger(string reason)
     {
         triggered = true;
+        brushBuddy.SetActive(true);
         Debug.Log("We've triggered " + reason);
         onTriggerMet.Invoke();
+    }
+
+    public void TriggerFull()
+    {
+        gameObject.SetActive(false);
+        brushBuddy.SetActive(false);
     }
 }

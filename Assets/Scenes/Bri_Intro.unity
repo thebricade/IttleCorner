@@ -1499,7 +1499,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &363404558
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5483,11 +5483,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IntroTracker
   timeTrigger: 40
   clickTrigger: 4
-  coverageTrigger: 0.054
+  coverageTrigger: 0.805
   drawingPad: {fileID: 1671210288}
   onTriggerMet:
     m_PersistentCalls:
       m_Calls: []
+  brushBuddy: {fileID: 363404557}
 --- !u!1 &1703523168
 GameObject:
   m_ObjectHideFlags: 0
