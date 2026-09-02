@@ -76,109 +76,146 @@ public class GameContentImporter : EditorWindow
    }
 
    static void ImportDialogue()
-   {
-       string path = Path.Combine(Application.streamingAssetsPath, "Dialogue.csv");
+{
+    string path = Path.Combine(Application.streamingAssetsPath, "Dialogue.csv");
 
-        if (!File.Exists(path))
+    if (!File.Exists(path))
+    {
+        Debug.LogError("Dialogue.csv not found at: " + path);
+        return;
+    }
+
+    string[] lines = File.ReadAllLines(path);
+
+    // group rows by npc_name first
+    Dictionary<string, List<string[]>> npcRows = new Dictionary<string, List<string[]>>();
+
+    for (int i = 1; i < lines.Length; i++)
+    {
+        string line = lines[i].Trim();
+        if (string.IsNullOrEmpty(line)) continue;
+
+        string[] columns = ParseCSVLine(line);
+        if (columns.Length < 3) continue;
+
+        string npcName = columns[0].Trim();
+        if (string.IsNullOrEmpty(npcName)) continue;
+
+        if (!npcRows.ContainsKey(npcName))
         {
-            Debug.LogError("Dialogue.csv not found at: " + path);
-            return;
+            npcRows[npcName] = new List<string[]>();
+        }
+        npcRows[npcName].Add(columns);
+    }
+
+    foreach (var kvp in npcRows)
+    {
+        string npcName = kvp.Key;
+        List<string[]> rows = kvp.Value;
+
+        string assetPath = "Assets/Data/NPCs/" + npcName + ".asset";
+        NPCData npcData = AssetDatabase.LoadAssetAtPath<NPCData>(assetPath);
+
+        if (npcData == null)
+        {
+            npcData = ScriptableObject.CreateInstance<NPCData>();
+            EnsureFolderExists("Assets/Data/NPCs");
+            AssetDatabase.CreateAsset(npcData, assetPath);
+            Debug.Log("Created NPC: " + npcName);
+        }
+        else
+        {
+            Debug.Log("Updated NPC: " + npcName);
         }
 
-        string[] lines = File.ReadAllLines(path);
+        npcData.npcName = npcName;
+        npcData.conversations = new List<ConversationEntry>();
 
-        // group rows by npc_name first
-        // key = npcName, value = list of raw column arrays for that NPC
-        Dictionary<string, List<string[]>> npcRows = new Dictionary<string, List<string[]>>();
+        // columns: npc_name(0) conversation_key(1) npc_text(2)
+        // choice_1_text(3) choice_1_sets_key(4) choice_1_action(5)
+        // choice_1_action_param(6) choice_1_ends(7)
+        // choice_2_text(8) choice_2_sets_key(9) choice_2_action(10)
+        // choice_2_action_param(11) choice_2_ends(12)
+        // choice_3_text(13) choice_3_sets_key(14) choice_3_action(15)
+        // choice_3_action_param(16) choice_3_ends(17)
+        // next_row_key(18) notes(19)
 
-        for (int i = 1; i < lines.Length; i++)
+        // first pass - build all conversation entries and a lookup by key
+        Dictionary<string, ConversationEntry> entryByKey = new Dictionary<string, ConversationEntry>();
+
+        foreach (string[] columns in rows)
         {
-            string line = lines[i].Trim();
-            if (string.IsNullOrEmpty(line)) continue;
+            string conversationKey = columns.Length > 1 ? columns[1].Trim() : "";
+            string npcText =         columns.Length > 2 ? columns[2].Trim() : "";
 
-            string[] columns = ParseCSVLine(line);
-            if (columns.Length < 3) continue;
+            if (string.IsNullOrEmpty(conversationKey)) continue;
 
-            string npcName = columns[0].Trim();
-            if (string.IsNullOrEmpty(npcName)) continue;
+            ConversationEntry entry = new ConversationEntry();
+            entry.key = conversationKey;
+            entry.dialogueLine = new DialogueLine();
+            entry.dialogueLine.npcText = npcText;
+            entry.dialogueLine.choices = new List<DialogueChoice>();
 
-            if (!npcRows.ContainsKey(npcName))
+            // parse up to 3 choices
+            int[] choiceStarts = { 3, 8, 13 };
+
+            foreach (int start in choiceStarts)
             {
-                npcRows[npcName] = new List<string[]>();
+                if (columns.Length <= start) break;
+
+                string choiceText = columns[start].Trim();
+                if (string.IsNullOrEmpty(choiceText)) continue;
+
+                DialogueChoice choice = new DialogueChoice();
+                choice.choiceText =          choiceText;
+                choice.setsConversationKey = columns.Length > start + 1 ? columns[start + 1].Trim() : "";
+                choice.action =              columns.Length > start + 2 ? ParseChoiceAction(columns[start + 2].Trim()) : ChoiceAction.None;
+                choice.actionParam =         columns.Length > start + 3 ? columns[start + 3].Trim() : "";
+                choice.endsConversation =    columns.Length > start + 4 ? columns[start + 4].Trim().ToUpper() == "TRUE" : false;
+
+                entry.dialogueLine.choices.Add(choice);
             }
-            npcRows[npcName].Add(columns);
+
+            npcData.conversations.Add(entry);
+            entryByKey[conversationKey] = entry;
         }
 
-        // now build one NPCData asset per NPC
-        foreach (var kvp in npcRows)
+        // second pass - wire up nextLine using next_row_key
+        foreach (string[] columns in rows)
         {
-            string npcName = kvp.Key;
-            List<string[]> rows = kvp.Value;
+            string conversationKey = columns.Length > 1 ? columns[1].Trim() : "";
+            string nextRowKey =      columns.Length > 18 ? columns[18].Trim() : "";
 
-            string assetPath = "Assets/Data/NPCs/" + npcName + ".asset";
-            NPCData npcData = AssetDatabase.LoadAssetAtPath<NPCData>(assetPath);
+            if (string.IsNullOrEmpty(conversationKey)) continue;
+            if (string.IsNullOrEmpty(nextRowKey)) continue;
 
-            if (npcData == null)
+            // find the entry for this row and the entry it should chain to
+            if (!entryByKey.ContainsKey(conversationKey)) continue;
+            if (!entryByKey.ContainsKey(nextRowKey))
             {
-                npcData = ScriptableObject.CreateInstance<NPCData>();
-                EnsureFolderExists("Assets/Data/NPCs");
-                AssetDatabase.CreateAsset(npcData, assetPath);
-                Debug.Log("Created NPC: " + npcName);
-            }
-            else
-            {
-                Debug.Log("Updated NPC: " + npcName);
+                Debug.LogWarning("next_row_key '" + nextRowKey + "' not found for conversation '" + conversationKey + "'");
+                continue;
             }
 
-            npcData.npcName = npcName;
-            npcData.conversations = new List<ConversationEntry>();
+            ConversationEntry currentEntry = entryByKey[conversationKey];
+            ConversationEntry nextEntry = entryByKey[nextRowKey];
 
-            foreach (string[] columns in rows)
+            // set nextLine on every choice in this row
+            // so regardless of which choice the player picks, the next line shows immediately
+            foreach (DialogueChoice choice in currentEntry.dialogueLine.choices)
             {
-                // columns: npc_name(0) conversation_key(1) npc_text(2)
-                // choice_1_text(3) choice_1_sets_key(4) choice_1_action(5) 
-                // choice_1_action_param(6) choice_1_ends(7)
-                // choice_2_text(8) choice_2_sets_key(9) choice_2_action(10)
-                // choice_2_action_param(11) choice_2_ends(12)
-                // notes(13)
-
-                string conversationKey = columns.Length > 1 ? columns[1].Trim() : "";
-                string npcText =         columns.Length > 2 ? columns[2].Trim() : "";
-
-                if (string.IsNullOrEmpty(conversationKey)) continue;
-
-                ConversationEntry entry = new ConversationEntry();
-                entry.key = conversationKey;
-                entry.dialogueLine = new DialogueLine();
-                entry.dialogueLine.npcText = npcText;
-                entry.dialogueLine.choices = new List<DialogueChoice>();
-
-                // parse up to 3 choices
-                int[] choiceStarts = { 3, 8, 13 };
-
-                foreach (int start in choiceStarts)
+                // only set nextLine if this choice doesn't have a special action
+                // actions like OpenDrawingQuest handle their own flow
+                if (choice.action == ChoiceAction.None)
                 {
-                    if (columns.Length <= start) break;
-
-                    string choiceText = columns[start].Trim();
-                    if (string.IsNullOrEmpty(choiceText)) continue;
-
-                    DialogueChoice choice = new DialogueChoice();
-                    choice.choiceText =          choiceText;
-                    choice.setsConversationKey = columns.Length > start + 1 ? columns[start + 1].Trim() : "";
-                    choice.action =              columns.Length > start + 2 ? ParseChoiceAction(columns[start + 2].Trim()) : ChoiceAction.None;
-                    choice.actionParam =         columns.Length > start + 3 ? columns[start + 3].Trim() : "";
-                    choice.endsConversation =    columns.Length > start + 4 ? columns[start + 4].Trim().ToUpper() == "TRUE" : false;
-
-                    entry.dialogueLine.choices.Add(choice);
+                    choice.nextLine = nextEntry.dialogueLine;
                 }
-
-                npcData.conversations.Add(entry);
             }
-
-            EditorUtility.SetDirty(npcData);
         }
-   }
+
+        EditorUtility.SetDirty(npcData);
+    }
+}
 
    static void ImportConditions()
    {

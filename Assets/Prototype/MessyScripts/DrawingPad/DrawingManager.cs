@@ -35,6 +35,7 @@ public class DrawingManager : MonoBehaviour
             return;
         }
         Instance = this;
+        DontDestroyOnLoad(gameObject); 
     }
 
     public void SaveDrawing(Texture2D texture, string name)

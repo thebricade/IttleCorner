@@ -17,85 +17,1114 @@ MonoBehaviour:
   conversations:
   - key: default
     dialogueLine:
-      npcText: Can you make me a tree
+      npcText: Sick abstract! Could I buy it off you?
       choices:
-      - choiceText: sure
+      - choiceText: Uh sure
         endsConversation: 0
-        setsConversationKey: ittle_waiting_for_tree
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: Here I'll give you 100 scrap for it
+          choices:
+          - choiceText: wow that's a lot...
+            endsConversation: 0
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Love this new look! You'll be able to create a for this word
+                with that. Hey do you do commissions?
+              choices:
+              - choiceText: You want me to draw more?
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+              - choiceText: Sure!
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+              - choiceText: If the price is right
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+          - choiceText: thank you
+            endsConversation: 0
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Love this new look! You'll be able to create a for this word
+                with that. Hey do you do commissions?
+              choices:
+              - choiceText: You want me to draw more?
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+              - choiceText: Sure!
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+              - choiceText: If the price is right
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+          - choiceText: scrap?
+            endsConversation: 0
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Love this new look! You'll be able to create a for this word
+                with that. Hey do you do commissions?
+              choices:
+              - choiceText: You want me to draw more?
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+              - choiceText: Sure!
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+              - choiceText: If the price is right
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+      - choiceText: If you want to...
+        endsConversation: 0
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: Here I'll give you 100 scrap for it
+          choices:
+          - choiceText: wow that's a lot...
+            endsConversation: 0
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Love this new look! You'll be able to create a for this word
+                with that. Hey do you do commissions?
+              choices:
+              - choiceText: You want me to draw more?
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+              - choiceText: Sure!
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+              - choiceText: If the price is right
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+          - choiceText: thank you
+            endsConversation: 0
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Love this new look! You'll be able to create a for this word
+                with that. Hey do you do commissions?
+              choices:
+              - choiceText: You want me to draw more?
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+              - choiceText: Sure!
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+              - choiceText: If the price is right
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+          - choiceText: scrap?
+            endsConversation: 0
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Love this new look! You'll be able to create a for this word
+                with that. Hey do you do commissions?
+              choices:
+              - choiceText: You want me to draw more?
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+              - choiceText: Sure!
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+              - choiceText: If the price is right
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+      - choiceText: I guess
+        endsConversation: 0
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: Here I'll give you 100 scrap for it
+          choices:
+          - choiceText: wow that's a lot...
+            endsConversation: 0
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Love this new look! You'll be able to create a for this word
+                with that. Hey do you do commissions?
+              choices:
+              - choiceText: You want me to draw more?
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+              - choiceText: Sure!
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+              - choiceText: If the price is right
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+          - choiceText: thank you
+            endsConversation: 0
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Love this new look! You'll be able to create a for this word
+                with that. Hey do you do commissions?
+              choices:
+              - choiceText: You want me to draw more?
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+              - choiceText: Sure!
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+              - choiceText: If the price is right
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+          - choiceText: scrap?
+            endsConversation: 0
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Love this new look! You'll be able to create a for this word
+                with that. Hey do you do commissions?
+              choices:
+              - choiceText: You want me to draw more?
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+              - choiceText: Sure!
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+              - choiceText: If the price is right
+                endsConversation: 0
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: Could you fill a painting with all the shades of blue!
+                  choices:
+                  - choiceText: You'll be seeing blue all day
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+                  - choiceText: Azsure
+                    endsConversation: 1
+                    setsConversationKey: ittle_wait_commission
+                    action: 1
+                    actionParam: ittle_draw_sky
+                    nextLine:
+                      npcText: 
+                      choices: []
+  - key: ittle_first_drawing
+    dialogueLine:
+      npcText: Here I'll give you 100 scrap for it
+      choices:
+      - choiceText: wow that's a lot...
+        endsConversation: 0
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: Love this new look! You'll be able to create a for this word with
+            that. Hey do you do commissions?
+          choices:
+          - choiceText: You want me to draw more?
+            endsConversation: 0
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Could you fill a painting with all the shades of blue!
+              choices:
+              - choiceText: You'll be seeing blue all day
+                endsConversation: 1
+                setsConversationKey: ittle_wait_commission
+                action: 1
+                actionParam: ittle_draw_sky
+                nextLine:
+                  npcText: 
+                  choices: []
+              - choiceText: Azsure
+                endsConversation: 1
+                setsConversationKey: ittle_wait_commission
+                action: 1
+                actionParam: ittle_draw_sky
+                nextLine:
+                  npcText: 
+                  choices: []
+          - choiceText: Sure!
+            endsConversation: 0
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Could you fill a painting with all the shades of blue!
+              choices:
+              - choiceText: You'll be seeing blue all day
+                endsConversation: 1
+                setsConversationKey: ittle_wait_commission
+                action: 1
+                actionParam: ittle_draw_sky
+                nextLine:
+                  npcText: 
+                  choices: []
+              - choiceText: Azsure
+                endsConversation: 1
+                setsConversationKey: ittle_wait_commission
+                action: 1
+                actionParam: ittle_draw_sky
+                nextLine:
+                  npcText: 
+                  choices: []
+          - choiceText: If the price is right
+            endsConversation: 0
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Could you fill a painting with all the shades of blue!
+              choices:
+              - choiceText: You'll be seeing blue all day
+                endsConversation: 1
+                setsConversationKey: ittle_wait_commission
+                action: 1
+                actionParam: ittle_draw_sky
+                nextLine:
+                  npcText: 
+                  choices: []
+              - choiceText: Azsure
+                endsConversation: 1
+                setsConversationKey: ittle_wait_commission
+                action: 1
+                actionParam: ittle_draw_sky
+                nextLine:
+                  npcText: 
+                  choices: []
+      - choiceText: thank you
+        endsConversation: 0
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: Love this new look! You'll be able to create a for this word with
+            that. Hey do you do commissions?
+          choices:
+          - choiceText: You want me to draw more?
+            endsConversation: 0
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Could you fill a painting with all the shades of blue!
+              choices:
+              - choiceText: You'll be seeing blue all day
+                endsConversation: 1
+                setsConversationKey: ittle_wait_commission
+                action: 1
+                actionParam: ittle_draw_sky
+                nextLine:
+                  npcText: 
+                  choices: []
+              - choiceText: Azsure
+                endsConversation: 1
+                setsConversationKey: ittle_wait_commission
+                action: 1
+                actionParam: ittle_draw_sky
+                nextLine:
+                  npcText: 
+                  choices: []
+          - choiceText: Sure!
+            endsConversation: 0
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Could you fill a painting with all the shades of blue!
+              choices:
+              - choiceText: You'll be seeing blue all day
+                endsConversation: 1
+                setsConversationKey: ittle_wait_commission
+                action: 1
+                actionParam: ittle_draw_sky
+                nextLine:
+                  npcText: 
+                  choices: []
+              - choiceText: Azsure
+                endsConversation: 1
+                setsConversationKey: ittle_wait_commission
+                action: 1
+                actionParam: ittle_draw_sky
+                nextLine:
+                  npcText: 
+                  choices: []
+          - choiceText: If the price is right
+            endsConversation: 0
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Could you fill a painting with all the shades of blue!
+              choices:
+              - choiceText: You'll be seeing blue all day
+                endsConversation: 1
+                setsConversationKey: ittle_wait_commission
+                action: 1
+                actionParam: ittle_draw_sky
+                nextLine:
+                  npcText: 
+                  choices: []
+              - choiceText: Azsure
+                endsConversation: 1
+                setsConversationKey: ittle_wait_commission
+                action: 1
+                actionParam: ittle_draw_sky
+                nextLine:
+                  npcText: 
+                  choices: []
+      - choiceText: scrap?
+        endsConversation: 0
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: Love this new look! You'll be able to create a for this word with
+            that. Hey do you do commissions?
+          choices:
+          - choiceText: You want me to draw more?
+            endsConversation: 0
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Could you fill a painting with all the shades of blue!
+              choices:
+              - choiceText: You'll be seeing blue all day
+                endsConversation: 1
+                setsConversationKey: ittle_wait_commission
+                action: 1
+                actionParam: ittle_draw_sky
+                nextLine:
+                  npcText: 
+                  choices: []
+              - choiceText: Azsure
+                endsConversation: 1
+                setsConversationKey: ittle_wait_commission
+                action: 1
+                actionParam: ittle_draw_sky
+                nextLine:
+                  npcText: 
+                  choices: []
+          - choiceText: Sure!
+            endsConversation: 0
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Could you fill a painting with all the shades of blue!
+              choices:
+              - choiceText: You'll be seeing blue all day
+                endsConversation: 1
+                setsConversationKey: ittle_wait_commission
+                action: 1
+                actionParam: ittle_draw_sky
+                nextLine:
+                  npcText: 
+                  choices: []
+              - choiceText: Azsure
+                endsConversation: 1
+                setsConversationKey: ittle_wait_commission
+                action: 1
+                actionParam: ittle_draw_sky
+                nextLine:
+                  npcText: 
+                  choices: []
+          - choiceText: If the price is right
+            endsConversation: 0
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Could you fill a painting with all the shades of blue!
+              choices:
+              - choiceText: You'll be seeing blue all day
+                endsConversation: 1
+                setsConversationKey: ittle_wait_commission
+                action: 1
+                actionParam: ittle_draw_sky
+                nextLine:
+                  npcText: 
+                  choices: []
+              - choiceText: Azsure
+                endsConversation: 1
+                setsConversationKey: ittle_wait_commission
+                action: 1
+                actionParam: ittle_draw_sky
+                nextLine:
+                  npcText: 
+                  choices: []
+  - key: ittle_scrap_explaination
+    dialogueLine:
+      npcText: Love this new look! You'll be able to create a for this word with
+        that. Hey do you do commissions?
+      choices:
+      - choiceText: You want me to draw more?
+        endsConversation: 0
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: Could you fill a painting with all the shades of blue!
+          choices:
+          - choiceText: You'll be seeing blue all day
+            endsConversation: 1
+            setsConversationKey: ittle_wait_commission
+            action: 1
+            actionParam: ittle_draw_sky
+            nextLine:
+              npcText: 
+              choices: []
+          - choiceText: Azsure
+            endsConversation: 1
+            setsConversationKey: ittle_wait_commission
+            action: 1
+            actionParam: ittle_draw_sky
+            nextLine:
+              npcText: 
+              choices: []
+      - choiceText: Sure!
+        endsConversation: 0
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: Could you fill a painting with all the shades of blue!
+          choices:
+          - choiceText: You'll be seeing blue all day
+            endsConversation: 1
+            setsConversationKey: ittle_wait_commission
+            action: 1
+            actionParam: ittle_draw_sky
+            nextLine:
+              npcText: 
+              choices: []
+          - choiceText: Azsure
+            endsConversation: 1
+            setsConversationKey: ittle_wait_commission
+            action: 1
+            actionParam: ittle_draw_sky
+            nextLine:
+              npcText: 
+              choices: []
+      - choiceText: If the price is right
+        endsConversation: 0
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: Could you fill a painting with all the shades of blue!
+          choices:
+          - choiceText: You'll be seeing blue all day
+            endsConversation: 1
+            setsConversationKey: ittle_wait_commission
+            action: 1
+            actionParam: ittle_draw_sky
+            nextLine:
+              npcText: 
+              choices: []
+          - choiceText: Azsure
+            endsConversation: 1
+            setsConversationKey: ittle_wait_commission
+            action: 1
+            actionParam: ittle_draw_sky
+            nextLine:
+              npcText: 
+              choices: []
+  - key: ittle_first_commission
+    dialogueLine:
+      npcText: Could you fill a painting with all the shades of blue!
+      choices:
+      - choiceText: You'll be seeing blue all day
+        endsConversation: 1
+        setsConversationKey: ittle_wait_commission
         action: 1
-        actionParam: ittle_tree_quest
+        actionParam: ittle_draw_sky
         nextLine:
           npcText: 
           choices: []
-      - choiceText: Maybe later
+      - choiceText: Azsure
         endsConversation: 1
-        setsConversationKey: 
-        action: 0
-        actionParam: 
-        nextLine:
-          npcText: 
-          choices: []
-  - key: ittle_waiting_for_tree
-    dialogueLine:
-      npcText: Did you make my tree yet?
-      choices:
-      - choiceText: I made it!
-        endsConversation: 0
-        setsConversationKey: 
-        action: 2
-        actionParam: ittle_tree_quest
-        nextLine:
-          npcText: 
-          choices: []
-      - choiceText: Still working on it...
-        endsConversation: 1
-        setsConversationKey: 
-        action: 0
-        actionParam: 
-        nextLine:
-          npcText: 
-          choices: []
-  - key: ittle_got_her_tree
-    dialogueLine:
-      npcText: Thank you!
-      choices:
-      - choiceText: you're welcome
-        endsConversation: 1
-        setsConversationKey: ittle_start_flower
-        action: 0
-        actionParam: 
-        nextLine:
-          npcText: 
-          choices: []
-  - key: ittle_start_flower
-    dialogueLine:
-      npcText: Can you make me a flower?
-      choices:
-      - choiceText: Would love to
-        endsConversation: 0
-        setsConversationKey: ittle_wait_flower
+        setsConversationKey: ittle_wait_commission
         action: 1
-        actionParam: ittle_flower_quest
+        actionParam: ittle_draw_sky
         nextLine:
           npcText: 
           choices: []
-      - choiceText: Not right now
-        endsConversation: 1
-        setsConversationKey: 
-        action: 0
-        actionParam: 
-        nextLine:
-          npcText: 
-          choices: []
-  - key: ittle_wait_flower
+  - key: ittle_wait_commission
     dialogueLine:
-      npcText: Did you make a flower?
+      npcText: Is my commission done?
       choices:
       - choiceText: Check it out
-        endsConversation: 0
+        endsConversation: 1
         setsConversationKey: 
         action: 2
-        actionParam: ittle_flower_quest
+        actionParam: ittle_draw_sky
         nextLine:
           npcText: 
           choices: []
@@ -107,12 +1136,12 @@ MonoBehaviour:
         nextLine:
           npcText: 
           choices: []
-  - key: ittle_got_her_flower
+  - key: ittle_got_her_commission
     dialogueLine:
-      npcText: Thank you! I love this flower
+      npcText: Thank you! I love this painting
       choices:
       - choiceText: no problem
-        endsConversation: 0
+        endsConversation: 1
         setsConversationKey: 
         action: 0
         actionParam: 
