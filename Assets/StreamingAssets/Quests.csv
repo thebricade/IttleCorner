@@ -1,2 +1,2 @@
-quest_id,display_name,npc_name,quest_type,required_tag,sets_conversation_key,notes
-ittle_draw_sky,Ittle's Sky Painting,Ittle,DrawSomething,BlueSky,ittle_got_her_commission,sample quest
+quest_id,display_name,npc_name,quest_type,required_tag,sets_conversation_key,required_iterations,notes
+ittle_draw_sky,Ittle's Sky Painting,Ittle,IteratedDraw,BlueSky,ittle_got_her_commission,3,first quest asking for skies

@@ -15,6 +15,8 @@ MonoBehaviour:
   questId: ittle_draw_sky
   displayName: Ittle's Sky Painting
   npcName: Ittle
-  questType: 0
+  questType: 2
   requiredTag: BlueSky
   setConversationKey: ittle_got_her_commission
+  requiredIterations: 3
+  rewardType: 1

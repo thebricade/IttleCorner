@@ -9,7 +9,7 @@ public class GameContentImporter : EditorWindow
    public static void ImportAll()
    {
       ImportQuest();
-      ImportDialogue();
+      ImportDialogue(); 
       ImportConditions();
       AssetDatabase.SaveAssets();
       AssetDatabase.Refresh();
@@ -17,63 +17,65 @@ public class GameContentImporter : EditorWindow
    }
 
    static void ImportQuest()
-   {
-       string path = Path.Combine(Application.streamingAssetsPath, "Quests.csv");
+{
+    string path = Path.Combine(Application.streamingAssetsPath, "Quests.csv");
+     
+    if (!File.Exists(path))
+    {
+        Debug.LogError("Quests.csv not found at: " + path);
+        return;
+    }
 
-       if (!File.Exists(path))
-       {
-           Debug.LogError("Quests.csv not found at: " + path);
-           return;
-       }
+    string[] lines = File.ReadAllLines(path);
 
-       string[] lines = File.ReadAllLines(path);
+    for (int i = 1; i < lines.Length; i++)
+    {
+        string line = lines[i].Trim();
+        if (string.IsNullOrEmpty(line)) continue;
 
-       // first line is headers - skip it
-       for (int i = 1; i < lines.Length; i++)
-       {
-           string line = lines[i].Trim();
+        string[] columns = ParseCSVLine(line);
+        if (columns.Length < 6) continue;
 
-           if (string.IsNullOrEmpty(line)) continue;
+        // read all columns first
+        string questId =             columns[0].Trim();
+        string displayName =         columns[1].Trim();
+        string npcName =             columns[2].Trim();
+        string questTypeStr =        columns[3].Trim();
+        string requiredTag =         columns[4].Trim();
+        string setConversationKey =  columns[5].Trim();
+        string requiredIterationsStr = columns.Length > 6 ? columns[6].Trim() : "1";
+        int requiredIterations = int.TryParse(requiredIterationsStr, out int result) ? result : 1;
 
-           string[] columns = ParseCSVLine(line);
+        if (string.IsNullOrEmpty(questId)) continue;
 
-           if (columns.Length < 6) continue;
+        // find or create asset
+        string assetPath = "Assets/Data/Quests/" + questId + ".asset";
+        Quest quest = AssetDatabase.LoadAssetAtPath<Quest>(assetPath);
 
-           string questId =              columns[0].Trim();
-           string displayName =          columns[1].Trim();
-           string npcName =              columns[2].Trim();
-           string questTypeStr =         columns[3].Trim();
-           string requiredTag =          columns[4].Trim();
-           string setConversationKey =   columns[5].Trim();
+        if (quest == null)
+        {
+            quest = ScriptableObject.CreateInstance<Quest>();
+            EnsureFolderExists("Assets/Data/Quests");
+            AssetDatabase.CreateAsset(quest, assetPath);
+            Debug.Log("Created quest: " + questId);
+        }
+        else
+        {
+            Debug.Log("Updated quest: " + questId);
+        }
 
-           if (string.IsNullOrEmpty(questId)) continue;
+        // set all fields after quest exists
+        quest.questId =            questId;
+        quest.displayName =        displayName;
+        quest.npcName =            npcName;
+        quest.questType =          ParseQuestType(questTypeStr);
+        quest.requiredTag =        requiredTag;
+        quest.setConversationKey = setConversationKey;
+        quest.requiredIterations = requiredIterations;
 
-           // find existing asset or create new one
-           string assetPath = "Assets/Data/Quests/" + questId + ".asset";
-           Quest quest = AssetDatabase.LoadAssetAtPath<Quest>(assetPath);
-
-           if (quest == null)
-           {
-               quest = ScriptableObject.CreateInstance<Quest>();
-               EnsureFolderExists("Assets/Data/Quests");
-               AssetDatabase.CreateAsset(quest, assetPath);
-               Debug.Log("Created quest: " + questId);
-           }
-           else
-           {
-               Debug.Log("Updated quest: " + questId);
-           }
-
-           quest.questId =             questId;
-           quest.displayName =         displayName;
-           quest.npcName =             npcName;
-           quest.questType =           ParseQuestType(questTypeStr);
-           quest.requiredTag =         requiredTag;
-           quest.setConversationKey =  setConversationKey;
-
-           EditorUtility.SetDirty(quest);
-       }
-   }
+        EditorUtility.SetDirty(quest);
+    }
+}
 
    static void ImportDialogue()
 {
@@ -293,6 +295,8 @@ public class GameContentImporter : EditorWindow
         switch (value)
         {
             case "DrawSomething": return QuestType.DrawSomething;
+            case "CreateNPC":     return QuestType.CreateNPC;
+            case "IteratedDraw":  return QuestType.IteratedDraw;
             default:
                 Debug.LogWarning("Unknown QuestType: " + value + " — defaulting to DrawSomething");
                 return QuestType.DrawSomething;

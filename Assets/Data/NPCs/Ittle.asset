@@ -1136,6 +1136,31 @@ MonoBehaviour:
         nextLine:
           npcText: 
           choices: []
+  - key: bluesky_attempt_1
+    dialogueLine:
+      npcText: That's a lot of blue! Could you try one with some twinkling stars
+        with it?
+      choices:
+      - choiceText: Sure
+        endsConversation: 0
+        setsConversationKey: ittle_wait_commission
+        action: 1
+        actionParam: ittle_draw_sky
+        nextLine:
+          npcText: 
+          choices: []
+  - key: bluesky_attempt_2
+    dialogueLine:
+      npcText: what if you painted with your eyes close?
+      choices:
+      - choiceText: I'll try
+        endsConversation: 0
+        setsConversationKey: ittle_wait_commission
+        action: 1
+        actionParam: ittle_draw_sky
+        nextLine:
+          npcText: 
+          choices: []
   - key: ittle_got_her_commission
     dialogueLine:
       npcText: Thank you! I love this painting

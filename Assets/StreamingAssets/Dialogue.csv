@@ -4,4 +4,13 @@ Ittle,ittle_first_drawing,Here I'll give you 100 scrap for it,wow that's a lot..
 Ittle,ittle_scrap_explaination,Love this new look! You'll be able to create a for this word with that. Hey do you do commissions?,You want me to draw more?,,,,FALSE,Sure! ,,,,FALSE,If the price is right,,,,FALSE,ittle_first_commission,Will need character Character explains scrap and asks if you will take on a drawing commission 
 Ittle,ittle_first_commission,Could you fill a painting with all the shades of blue! ,You'll be seeing blue all day,ittle_wait_commission,OpenDrawingQuest,ittle_draw_sky,TRUE,Azsure ,ittle_wait_commission,OpenDrawingQuest,ittle_draw_sky,TRUE,,,,,,,Have them accept the quest
 Ittle,ittle_wait_commission,Is my commission done?,Check it out,,TriggerQuestCheck,ittle_draw_sky,TRUE,Not yet,,,,TRUE,,,,,,,
+Ittle,bluesky_attempt_1,That's a lot of blue! Could you try one with some twinkling stars with it?,Sure,ittle_wait_commission,OpenDrawingQuest,ittle_draw_sky,FALSE,,,,,,,,,,,,
+Ittle,bluesky_attempt_2,what if you painted with your eyes close? ,I'll try,ittle_wait_commission,OpenDrawingQuest,ittle_draw_sky,FALSE,,,,,,,,,,,,
 Ittle,ittle_got_her_commission,Thank you! I love this painting,no problem,,,,TRUE,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+Waldorf,default,A creative human? I can't believe it! Show me what you can do,,,,,,,,,,,,,,,,,
+Waldorf,ittle_first_drawing,Ho ho! It's really true. That's some shnazzy stuff. Don't suppose you'd trade some scraps for it...,,,,,,,,,,,,,,,,,
+Waldorf,ittle_scrap_explaination0,You don't know about Scraps!? Pastels and paste...,,,,,,,,,,,,,,,,,
+Waldorf,ittle_scrap_explaination1," Every bit of creativity takes something from the world and makes it into something new. One Ittle's scrap is another Ittle's masterpiece, am I right?",,,,,,,,,,,,,,,,,
+Waldorf,ittle_scrap_explaination2,"Anything you create can be added into the world with a little scrap. Here, I'll give you some of mine!",,,,,,,,,,,,,,,,,

@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b4da19336b54fa4ebf67db148f50e9c, type: 3}
+  m_Name: Waldorf
+  m_EditorClassIdentifier: Assembly-CSharp::NPCData
+  npcName: Waldorf
+  defaultConversationKey: default
+  conversations:
+  - key: default
+    dialogueLine:
+      npcText: A creative human? I can't believe it! Show me what you can do
+      choices: []
+  - key: ittle_first_drawing
+    dialogueLine:
+      npcText: Ho ho! It's really true. That's some shnazzy stuff. Don't suppose
+        you'd trade some scraps for it...
+      choices: []
+  - key: ittle_scrap_explaination0
+    dialogueLine:
+      npcText: You don't know about Scraps!? Pastels and paste...
+      choices: []
+  - key: ittle_scrap_explaination1
+    dialogueLine:
+      npcText: Every bit of creativity takes something from the world and makes it
+        into something new. One Ittle's scrap is another Ittle's masterpiece, am
+        I right?
+      choices: []
+  - key: ittle_scrap_explaination2
+    dialogueLine:
+      npcText: Anything you create can be added into the world with a little scrap.
+        Here, I'll give you some of mine!
+      choices: []
