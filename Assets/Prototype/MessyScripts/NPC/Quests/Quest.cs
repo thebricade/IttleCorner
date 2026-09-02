@@ -5,6 +5,7 @@ public enum QuestType
 {
     DrawSomething,
     CreateNPC,
+    IteratedDraw,
 }
 
 [CreateAssetMenu(fileName = "New Quest", menuName = "Game/Quest")]
@@ -16,4 +17,5 @@ public class Quest : ScriptableObject
     public QuestType questType;
     public string requiredTag;
     public string setConversationKey;
+    public int requiredIterations = 3;
 }

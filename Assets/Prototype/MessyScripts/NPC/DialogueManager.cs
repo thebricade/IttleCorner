@@ -15,6 +15,7 @@ public class DialogueManager : MonoBehaviour
     private NPCData currentNPC;
     private DialogueLine currentLine;
     private Vector3 currentNPCPosition;
+    private float proximityRadius = 10f;
 
     void Awake()
     {
@@ -24,14 +25,13 @@ public class DialogueManager : MonoBehaviour
             return;
         }
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     public void StartDialogue(NPCData npc, Vector3 npcPosition)
     {
         currentNPC = npc;
         currentNPCPosition = npcPosition;
-
-        //Debug.Log("StartDialogue called. npc: " + npc + " | npcNameText: " + npcNameText);
 
         NPCRuntimeState npcState = DrawingManager.Instance.GetNPCState(npc);
         DialogueLine conversation = npc.GetConversation(npcState.currentConversationKey);
@@ -66,14 +66,12 @@ public class DialogueManager : MonoBehaviour
     {
         Debug.Log("Choice selected: " + choice.choiceText + " | action: " + choice.action + " | actionParam: " + choice.actionParam);
 
-        // set conversation key first if this choice advances state
         if (!string.IsNullOrEmpty(choice.setsConversationKey))
         {
             NPCRuntimeState npcState = DrawingManager.Instance.GetNPCState(currentNPC);
             npcState.currentConversationKey = choice.setsConversationKey;
         }
 
-        // handle the choice action
         switch (choice.action)
         {
             case ChoiceAction.OpenDrawingQuest:
@@ -89,7 +87,6 @@ public class DialogueManager : MonoBehaviour
                 break;
         }
 
-        // handle conversation flow
         if (choice.endsConversation)
         {
             EndDialogue();
@@ -122,11 +119,11 @@ public class DialogueManager : MonoBehaviour
 
         if (quest.questType == QuestType.CreateNPC)
         {
-            DrawingManager.Instance.drawingForNPC = quest.npcName; // get the name of the npc you are drawing for
+            DrawingManager.Instance.drawingForNPC = quest.npcName;
         }
         else
         {
-            DrawingManager.Instance.drawingForNPC = ""; //clear so it doesn't store
+            DrawingManager.Instance.drawingForNPC = "";
         }
 
         EndDialogue();
@@ -143,13 +140,6 @@ public class DialogueManager : MonoBehaviour
             EndDialogue();
             return;
         }
-        
-        Debug.Log("Required tag: " + quest.requiredTag);
-        Debug.Log("Placed drawings count: " + DrawingManager.Instance.placedDrawings.Count);
-        foreach (var p in DrawingManager.Instance.placedDrawings)
-        {
-            Debug.Log("Placed tag: '" + p.tag + "' | Required: '" + quest.requiredTag + "' | Match: " + (p.tag == quest.requiredTag));
-        }
 
         if (QuestManager.Instance.IsQuestComplete(questId))
         {
@@ -158,38 +148,45 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        float proximityRadius = 10f;
-
-        Debug.Log("Checking for tag: " + quest.requiredTag);
-        Debug.Log("Placed drawings count: " + DrawingManager.Instance.placedDrawings.Count);
-
-        foreach (var p in DrawingManager.Instance.placedDrawings)
-        {
-            Debug.Log("Placed: " + p.tag + " at " + p.worldPosition +
-                      " | distance: " + Vector3.Distance(p.worldPosition, currentNPCPosition));
-        }
-
         bool foundNearby = DrawingManager.Instance.placedDrawings.Exists(p =>
             p.tag == quest.requiredTag &&
             Vector3.Distance(p.worldPosition, currentNPCPosition) <= proximityRadius
         );
 
-        Debug.Log("Found nearby: " + foundNearby);
-
-        if (foundNearby)
-        {
-            QuestManager.Instance.CompleteQuest(questId);
-
-            NPCRuntimeState npcState = DrawingManager.Instance.GetNPCState(currentNPC);
-            npcState.currentConversationKey = quest.setConversationKey;
-
-            Debug.Log("Quest complete: " + questId);
-            ShowLine(currentNPC.GetConversation(quest.setConversationKey));
-        }
-        else
+        if (!foundNearby)
         {
             Debug.Log("Drawing not found nearby.");
             EndDialogue();
+            return;
+        }
+
+        switch (quest.questType)
+        {
+            case QuestType.DrawSomething:
+                QuestManager.Instance.CompleteQuest(questId);
+                NPCRuntimeState state = DrawingManager.Instance.GetNPCState(currentNPC);
+                state.currentConversationKey = quest.setConversationKey;
+                ShowLine(currentNPC.GetConversation(quest.setConversationKey));
+                break;
+
+            case QuestType.IteratedDraw:
+                QuestManager.Instance.IncrementQuestAttempts(questId);
+                int attempts = QuestManager.Instance.GetQuestAttempts(questId);
+
+                Debug.Log("Attempt " + attempts + " of " + quest.requiredIterations + " for quest: " + questId);
+
+                if (attempts < quest.requiredIterations)
+                {
+                    NPCRuntimeState npcState = DrawingManager.Instance.GetNPCState(currentNPC);
+                    npcState.currentConversationKey = quest.requiredTag.ToLower() + "_attempt_" + attempts;
+                    ShowLine(currentNPC.GetConversation(npcState.currentConversationKey));
+                }
+                else
+                {
+                    EndDialogue();
+                   // SelectionScreenManager.Instance.Show(quest.requiredTag, questId);
+                }
+                break;
         }
     }
 

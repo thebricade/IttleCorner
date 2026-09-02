@@ -8,6 +8,8 @@ public class QuestManager : MonoBehaviour
     
     private List<string> activeQuests = new List<string>();
     private List<string> completedQuests = new List<string>();
+    private Dictionary<string, int> questAttempts = new Dictionary<string, int>();
+
 
     void Awake()
     {
@@ -63,4 +65,17 @@ public class QuestManager : MonoBehaviour
         }
         return null;
     }
+    public int GetQuestAttempts(string questId)
+    {
+        return questAttempts.ContainsKey(questId) ? questAttempts[questId] : 0;
+    }
+
+    public void IncrementQuestAttempts(string questId)
+    {
+        if (!questAttempts.ContainsKey(questId))
+            questAttempts[questId] = 0;
+        questAttempts[questId]++;
+        Debug.Log("Quest attempts for " + questId + ": " + questAttempts[questId]);
+    }
+    
 }
