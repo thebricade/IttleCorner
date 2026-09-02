@@ -20,12 +20,17 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         Small,
         Watercolor,
         Watercolor2,
+        GelGlitter,
     }
 
     private DrawingTool currentDrawingTool = DrawingTool.Brush;
     private BrushStyle currentBrushStyle = BrushStyle.Big;
     private int brushSize = 4;
     public int textureSize = 256;
+    [Header("Gel Glitter Brush Settings")] // Glitter Settings
+    [Range(0.01f, 0.4f)] public float glitterDensity = 0.14f; // Glitter Settings
+    [Range(5f, 120f)] public float glitterShininess = 35f; // Glitter Settings
+    public Color glitterGlintColor = Color.white; // Glitter Settings
     private Texture2D drawTexture;
     private RawImage rawImage;
     private RectTransform rectTransform;
@@ -272,6 +277,11 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 SetBrushSize(6);
                 PaintWatercolor2(x, y);
             }
+            else if (currentBrushStyle == BrushStyle.GelGlitter)
+            {
+                SetBrushSize(8);
+                PaintGelGlitter(x, y);
+            }
             break;
         case DrawingTool.Eraser:
             PaintEraser(x, y);
@@ -325,10 +335,248 @@ void PaintEraser(int centerX, int centerY)
     }
     drawTexture.Apply();
 }
+    void PaintGelGlitter(int centerX, int centerY)
+    {
+        PaintGelGlitterDab(centerX, centerY, GelGlitterPreset);
+    }
 
-// Tuning knobs for a watercolor preset - see WatercolorPresetV1/V2 below for the
-// actual "Watercolor" vs "Watercolor2" personalities.
-private struct WatercolorParams
+    void PaintGelGlitterDab(int centerX, int centerY, GelGlitterParams p)
+    {
+        if (drawTexture == null) return;
+
+        Color baseColor = brushColor;
+
+        // Fast, self-contained coordinate-independent local hash function
+        float GetLocalHash(int x, int y, int seed)
+        {
+            float val = Mathf.Sin(x * 12.9898f + y * 78.233f + seed * 37.123f) * 43758.5453f;
+            return Mathf.Abs(val - Mathf.Floor(val));
+        }
+
+        // ==========================================================
+        // DYNAMIC COLOR-SEEDING (Solves the Tinting/Layering Issue)
+        // ==========================================================
+        // Derive a unique spatial offset based on the active color. 
+        // Different colors will now generate completely independent ripple waves and glitter layouts!
+        float colorOffsetF = (baseColor.r * 127.1f + baseColor.g * 311.7f + baseColor.b * 74.2f);
+        float colorSeedX = Mathf.Repeat(colorOffsetF * 43.13f, 500f);
+        float colorSeedY = Mathf.Repeat(colorOffsetF * 119.23f, 500f);
+
+        // 3D Lighting setup (virtual light from top-left-front)
+        Vector3 lightDir = new Vector3(-0.4f, 0.4f, 0.82f).normalized;
+        Vector3 viewDir = new Vector3(0.0f, 0.0f, 1.0f);
+        Vector3 halfDir = (lightDir + viewDir).normalized;
+
+        float time = Time.time * p.shimmerSpeed;
+
+        // Tighter cell size (4.0f instead of 6.0f) packs the glitter closer together for a dense coat
+        float cellSize = 4.0f;
+
+        for (int i = -brushSize; i < brushSize; i++)
+        {
+            for (int j = -brushSize; j < brushSize; j++)
+            {
+                float distSq = i * i + j * j;
+                float rMax = brushSize;
+                if (distSq >= rMax * rMax) continue;
+
+                int px = centerX + i;
+                int py = centerY + j;
+
+                // Canvas bounds safety check
+                if (px < 0 || px >= drawTexture.width || py < 0 || py >= drawTexture.height) continue;
+
+                float dist = Mathf.Sqrt(distSq);
+                float normDist = dist / rMax;
+
+                // Retrieve the existing pixel color on the canvas
+                Color existingColor = drawTexture.GetPixel(px, py);
+
+                // ==========================================================
+                // COLOR-SIMILARITY THRESHOLD GUARD
+                // ==========================================================
+                float colorDistSq =
+                    (existingColor.r - baseColor.r) * (existingColor.r - baseColor.r) +
+                    (existingColor.g - baseColor.g) * (existingColor.g - baseColor.g) +
+                    (existingColor.b - baseColor.b) * (existingColor.b - baseColor.b);
+
+                bool isInsideStroke = (colorDistSq < 0.05f);
+
+                float profile = 1.0f;
+                float edgeShadow = 1.0f;
+
+                if (isInsideStroke)
+                {
+                    profile = 1.0f;
+                    edgeShadow = 1.0f;
+                }
+                else
+                {
+                    if (normDist <= 0.82f)
+                    {
+                        profile = 1.0f;
+                        edgeShadow = 1.0f;
+                    }
+                    else
+                    {
+                        profile = (1.0f - normDist) / 0.18f;
+                        edgeShadow = 0.65f + 0.35f * profile;
+                    }
+                }
+
+                // ==========================================================
+                // DYNAMIC COLOR-SEEDED BUMP RIPPLES
+                // ==========================================================
+                float rippleScale = 0.08f;
+                float rx = px + colorSeedX;
+                float ry = py + colorSeedY;
+                float h0_ripple = Mathf.PerlinNoise(rx * rippleScale, ry * rippleScale);
+                float h1_ripple = Mathf.PerlinNoise((rx + 1) * rippleScale, ry * rippleScale);
+                float h2_ripple = Mathf.PerlinNoise(rx * rippleScale, (ry + 1) * rippleScale);
+
+                float nx = (h0_ripple - h1_ripple) * 0.35f;
+                float ny = (h0_ripple - h2_ripple) * 0.35f;
+
+                if (!isInsideStroke && normDist > 0.82f)
+                {
+                    float edgeF = (normDist - 0.82f) / 0.18f;
+                    nx += (i / rMax) * edgeF * 1.5f;
+                    ny += (j / rMax) * edgeF * 1.5f;
+                }
+
+                Vector3 gelNormal = new Vector3(nx, ny, 1.0f).normalized;
+
+                // Ambient shading
+                float ndotl = Vector3.Dot(gelNormal, lightDir);
+                float diffuse = Mathf.Lerp(0.85f, 1.0f, Mathf.Max(0.0f, ndotl));
+                Color shadedGel = baseColor * (diffuse * edgeShadow);
+
+                // Specular gloss
+                float specular = Mathf.Pow(Mathf.Max(0.0f, Vector3.Dot(gelNormal, halfDir)), p.glossiness);
+                Color specularHighlightColor = Color.Lerp(baseColor, Color.white, 0.4f) * specular * 0.35f;
+                shadedGel += specularHighlightColor;
+
+                shadedGel.a = p.gelOpacity * profile;
+
+                Color finalPixelColor = shadedGel;
+
+                // ==========================================================
+                // DYNAMIC COLOR-SEEDED CHUNKY GLITTER SPECKS
+                // ==========================================================
+                int cellX = Mathf.FloorToInt((px + colorSeedX) / cellSize);
+                int cellY = Mathf.FloorToInt((py + colorSeedY) / cellSize);
+
+                bool isOverFlake = false;
+                Color flakeColorValue = Color.clear;
+                float maxGlint = 0.0f;
+
+                // Higher density multiplier to pack flakes tighter
+                float targetDensity = p.glitterDensity * 1.6f;
+
+                for (int cx = -1; cx <= 1; cx++)
+                {
+                    int nx_cell = cellX + cx;
+                    for (int cy = -1; cy <= 1; cy++)
+                    {
+                        int ny_cell = cellY + cy;
+
+                        float h0 = GetLocalHash(nx_cell, ny_cell, 1);
+                        if (h0 > targetDensity) continue;
+
+                        float h1 = GetLocalHash(nx_cell, ny_cell, 2);
+                        float h2 = GetLocalHash(nx_cell, ny_cell, 3);
+
+                        // Position flake based on cell coordinates + seed offset
+                        float flakeCenterX = (nx_cell + h1) * cellSize;
+                        float flakeCenterY = (ny_cell + h2) * cellSize;
+
+                        float dx = (px + colorSeedX) - flakeCenterX;
+                        float dy = (py + colorSeedY) - flakeCenterY;
+                        float distToFlake = Mathf.Sqrt(dx * dx + dy * dy);
+
+                        // Core flake bounds (1.0 to 2.2 pixels for visible chunky particles)
+                        float flakeSize = Mathf.Lerp(1.0f, 2.2f, GetLocalHash(nx_cell, ny_cell, 4));
+                        float twinklePhase = time + h0 * Mathf.PI * 2.0f;
+                        float twinkle = 0.4f + 0.6f * Mathf.Sin(twinklePhase);
+
+                        if (distToFlake <= flakeSize)
+                        {
+                            isOverFlake = true;
+
+                            float h_hsv, s_hsv, v_hsv;
+                            Color.RGBToHSV(baseColor, out h_hsv, out s_hsv, out v_hsv);
+
+                            h_hsv = Mathf.Repeat(h_hsv + (GetLocalHash(nx_cell, ny_cell, 5) - 0.5f) * p.holographicShift, 1.0f);
+                            s_hsv = Mathf.Clamp01(s_hsv * 1.3f);
+                            v_hsv = Mathf.Clamp01(v_hsv * 1.4f);
+                            Color flakeBaseColor = Color.HSVToRGB(h_hsv, s_hsv, v_hsv);
+
+                            float facetAngle = (GetLocalHash(nx_cell, ny_cell, 6) * Mathf.PI * 2.0f) + time;
+                            Vector3 facetNormal = new Vector3(Mathf.Cos(facetAngle), Mathf.Sin(facetAngle), 0.5f).normalized;
+
+                            float flakeSpec = Mathf.Pow(Mathf.Max(0.0f, Vector3.Dot(facetNormal, halfDir)), p.glitterShininess);
+
+                            flakeColorValue = Color.Lerp(flakeBaseColor * 1.3f, Color.white, flakeSpec * twinkle);
+                            flakeColorValue.a = 1.0f;
+                        }
+
+                        // Sharp 4-Pointed Specular Sparkle Glint
+                        float flareLength = Mathf.Lerp(2.5f, 6.0f, GetLocalHash(nx_cell, ny_cell, 7)) * twinkle;
+                        float axisDistX = Mathf.Abs(dx);
+                        float axisDistY = Mathf.Abs(dy);
+                        float flareThickness = 0.75f;
+
+                        float glintBrightness = 0.0f;
+                        if (axisDistX < flareThickness && Mathf.Abs(dy) < flareLength)
+                        {
+                            glintBrightness = (1.0f - (Mathf.Abs(dy) / flareLength)) * (1.0f - (axisDistX / flareThickness));
+                        }
+                        else if (axisDistY < flareThickness && Mathf.Abs(dx) < flareLength)
+                        {
+                            glintBrightness = (1.0f - (Mathf.Abs(dx) / flareLength)) * (1.0f - (axisDistY / flareThickness));
+                        }
+
+                        if (glintBrightness > maxGlint)
+                        {
+                            maxGlint = glintBrightness;
+                        }
+                    }
+                }
+
+                // Render the solid chunky flake
+                if (isOverFlake)
+                {
+                    finalPixelColor = Color.Lerp(shadedGel, flakeColorValue, 0.95f);
+                }
+
+                // Screen blend the brilliant flares over the paint surface
+                if (maxGlint > 0.0f)
+                {
+                    Color flareColor = Color.white * maxGlint;
+                    finalPixelColor.r += flareColor.r * (1.0f - finalPixelColor.r);
+                    finalPixelColor.g += flareColor.g * (1.0f - finalPixelColor.g);
+                    finalPixelColor.b += flareColor.b * (1.0f - finalPixelColor.b);
+                    finalPixelColor.a = Mathf.Max(finalPixelColor.a, maxGlint);
+                }
+
+                // Alpha-blend the final pixel over the existing canvas pixel
+                Color blendedColor = Color.Lerp(existingColor, finalPixelColor, finalPixelColor.a);
+                drawTexture.SetPixel(px, py, blendedColor);
+            }
+        }
+        drawTexture.Apply();
+    }
+
+    float ShaderHash(int x, int y, int seed)
+    {
+        int n = x + y * 37 + seed * 101;
+        n = (n << 13) ^ n;
+        return (float)((n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) / 2147483647.0f;
+    }
+
+    // Tuning knobs for a watercolor preset - see WatercolorPresetV1/V2 below for the
+    // actual "Watercolor" vs "Watercolor2" personalities.
+    private struct WatercolorParams
 {
     public int spreadPad;          // extra radius beyond brushSize for the bloom/backrun zone
     public float maxStrength;      // peak per-dab strength at the brush center
@@ -416,7 +664,29 @@ private static readonly WatercolorParams WatercolorPresetV2 = new WatercolorPara
     smudgeDistance = 7f,
 };
 
-void PaintWatercolor(int centerX, int centerY)
+[System.Serializable]
+    public struct GelGlitterParams 
+    {
+        public float gelOpacity;            // Max opacity of the gel center (0.0 to 1.0)
+        public float glossiness;            // Specular highlight exponent (wetness)
+        public float edgeSoftness;          // Width of the curved edge border (0.05 to 0.3)
+        public float glitterDensity;        // Density of glitter particles (0.0 to 1.0)
+        public float glitterShininess;      // Sharpness of glitter sparkles
+        public float shimmerSpeed;          // Twinkle speed
+        public float holographicShift;      // Holographic rainbow range (0.0 to 0.3)
+    }
+    private static readonly GelGlitterParams GelGlitterPreset = new GelGlitterParams
+    {
+        gelOpacity = 0.95f,         // Opaque gel core to preserve rich paint pigment
+        glossiness = 40.0f,         // Rich, glassy glaze wetness
+        edgeSoftness = 0.18f,       // Tight boundary edge rounding
+        glitterDensity = 0.08f,     // 8% metallic glitter flake coverage
+        glitterShininess = 30.0f,   // Pinpoint intense specular sparkle
+        shimmerSpeed = 3.8f,        // Smooth real-time twinkling speed
+        holographicShift = 0.12f    // Shifts flake color slightly around the brush color for deep luster
+    };
+
+    void PaintWatercolor(int centerX, int centerY)
 {
     PaintWatercolorDab(centerX, centerY, WatercolorPresetV1);
 }
