@@ -1,3 +1,2 @@
 quest_id,condition_type,parameter,value,notes
-ittle_tree_quest,Always,,,First quest/ sample quest
-ittle_flower_quest,QuestComplete,ittle_tree_quest,complete,unlocks after first quest
+ittle_draw_sky,Always,,,First quest/ sample quest

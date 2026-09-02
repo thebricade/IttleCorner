@@ -16,6 +16,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (GameModeManager.Instance.currentMode != GameMode.Explore) return;
+        if (DialogueManager.Instance.dialogueCanvas.activeSelf) return; 
+        
         if (GameModeManager.Instance.currentMode != GameMode.Explore)
         {
             return;

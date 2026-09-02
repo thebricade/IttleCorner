@@ -1,7 +1,7 @@
-npc_name,conversation_key,npc_text,choice_1_text,choice_1_sets_key,choice_1_action,choice_1_action_param,choice_1_ends,choice_2_text,choice_2_set_key,choice_2_action,choice_2_action_param,choice_2_ends,choice_3_text,choice_3_set_key,choice_3_action,choice_3_action_param,choice_3_ends,Notes
-Ittle,default,Can you make me a tree,sure,ittle_waiting_for_tree,OpenDrawingQuest,ittle_tree_quest,FALSE,Maybe later,,,,TRUE,,,,,,
-Ittle,ittle_waiting_for_tree,Did you make my tree yet? ,I made it!,,TriggerQuestCheck,ittle_tree_quest,FALSE,Still working on it...,,,,TRUE,,,,,,
-Ittle,ittle_got_her_tree,Thank you!,you're welcome,ittle_start_flower,,,TRUE,,,,,,,,,,,
-Ittle,ittle_start_flower,Can you make me a flower? ,Would love to,ittle_wait_flower,OpenDrawingQuest,ittle_flower_quest,FALSE,Not right now,,,,TRUE,,,,,,
-Ittle,ittle_wait_flower,Did you make a flower? ,Check it out,,TriggerQuestCheck,ittle_flower_quest,FALSE,Not yet,,,,TRUE,,,,,,
-Ittle,ittle_got_her_flower,Thank you! I love this flower,no problem,,,,,,,,,,,,,,,
+npc_name,conversation_key,npc_text,choice_1_text,choice_1_sets_key,choice_1_action,choice_1_action_param,choice_1_ends,choice_2_text,choice_2_set_key,choice_2_action,choice_2_action_param,choice_2_ends,choice_3_text,choice_3_set_key,choice_3_action,choice_3_action_param,choice_3_ends,next_row_key,Notes
+Ittle,default,Sick abstract! Could I buy it off you?,Uh sure,,,,FALSE,If you want to...,,,,FALSE,I guess,,,,FALSE,ittle_first_drawing,defaut first character wanting to buy your first drawing.
+Ittle,ittle_first_drawing,Here I'll give you 100 scrap for it,wow that's a lot...,,,,FALSE,thank you,,,,FALSE,scrap?,,,,FALSE,ittle_scrap_explaination,character gives you scrap
+Ittle,ittle_scrap_explaination,Love this new look! You'll be able to create a for this word with that. Hey do you do commissions?,You want me to draw more?,,,,FALSE,Sure! ,,,,FALSE,If the price is right,,,,FALSE,ittle_first_commission,Will need character Character explains scrap and asks if you will take on a drawing commission 
+Ittle,ittle_first_commission,Could you fill a painting with all the shades of blue! ,You'll be seeing blue all day,ittle_wait_commission,OpenDrawingQuest,ittle_draw_sky,TRUE,Azsure ,ittle_wait_commission,OpenDrawingQuest,ittle_draw_sky,TRUE,,,,,,,Have them accept the quest
+Ittle,ittle_wait_commission,Is my commission done?,Check it out,,TriggerQuestCheck,ittle_draw_sky,TRUE,Not yet,,,,TRUE,,,,,,,
+Ittle,ittle_got_her_commission,Thank you! I love this painting,no problem,,,,TRUE,,,,,,,,,,,,

@@ -2,86 +2,88 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
-public class IntroTracker : MonoBehaviour
+public class IntroTacker : MonoBehaviour
 {
     [Header("Triggers")] 
-    public float timeTrigger = 40f; //seconds
-
+    public float timeTrigger = 40f;
     public int clickTrigger = 4;
-    [Range(0f, 1f)] public float coverageTrigger = 0.15f; //percent of canvas
-    [Header("Drawing Pad ref")] 
-    public DrawingPad drawingPad;
+    [Range(0f, 1f)] public float coverageTrigger = 0.15f;
 
-    [Header("Drawing Pad Ref")] 
-    public UnityEvent onTriggerMet;
-    
-    //counters
+    [Header("References")] 
+    public DrawingPad drawingPad;
+    public GameObject brushBuddy;
+    public GameObject submitButton;
+
+    [Header("Events")] 
+    public UnityEvent onBrushBuddyTriggered;
+
+    // counters
     private float elapsedTime = 0f; 
     private int clickCount = 0;
-    private bool triggered = false;
 
-    public GameObject brushBuddy;
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    // flags - one per trigger moment
+    private bool brushBuddyTriggered = false;
+    private bool submitTriggered = false;
 
-    // Update is called once per frame
     void Update()
     {
-        float coverage = drawingPad.GetCoveragePercentage();
-        //Debug.Log("Coverage: " + coverage + " | Threshold: " + coverageTrigger);
-        if (coverage >= coverageTrigger)
+        // coverage check - only until submit is shown
+        if (!submitTriggered)
         {
-            TriggerFull();
-            return;
-        }
-        
-        if (triggered) return;
-        
-        // track clicks directly here since whole screen is canvas in intro
-        if (Input.GetMouseButtonDown(0))
-        {
-            clickCount++;
-        }
-        
-        //track time
-        elapsedTime += Time.deltaTime;
-        
-        //check triggers
-        if (elapsedTime >= timeTrigger)
-        {
-            Trigger("time");
-            return;
+            float coverage = drawingPad.GetCoveragePercentage();
+            if (coverage >= coverageTrigger)
+            {
+                TriggerSubmit();
+                return;
+            }
         }
 
-        if (clickCount >= clickTrigger)
+        // clicks and time - only until brushbuddy is shown
+        if (!brushBuddyTriggered)
         {
-            Trigger("clicks");
-            return;
+            if (Input.GetMouseButtonDown(0))
+            {
+                clickCount++;
+            }
+
+            elapsedTime += Time.deltaTime;
+
+            if (elapsedTime >= timeTrigger)
+            {
+                TriggerBrushBuddy("time");
+                return;
+            }
+
+            if (clickCount >= clickTrigger)
+            {
+                TriggerBrushBuddy("clicks");
+                return;
+            }
         }
-       
-        
     }
 
-    public void RegisterClick()
+    void TriggerBrushBuddy(string reason)
     {
-        clickCount++;
-    }
-    public void Trigger(string reason)
-    {
-        triggered = true;
+        brushBuddyTriggered = true;
         brushBuddy.SetActive(true);
-        Debug.Log("We've triggered " + reason);
-        onTriggerMet.Invoke();
+        Debug.Log("BrushBuddy triggered via: " + reason);
+        onBrushBuddyTriggered.Invoke();
     }
 
-    public void TriggerFull()
+    void TriggerSubmit()
     {
-        gameObject.SetActive(false);
-        brushBuddy.SetActive(false);
+        submitTriggered = true;
+        submitButton.SetActive(true);
+        Debug.Log("Submit button shown");
+    }
+
+    public void SaveIntroDrawing()
+    {
+        Texture2D snapshot = drawingPad.GetCurrentTextureCopy();
+        Texture2D cropped = drawingPad.CropToContent(snapshot);
+        DrawingManager.Instance.SaveDrawing(cropped, "IntroDrawing");
+        Debug.Log("Saved count: " + DrawingManager.Instance.savedDrawings.Count);
+        Debug.Log("Drawing name: " + DrawingManager.Instance.savedDrawings[0].drawingName);
         SceneManager.LoadScene(1);
     }
 }

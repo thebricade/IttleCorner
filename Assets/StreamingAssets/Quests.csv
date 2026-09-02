@@ -1,3 +1,2 @@
 quest_id,display_name,npc_name,quest_type,required_tag,sets_conversation_key,notes
-ittle_tree_quest,Ittle's Tree,Ittle,DrawSomething,FirstTree,ittle_got_her_tree,sample quest
-ittle_flower_quest,Ittle's Flower,Ittle,DrawSomething,FirstFlower,ittle_got_her_flower,
+ittle_draw_sky,Ittle's Sky Painting,Ittle,DrawSomething,BlueSky,ittle_got_her_commission,sample quest
