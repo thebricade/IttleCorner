@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class IntroTracker : MonoBehaviour
 {
@@ -81,5 +82,6 @@ public class IntroTracker : MonoBehaviour
     {
         gameObject.SetActive(false);
         brushBuddy.SetActive(false);
+        SceneManager.LoadScene(1);
     }
 }
