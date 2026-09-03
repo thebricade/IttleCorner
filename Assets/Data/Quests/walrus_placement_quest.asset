@@ -10,11 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c08559f539cd7ff44b66bec85063f75c, type: 3}
-  m_Name: ittle_tree_quest
+  m_Name: walrus_placement_quest
   m_EditorClassIdentifier: Assembly-CSharp::Quest
-  questId: ittle_tree_quest
-  displayName: Ittle's Tree
-  npcName: Ittle
+  questId: walrus_placement_quest
+  displayName: Your First Object
+  npcName: Walrus
   questType: 0
-  requiredTag: FirstTree
-  setConversationKey: ittle_got_her_tree
+  requiredTag: DrawSomething
+  setConversationKey: ittle_first_placement_c
+  requiredIterations: 1
+  rewardType: 0
+  currencyReward: 0

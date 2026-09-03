@@ -8,7 +8,7 @@ public enum ChoiceAction
     TriggerQuestCheck
 }
 
-[System.Serializable]
+[System.Serializable] 
 public class DialogueChoice
 {
     public string choiceText;
@@ -24,4 +24,5 @@ public class DialogueLine
 {
     public string npcText;
     public List<DialogueChoice> choices;
+    public string nextLineKey; 
 }

@@ -28,5 +28,6 @@ public class Quest : ScriptableObject
     public string setConversationKey;
     public int requiredIterations = 3;
     public QuestRewardType rewardType;
+    public int currencyReward = 0;
     
 }

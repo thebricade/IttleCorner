@@ -1,2 +1,3 @@
-quest_id,display_name,npc_name,quest_type,required_tag,sets_conversation_key,required_iterations,notes
-ittle_draw_sky,Ittle's Sky Painting,Ittle,IteratedDraw,BlueSky,ittle_got_her_commission,3,first quest asking for skies
+quest_id,display_name,npc_name,quest_type,required_tag,sets_conversation_key,required_iterations,reward_type,currency_reward,notes
+walrus_placement_quest,Your First Object,Walrus,DrawSomething,DrawSomething,ittle_first_placement_c,,,100,
+ittle_draw_sky,Ittle's Sky Painting,Walrus,IteratedDraw,BlueSky,ittle_got_her_commission,3,BecomeSky,,first quest asking for skies
