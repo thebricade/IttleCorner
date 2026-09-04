@@ -1,3 +1,5 @@
 quest_id,display_name,npc_name,quest_type,required_tag,sets_conversation_key,required_iterations,reward_type,currency_reward,notes
 walrus_placement_quest,Your First Object,Walrus,DrawSomething,DrawSomething,ittle_first_placement_c,,,100,
 lemon_sky_quest,The Color of the sky,Lemon,IteratedDraw,BlueSky,lemon_bluesky_c,3,BecomeSky,100,
+amyjo_tree,A Tree a Day Keeps Amy Jo at Bay,AmyJo,DrawSomething,AmyJoTree,aj_tree_c,,,100,
+gleeglo_watercolor_unlock,Going with the Flow,GleeGlo,DrawSomething,GleeGloWatercolor,gleeglo_watercolor_c,,,100,Maybe have them take on the texture (if time) 

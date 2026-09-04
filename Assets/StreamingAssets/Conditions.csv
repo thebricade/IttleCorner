@@ -1,3 +1,5 @@
 quest_id,condition_type,parameter,value,notes
-lemon_sky_quest,Always,,,this list will always so always till real conditionals have been set
 walrus_placement_quest,Always,,,
+lemon_sky_quest,Always,,,this list will always so always till real conditionals have been set
+amyjo_tree,Always,,,
+gleeglo_watercolor_unlock,Always,,,

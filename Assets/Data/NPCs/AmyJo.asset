@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b4da19336b54fa4ebf67db148f50e9c, type: 3}
+  m_Name: AmyJo
+  m_EditorClassIdentifier: Assembly-CSharp::NPCData
+  npcName: AmyJo
+  defaultConversationKey: default
+  conversations:
+  - key: default
+    dialogueLine:
+      npcText: Ya must be that creative human I been hearin' about. I don't suppose
+        you'd help make a barren ol' place like this into somethin' special with
+        a little ol' tree? There'd be some Scraps in it for ya!
+      choices:
+      - choiceText: a tree easy!
+        endsConversation: 0
+        setsConversationKey: aj_tree_1
+        action: 1
+        actionParam: amyjo_tree
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: aj_tree_1
+    dialogueLine:
+      npcText: Did you place or plant the tree yet?
+      choices:
+      - choiceText: Yes
+        endsConversation: 0
+        setsConversationKey: 
+        action: 2
+        actionParam: amyjo_tree
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      - choiceText: Not yet
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: aj_tree_c
+    dialogueLine:
+      npcText: How do ya like that? Ya really are as creative as they say! Take these
+        Scraps. Ya earned 'em!
+      choices: []
+      nextLineKey: 

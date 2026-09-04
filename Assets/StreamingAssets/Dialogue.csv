@@ -1,4 +1,15 @@
-npc_name,conversation_key,npc_text,choice_1_text,choice_1_sets_key,choice_1_action,choice_1_action_param,choice_1_ends,choice_2_text,choice_2_set_key,choice_2_action,choice_2_action_param,choice_2_ends,choice_3_text,choice_3_set_key,choice_3_action,choice_3_action_param,choice_3_ends,next_row_key,Notes
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
 Walrus,default,Whoa ho ho! Maybe you really ARE creative! Origami... Don't suppose you'd trade some Scraps for it...?,Uh sure,,,,FALSE,If you want to...,,,,FALSE,I guess,,,,FALSE,ittle_first_placement_0,defaut first character wanting to buy your first drawing.
 Walrus,ittle_first_placement_0,You don't know about Scraps!? Pastels and paste...,wow that's a lot...,,,,FALSE,thank you,,,,FALSE,scrap?,,,,FALSE,ittle_first_placement_1,character gives you scrap
 Walrus,ittle_first_placement_1,"Every bit of creativity takes something from the world and makes it into something new. One Ittle Scrap is another Ittle masterpiece, am I right?",You want me to draw more?,,,,FALSE,Sure! ,,,,FALSE,If the price is right,,,,FALSE,ittle_first_placement_2,Will need character Character explains scrap and tells you that what you make you can place in the world.
@@ -15,3 +26,11 @@ Lemon,lemon_bluesky_2,"OK, wow, fancy humie here doing their sky thing. Not like
 Lemon,lemon_bluesky_3,"Not bad for a humie. Now, tell me, which of these do you think is the best sky? Don't be shy...",Hmm,,TriggerQuestCheck,lemon_sky_quest,FALSE,,,,,,,,,,,,
 Lemon,lemon_bluesky_4,"OK, yeah, humie here's got taste. Now I know you don't got the Scraps to put this out there, which is why you came to me. I'll loan you everything you need and come to collect my Scraps with interest later.",,,,,,,,,,,,,,,,,
 Lemon,lemon_bluesky_c,"Pleasure doing business with you, humie! Be seeing you!",Thanks,,,,TRUE,,,,,,,,,,,,
+AmyJo,default,Ya must be that creative human I been hearin' about. I don't suppose you'd help make a barren ol' place like this into somethin' special with a little ol' tree? There'd be some Scraps in it for ya!,a tree easy! ,aj_tree_1,OpenDrawingQuest,amyjo_tree,FALSE,,,,,,,,,,,,
+AmyJo,aj_tree_1,Did you place or plant the tree yet? ,Yes,,TriggerQuestCheck,amyjo_tree,FALSE,Not yet,,,,TRUE,,,,,,,
+AmyJo,aj_tree_c,How do ya like that? Ya really are as creative as they say! Take these Scraps. Ya earned 'em!,,,,,,,,,,,,,,,,,
+Gleeglo,gleeglo_watercolor_0,"Whoa hey. You're a weird lookin Ittle. Dig it. I say, you gotta go with the flow, you know? It rhymes, so it's true.",I'm BEAUTIFUL,gleeglo_watercolor_1,,,,,,,,,,,,,,gleeglo_watercolor_1,
+Gleeglo,gleeglo_watercolor_1,You ever gone with the flon? Or flow? No? Worry not. Lemme show you the way...,,,,,,,,,,,,,,,,gleeglo_watercolor_2,
+Gleeglo,gleeglo_watercolor_2,This is the watercolor. You can really make things look dreamy with this. Try it out. Open your mind to the possibilities.,A new brush?,,OpenDrawingQuest,gleeglo_watercolor_unlock,FALSE,,,,,,,,,,,,Will need to show new unlock
+Gleeglo,gleeglo_watercolor_3,Wanna show me what you made while in the flow?,Sure,,TriggerQuestCheck,gleeglo_watercolor_unlock,FALSE,Not yet,,,,TRUE,,,,,,,
+Gleeglo,gleeglo_watercolor_c,"See what I mean, fellow Ittle? When it should feel like a dream, watercolors reign supreme. It rhymes, so it's true.",,,,,,,,,,,,,,,,,

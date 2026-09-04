@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b4da19336b54fa4ebf67db148f50e9c, type: 3}
+  m_Name: Gleeglo
+  m_EditorClassIdentifier: Assembly-CSharp::NPCData
+  npcName: Gleeglo
+  defaultConversationKey: default
+  conversations:
+  - key: default
+    dialogueLine:
+      npcText: Whoa hey. You're a weird lookin Ittle. Dig it. I say, you gotta go
+        with the flow, you know? It rhymes, so it's true.
+      choices:
+      - choiceText: I'm BEAUTIFUL
+        endsConversation: 0
+        setsConversationKey: gleeglo_watercolor_1
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: You ever gone with the flon? Or flow? No? Worry not. Lemme show
+            you the way...
+          choices: []
+          nextLineKey: gleeglo_watercolor_2
+      nextLineKey: 
+  - key: gleeglo_watercolor_1
+    dialogueLine:
+      npcText: You ever gone with the flon? Or flow? No? Worry not. Lemme show you
+        the way...
+      choices: []
+      nextLineKey: gleeglo_watercolor_2
+  - key: gleeglo_watercolor_2
+    dialogueLine:
+      npcText: This is the watercolor. You can really make things look dreamy with
+        this. Try it out. Open your mind to the possibilities.
+      choices:
+      - choiceText: A new brush?
+        endsConversation: 0
+        setsConversationKey: gleeglo_watercolor_3
+        action: 1
+        actionParam: gleeglo_watercolor_unlock
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: gleeglo_watercolor_3
+    dialogueLine:
+      npcText: Wanna show me what you made while in the flow?
+      choices:
+      - choiceText: Sure
+        endsConversation: 0
+        setsConversationKey: 
+        action: 2
+        actionParam: gleeglo_watercolor_unlock
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      - choiceText: Not yet
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: gleeglo_watercolor_c
+    dialogueLine:
+      npcText: See what I mean, fellow Ittle? When it should feel like a dream, watercolors
+        reign supreme. It rhymes, so it's true.
+      choices: []
+      nextLineKey: 
