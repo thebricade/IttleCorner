@@ -11,20 +11,17 @@ public class DialogueManager : MonoBehaviour
     public TMP_Text dialogueText;
     public Transform choiceButtonParent;
     public GameObject choiceButtonPrefab;
+    public GameObject continueButton;        
+    public SelectionScreen selectionScreen;
 
     private NPCData currentNPC;
     private DialogueLine currentLine;
     private Vector3 currentNPCPosition;
-    private float proximityRadius = 10f;
-    public SelectionScreen selectionScreen;
+    private float proximityRadius = 10000f;
 
     void Awake()
     {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
+        if (Instance != null) { Destroy(gameObject); return; }
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
@@ -52,6 +49,15 @@ public class DialogueManager : MonoBehaviour
             Destroy(child.gameObject);
         }
 
+        // no choices - show continue button instead
+        if (line.choices == null || line.choices.Count == 0)
+        {
+            continueButton.SetActive(true);
+            return;
+        }
+
+        continueButton.SetActive(false);
+
         foreach (DialogueChoice choice in line.choices)
         {
             GameObject buttonObj = Instantiate(choiceButtonPrefab, choiceButtonParent);
@@ -61,6 +67,22 @@ public class DialogueManager : MonoBehaviour
             Button button = buttonObj.GetComponent<Button>();
             button.onClick.AddListener(() => OnChoiceSelected(choice));
         }
+    }
+
+    public void OnContinueClicked() 
+    {
+        continueButton.SetActive(false);
+
+        if (!string.IsNullOrEmpty(currentLine.nextLineKey))
+        {
+            DialogueLine nextLine = currentNPC.GetConversation(currentLine.nextLineKey);
+            if (nextLine != null)
+            {
+                ShowLine(nextLine);
+                return;
+            }
+        }
+        EndDialogue();
     }
 
     void OnChoiceSelected(DialogueChoice choice)
@@ -78,11 +100,9 @@ public class DialogueManager : MonoBehaviour
             case ChoiceAction.OpenDrawingQuest:
                 OpenDrawingQuest(choice.actionParam);
                 return;
-
             case ChoiceAction.TriggerQuestCheck:
                 TryCompleteQuest(choice.actionParam);
                 return;
-
             case ChoiceAction.None:
             default:
                 break;
@@ -99,7 +119,7 @@ public class DialogueManager : MonoBehaviour
         else
         {
             EndDialogue();
-        }
+        } 
     }
 
     void OpenDrawingQuest(string questId)
@@ -132,75 +152,78 @@ public class DialogueManager : MonoBehaviour
     }
 
     void TryCompleteQuest(string questId)
-{
-    Quest quest = QuestManager.Instance.GetQuest(questId);
-
-    if (quest == null) { Debug.Log("Quest not found: " + questId); EndDialogue(); return; }
-    if (QuestManager.Instance.IsQuestComplete(questId)) { Debug.Log("Quest already complete"); EndDialogue(); return; }
-
-    bool questConditionMet = false;
-
-    switch (quest.questType)
     {
-        case QuestType.DrawSomething:
-            // must be placed near NPC
-            questConditionMet = DrawingManager.Instance.placedDrawings.Exists(p =>
-                p.tag == quest.requiredTag &&
-                Vector3.Distance(p.worldPosition, currentNPCPosition) <= proximityRadius
-            );
-            break;
+        Quest quest = QuestManager.Instance.GetQuest(questId);
 
-        case QuestType.IteratedDraw:
-            // just needs to exist in saved drawings
-            questConditionMet = DrawingManager.Instance.savedDrawings.Exists(
-                d => d.drawingName == quest.requiredTag
-            );
-            break;
+        if (quest == null) { Debug.Log("Quest not found: " + questId); EndDialogue(); return; }
+        if (QuestManager.Instance.IsQuestComplete(questId)) { Debug.Log("Quest already complete"); EndDialogue(); return; }
+
+        bool questConditionMet = false;
+
+        switch (quest.questType)
+        {
+            case QuestType.DrawSomething:
+                questConditionMet = DrawingManager.Instance.placedDrawings.Exists(p =>
+                    p.tag == quest.requiredTag &&
+                    Vector3.Distance(p.worldPosition, currentNPCPosition) <= proximityRadius
+                );
+                break;
+
+            case QuestType.IteratedDraw:
+                questConditionMet = DrawingManager.Instance.savedDrawings.Exists(
+                    d => d.drawingName == quest.requiredTag
+                );
+                break;
+        }
+
+        Debug.Log("Quest condition met: " + questConditionMet + " | type: " + quest.questType);
+
+        if (!questConditionMet) { Debug.Log("Quest condition not met."); EndDialogue(); return; }
+
+        switch (quest.questType)
+        {
+            case QuestType.DrawSomething:
+                QuestManager.Instance.CompleteQuest(questId);
+
+                if (quest.currencyReward > 0)
+                    Wallet.Instance.AddCurrency(quest.currencyReward);
+
+                NPCRuntimeState state = DrawingManager.Instance.GetNPCState(currentNPC);
+                state.currentConversationKey = quest.setConversationKey;
+                ShowLine(currentNPC.GetConversation(quest.setConversationKey));
+                break;
+
+            case QuestType.IteratedDraw:
+                QuestManager.Instance.IncrementQuestAttempts(questId);
+                int attempts = QuestManager.Instance.GetQuestAttempts(questId);
+
+                Debug.Log("Attempt " + attempts + " of " + quest.requiredIterations);
+
+                if (attempts < quest.requiredIterations)
+                {
+                    string attemptKey = currentNPC.npcName.ToLower() + "_" + quest.requiredTag.ToLower() + "_attempt_" + attempts;
+                    Debug.Log("Looking for key: '" + attemptKey + "'");
+
+                    DialogueLine attemptLine = currentNPC.GetConversation(attemptKey);
+                    Debug.Log("Conversation found: " + (attemptLine != null));
+
+                    NPCRuntimeState npcState = DrawingManager.Instance.GetNPCState(currentNPC);
+                    npcState.currentConversationKey = attemptKey;
+                    ShowLine(attemptLine);
+                }
+                else
+                {
+                    EndDialogue();
+                    selectionScreen.Show(quest.requiredTag, questId);
+                }
+                break;
+        }
     }
-
-    Debug.Log("Quest condition met: " + questConditionMet + " | type: " + quest.questType);
-
-    if (!questConditionMet)
-    {
-        Debug.Log("Quest condition not met.");
-        EndDialogue();
-        return;
-    }
-
-    switch (quest.questType)
-    {
-        case QuestType.DrawSomething:
-            QuestManager.Instance.CompleteQuest(questId);
-            NPCRuntimeState state = DrawingManager.Instance.GetNPCState(currentNPC);
-            state.currentConversationKey = quest.setConversationKey;
-            ShowLine(currentNPC.GetConversation(quest.setConversationKey));
-            break;
-
-        case QuestType.IteratedDraw:
-            QuestManager.Instance.IncrementQuestAttempts(questId);
-            int attempts = QuestManager.Instance.GetQuestAttempts(questId);
-
-            Debug.Log("Attempt " + attempts + " of " + quest.requiredIterations);
-
-            if (attempts < quest.requiredIterations)
-            {
-                NPCRuntimeState npcState = DrawingManager.Instance.GetNPCState(currentNPC);
-                npcState.currentConversationKey = quest.requiredTag.ToLower() + "_attempt_" + attempts;
-                ShowLine(currentNPC.GetConversation(npcState.currentConversationKey));
-            }
-            else
-            {
-                EndDialogue();
-                selectionScreen.gameObject.SetActive(true);
-                selectionScreen.Show(quest.requiredTag, questId);
-            }
-            break;
-    }
-}
 
     void EndDialogue()
     {
         Debug.Log("Ending dialogue");
+        continueButton.SetActive(false);
         dialogueCanvas.SetActive(false);
     }
 }

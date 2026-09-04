@@ -1,16 +1,9 @@
 npc_name,conversation_key,npc_text,choice_1_text,choice_1_sets_key,choice_1_action,choice_1_action_param,choice_1_ends,choice_2_text,choice_2_set_key,choice_2_action,choice_2_action_param,choice_2_ends,choice_3_text,choice_3_set_key,choice_3_action,choice_3_action_param,choice_3_ends,next_row_key,Notes
-Ittle,default,Sick abstract! Could I buy it off you?,Uh sure,,,,FALSE,If you want to...,,,,FALSE,I guess,,,,FALSE,ittle_first_drawing,defaut first character wanting to buy your first drawing.
-Ittle,ittle_first_drawing,Here I'll give you 100 scrap for it,wow that's a lot...,,,,FALSE,thank you,,,,FALSE,scrap?,,,,FALSE,ittle_scrap_explaination,character gives you scrap
-Ittle,ittle_scrap_explaination,Love this new look! You'll be able to create a for this word with that. Hey do you do commissions?,You want me to draw more?,,,,FALSE,Sure! ,,,,FALSE,If the price is right,,,,FALSE,ittle_first_commission,Will need character Character explains scrap and asks if you will take on a drawing commission 
-Ittle,ittle_first_commission,Could you fill a painting with all the shades of blue! ,You'll be seeing blue all day,ittle_wait_commission,OpenDrawingQuest,ittle_draw_sky,TRUE,Azsure ,ittle_wait_commission,OpenDrawingQuest,ittle_draw_sky,TRUE,,,,,,,Have them accept the quest
-Ittle,ittle_wait_commission,Is my commission done?,Check it out,,TriggerQuestCheck,ittle_draw_sky,TRUE,Not yet,,,,TRUE,,,,,,,
-Ittle,bluesky_attempt_1,That's a lot of blue! Could you try one with some twinkling stars with it?,Sure,ittle_wait_commission,OpenDrawingQuest,ittle_draw_sky,FALSE,,,,,,,,,,,,
-Ittle,bluesky_attempt_2,what if you painted with your eyes close? ,I'll try,ittle_wait_commission,OpenDrawingQuest,ittle_draw_sky,FALSE,,,,,,,,,,,,
-Ittle,ittle_got_her_commission,Thank you! I love this painting,no problem,,,,TRUE,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,
-Waldorf,default,A creative human? I can't believe it! Show me what you can do,,,,,,,,,,,,,,,,,
-Waldorf,ittle_first_drawing,Ho ho! It's really true. That's some shnazzy stuff. Don't suppose you'd trade some scraps for it...,,,,,,,,,,,,,,,,,
-Waldorf,ittle_scrap_explaination0,You don't know about Scraps!? Pastels and paste...,,,,,,,,,,,,,,,,,
-Waldorf,ittle_scrap_explaination1," Every bit of creativity takes something from the world and makes it into something new. One Ittle's scrap is another Ittle's masterpiece, am I right?",,,,,,,,,,,,,,,,,
-Waldorf,ittle_scrap_explaination2,"Anything you create can be added into the world with a little scrap. Here, I'll give you some of mine!",,,,,,,,,,,,,,,,,
+Walrus,default,Whoa ho ho! Maybe you really ARE creative! Origami... Don't suppose you'd trade some Scraps for it...?,Uh sure,,,,FALSE,If you want to...,,,,FALSE,I guess,,,,FALSE,ittle_first_placement_0,defaut first character wanting to buy your first drawing.
+Walrus,ittle_first_placement_0,You don't know about Scraps!? Pastels and paste...,wow that's a lot...,,,,FALSE,thank you,,,,FALSE,scrap?,,,,FALSE,ittle_first_placement_1,character gives you scrap
+Walrus,ittle_first_placement_1,"Every bit of creativity takes something from the world and makes it into something new. One Ittle Scrap is another Ittle masterpiece, am I right?",You want me to draw more?,,,,FALSE,Sure! ,,,,FALSE,If the price is right,,,,FALSE,ittle_first_placement_2,Will need character Character explains scrap and tells you that what you make you can place in the world.
+Walrus,ittle_first_placement_2,"Anything you create can be added into the world with a little Scrap. Here, I'll give you some of mine. Make  some art and put it into the world!",I'll make something,ittle_wait_commission,OpenDrawingQuest,walrus_placement_quest,TRUE,Azsure ,ittle_wait_commission,OpenDrawingQuest,walrus_placement_quest,TRUE,,,,,,,Have them accept the quest
+Walrus,ittle_wait_commission,Did you finish yet?,Check it out,,TriggerQuestCheck,walrus_placement_quest,TRUE,Not yet,,,,TRUE,,,,,,,
+Walrus,ittle_first_placement_c,"Say, that's looking better already! But, y'know, sometimes it matters just as much what's there as what's not there, am I right?",,,,,FALSE,,,,,,,,,,,ittle_erasing_0,
+Walrus,ittle_erasing_0,See this? I call it a scrubber rubber. You can make pictures by getting rid of what's already there. Try for yourself and make some little spikies!,,,,,FALSE,,,,,,,,,,,ittle_erasing_c,
+Walrus,ittle_erasing_c,"An eraser? Doesn't really have that ring to it, but you do you. At least y'know how to use it.",neat,ittle_more_ittles_0,,,TRUE,,,,,,,,,,,,"Need to add reward for new tools, also need call out that you get things"

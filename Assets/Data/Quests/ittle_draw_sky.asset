@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Quest
   questId: ittle_draw_sky
   displayName: Ittle's Sky Painting
-  npcName: Ittle
+  npcName: Walrus
   questType: 2
   requiredTag: BlueSky
   setConversationKey: ittle_got_her_commission
   requiredIterations: 3
-  rewardType: 1
+  rewardType: 0
+  currencyReward: 0

@@ -1,2 +1,3 @@
 quest_id,condition_type,parameter,value,notes
 ittle_draw_sky,Always,,,First quest/ sample quest
+walrus_placement_quest,Always,,,

@@ -3,7 +3,7 @@ using UnityEditor;
 using System.IO;
 using System.Collections.Generic;
 
-public class GameContentImporter : EditorWindow
+public class GameContentImporter : EditorWindow 
 {
    [MenuItem("Tools/Import Game Content")]
    public static void ImportAll()
@@ -89,7 +89,6 @@ public class GameContentImporter : EditorWindow
 
     string[] lines = File.ReadAllLines(path);
 
-    // group rows by npc_name first
     Dictionary<string, List<string[]>> npcRows = new Dictionary<string, List<string[]>>();
 
     for (int i = 1; i < lines.Length; i++)
@@ -104,9 +103,8 @@ public class GameContentImporter : EditorWindow
         if (string.IsNullOrEmpty(npcName)) continue;
 
         if (!npcRows.ContainsKey(npcName))
-        {
             npcRows[npcName] = new List<string[]>();
-        }
+
         npcRows[npcName].Add(columns);
     }
 
@@ -133,18 +131,9 @@ public class GameContentImporter : EditorWindow
         npcData.npcName = npcName;
         npcData.conversations = new List<ConversationEntry>();
 
-        // columns: npc_name(0) conversation_key(1) npc_text(2)
-        // choice_1_text(3) choice_1_sets_key(4) choice_1_action(5)
-        // choice_1_action_param(6) choice_1_ends(7)
-        // choice_2_text(8) choice_2_sets_key(9) choice_2_action(10)
-        // choice_2_action_param(11) choice_2_ends(12)
-        // choice_3_text(13) choice_3_sets_key(14) choice_3_action(15)
-        // choice_3_action_param(16) choice_3_ends(17)
-        // next_row_key(18) notes(19)
-
-        // first pass - build all conversation entries and a lookup by key
         Dictionary<string, ConversationEntry> entryByKey = new Dictionary<string, ConversationEntry>();
 
+        // first pass - build all entries
         foreach (string[] columns in rows)
         {
             string conversationKey = columns.Length > 1 ? columns[1].Trim() : "";
@@ -158,7 +147,6 @@ public class GameContentImporter : EditorWindow
             entry.dialogueLine.npcText = npcText;
             entry.dialogueLine.choices = new List<DialogueChoice>();
 
-            // parse up to 3 choices
             int[] choiceStarts = { 3, 8, 13 };
 
             foreach (int start in choiceStarts)
@@ -191,7 +179,6 @@ public class GameContentImporter : EditorWindow
             if (string.IsNullOrEmpty(conversationKey)) continue;
             if (string.IsNullOrEmpty(nextRowKey)) continue;
 
-            // find the entry for this row and the entry it should chain to
             if (!entryByKey.ContainsKey(conversationKey)) continue;
             if (!entryByKey.ContainsKey(nextRowKey))
             {
@@ -202,22 +189,31 @@ public class GameContentImporter : EditorWindow
             ConversationEntry currentEntry = entryByKey[conversationKey];
             ConversationEntry nextEntry = entryByKey[nextRowKey];
 
-            // set nextLine on every choice in this row
-            // so regardless of which choice the player picks, the next line shows immediately
-            foreach (DialogueChoice choice in currentEntry.dialogueLine.choices)
+            Debug.Log("Wiring: " + conversationKey + " → " + nextRowKey +
+                      " | choices: " + currentEntry.dialogueLine.choices.Count);
+
+            if (currentEntry.dialogueLine.choices == null ||
+                currentEntry.dialogueLine.choices.Count == 0)
             {
-                // only set nextLine if this choice doesn't have a special action
-                // actions like OpenDrawingQuest handle their own flow
-                if (choice.action == ChoiceAction.None)
+                currentEntry.dialogueLine.nextLineKey = nextRowKey;
+                Debug.Log("Wired nextLineKey: " + conversationKey + " → " + nextRowKey);
+            }
+            else
+            {
+                foreach (DialogueChoice choice in currentEntry.dialogueLine.choices)
                 {
-                    choice.nextLine = nextEntry.dialogueLine;
+                    if (choice.action == ChoiceAction.None)
+                    {
+                        choice.nextLine = nextEntry.dialogueLine;
+                    }
                 }
+                Debug.Log("Wired nextLine on choices for: " + conversationKey);
             }
         }
 
         EditorUtility.SetDirty(npcData);
     }
-}
+} 
 
    static void ImportConditions()
    {

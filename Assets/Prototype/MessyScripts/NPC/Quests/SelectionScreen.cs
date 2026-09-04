@@ -48,7 +48,11 @@ public class SelectionScreen : MonoBehaviour
         Debug.Log("Player selected: " + selected.drawingName);
 
         Quest quest = QuestManager.Instance.GetQuest(currentQuestId);
-
+        if (quest.currencyReward > 0)
+        {
+            Wallet.Instance.AddCurrency(quest.currencyReward);
+        }
+        
         // handle reward based on quest reward type
         if (quest != null)
         {
