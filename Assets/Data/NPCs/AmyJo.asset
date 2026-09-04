@@ -14,6 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPCData
   npcName: AmyJo
   defaultConversationKey: default
+  voiceClips:
+  - {fileID: 8300000, guid: 8c6ab719ce612d04aa81643e3eb23c0a, type: 3}
+  - {fileID: 8300000, guid: 01ef369ba07802a408512a2a87878160, type: 3}
+  - {fileID: 8300000, guid: bcb61d08841ea0745a9e575f8a0bae93, type: 3}
   conversations:
   - key: default
     dialogueLine:

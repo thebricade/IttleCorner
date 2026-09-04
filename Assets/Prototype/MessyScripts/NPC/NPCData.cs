@@ -13,6 +13,7 @@ public class NPCData : ScriptableObject
 {
     public string npcName;
     public string defaultConversationKey = "default";
+    public AudioClip[] voiceClips;
 
     [Header("Conversations")]
     public List<ConversationEntry> conversations;

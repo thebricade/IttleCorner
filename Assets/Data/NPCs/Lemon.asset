@@ -14,6 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPCData
   npcName: Lemon
   defaultConversationKey: default
+  voiceClips:
+  - {fileID: 8300000, guid: ba6d753e5a052ce408351ce3a69f3248, type: 3}
+  - {fileID: 8300000, guid: f308d9f873e6bb2468670999118d9b4b, type: 3}
+  - {fileID: 8300000, guid: bf357b4bebc34ad47aeccadfa033fb6a, type: 3}
   conversations:
   - key: default
     dialogueLine:

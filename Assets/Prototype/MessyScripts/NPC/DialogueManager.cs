@@ -19,6 +19,9 @@ public class DialogueManager : MonoBehaviour
     private Vector3 currentNPCPosition;
     private float proximityRadius = 10000f;
     
+    public AudioSource audioSource;
+    private int currentVoiceIndex = 0; 
+    
     public GameObject eraserButton;
 
     void Awake()
@@ -32,6 +35,7 @@ public class DialogueManager : MonoBehaviour
     {
         currentNPC = npc;
         currentNPCPosition = npcPosition;
+        currentVoiceIndex = 0;
 
         NPCRuntimeState npcState = DrawingManager.Instance.GetNPCState(npc);
         DialogueLine conversation = npc.GetConversation(npcState.currentConversationKey);
@@ -45,6 +49,7 @@ public class DialogueManager : MonoBehaviour
         currentLine = line;
         dialogueText.text = line.npcText;
         npcNameText.text = currentNPC.npcName;
+        PlayVoice(currentNPC);
 
         foreach (Transform child in choiceButtonParent)
         {
@@ -219,6 +224,17 @@ public class DialogueManager : MonoBehaviour
                 new GameObject[] { eraserButton }
             );
         }
+    }
+    
+    void PlayVoice(NPCData npc)
+    {
+        if (npc.voiceClips == null || npc.voiceClips.Length == 0) return;
+        if (audioSource == null) return;
+
+        audioSource.clip = npc.voiceClips[currentVoiceIndex];
+        audioSource.Play();
+
+        currentVoiceIndex = (currentVoiceIndex + 1) % npc.voiceClips.Length;
     }
     
     void EndDialogue()

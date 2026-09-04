@@ -14,6 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPCData
   npcName: Gleeglo
   defaultConversationKey: default
+  voiceClips:
+  - {fileID: 8300000, guid: a3c9f190bb66bdf4ead591c9631067fa, type: 3}
+  - {fileID: 8300000, guid: 996391ca4dc6f524480b2d7dc73b6fb6, type: 3}
+  - {fileID: 8300000, guid: 0c76709af10352846a34bb25a768ccab, type: 3}
   conversations:
   - key: default
     dialogueLine:

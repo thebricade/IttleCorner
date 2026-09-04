@@ -14,6 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPCData
   npcName: Walrus
   defaultConversationKey: default
+  voiceClips:
+  - {fileID: 8300000, guid: efd681c6d7f22044bb5bbb708f40079e, type: 3}
+  - {fileID: 8300000, guid: 1a3bbfe2e2eb5e148b601ac3f8bf9105, type: 3}
+  - {fileID: 8300000, guid: 701fa46bb2746b04e8918ce4e46c2227, type: 3}
   conversations:
   - key: default
     dialogueLine:
