@@ -23,6 +23,7 @@ public class DialogueManager : MonoBehaviour
     private int currentVoiceIndex = 0; 
     
     public GameObject eraserButton;
+    public SpriteRenderer walrusHatDrawingRenderer; 
 
     void Awake()
     {
@@ -224,6 +225,28 @@ public class DialogueManager : MonoBehaviour
                 new GameObject[] { eraserButton }
             );
         }
+        if (key == "ittle_first_placement_0")
+        {
+            Debug.Log("found conversation for giving hat");
+            ApplyDrawingToWalrusHat();
+        }
+
+    }
+    
+    void ApplyDrawingToWalrusHat()
+    {
+        if (DrawingManager.Instance.savedDrawings.Count == 0) return;
+
+        // get the first drawing (the one from the intro)
+        Drawing introDrawing = DrawingManager.Instance.savedDrawings[0];
+    
+        Sprite drawingSprite = Sprite.Create(
+            introDrawing.texture,
+            new Rect(0, 0, introDrawing.texture.width, introDrawing.texture.height),
+            new Vector2(0.5f, 0.5f)
+        );
+
+        walrusHatDrawingRenderer.sprite = drawingSprite;
     }
     
     void PlayVoice(NPCData npc)

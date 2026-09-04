@@ -26,7 +26,7 @@ MonoBehaviour:
       choices:
       - choiceText: Uh sure
         endsConversation: 0
-        setsConversationKey: 
+        setsConversationKey: ittle_first_placement_0
         action: 0
         actionParam: 
         nextLine:
@@ -329,7 +329,7 @@ MonoBehaviour:
           nextLineKey: 
       - choiceText: If you want to...
         endsConversation: 0
-        setsConversationKey: 
+        setsConversationKey: ittle_first_placement_0
         action: 0
         actionParam: 
         nextLine:
@@ -632,7 +632,7 @@ MonoBehaviour:
           nextLineKey: 
       - choiceText: I guess
         endsConversation: 0
-        setsConversationKey: 
+        setsConversationKey: ittle_first_placement_0
         action: 0
         actionParam: 
         nextLine:
@@ -936,7 +936,7 @@ MonoBehaviour:
       nextLineKey: 
   - key: ittle_first_placement_0
     dialogueLine:
-      npcText: You don't know about Scraps!? Pastels and paste...
+      npcText: Looking fantastic! Do you not know about  Scraps!? Pastels and paste...
       choices:
       - choiceText: wow that's a lot...
         endsConversation: 0
