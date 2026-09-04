@@ -1,73 +1,79 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
-public class IntroTacker : MonoBehaviour
+public class IntroTracker : MonoBehaviour
 {
     [Header("Triggers")] 
-    public float timeTrigger = 40f;
-    public int clickTrigger = 4;
+    public float timeTrigger = 15f;
     [Range(0f, 1f)] public float coverageTrigger = 0.15f;
+    [Range(0f, 1f)] public float submitCoverageTrigger = 0.6f;
 
     [Header("References")] 
     public DrawingPad drawingPad;
     public GameObject brushBuddy;
+    public GameObject firstTouchHint;   // appears on first touch, vanishes after 6s
+    public GameObject secondHint;       // appears after time/coverage threshold, vanishes after 6s
     public GameObject submitButton;
 
     [Header("Events")] 
     public UnityEvent onBrushBuddyTriggered;
 
     // counters
-    private float elapsedTime = 0f; 
-    private int clickCount = 0;
+    private float elapsedTime = 0f;
+    private bool firstTouchFired = false;
 
-    // flags - one per trigger moment
+    // flags
     private bool brushBuddyTriggered = false;
+    private bool secondHintTriggered = false;
     private bool submitTriggered = false;
 
     void Update()
     {
-        // coverage check - only until submit is shown
-        if (!submitTriggered)
+        // first touch - show firstTouchHint and brushbuddy
+        if (!firstTouchFired && Input.GetMouseButtonDown(0))
+        {
+            firstTouchFired = true;
+            brushBuddy.SetActive(true);
+            firstTouchHint.SetActive(true);
+            StartCoroutine(HideAfterDelay(firstTouchHint, 6f));
+            onBrushBuddyTriggered.Invoke();
+        }
+
+        // only start counting time after first touch
+        if (firstTouchFired)
+        {
+            elapsedTime += Time.deltaTime;
+        }
+
+        // second hint - after time or coverage threshold
+        if (firstTouchFired && !secondHintTriggered)
         {
             float coverage = drawingPad.GetCoveragePercentage();
-            if (coverage >= coverageTrigger)
+            if (elapsedTime >= timeTrigger || coverage >= coverageTrigger)
             {
-                TriggerSubmit();
-                return;
+                secondHintTriggered = true;
+                secondHint.SetActive(true);
+                StartCoroutine(HideAfterDelay(secondHint, 6f));
             }
         }
 
-        // clicks and time - only until brushbuddy is shown
-        if (!brushBuddyTriggered)
+        // submit button - when coverage is near full
+        if (!submitTriggered)
         {
-            if (Input.GetMouseButtonDown(0))
+            float coverage = drawingPad.GetCoveragePercentage();
+            if (coverage >= submitCoverageTrigger)
             {
-                clickCount++;
-            }
-
-            elapsedTime += Time.deltaTime;
-
-            if (elapsedTime >= timeTrigger)
-            {
-                TriggerBrushBuddy("time");
-                return;
-            }
-
-            if (clickCount >= clickTrigger)
-            {
-                TriggerBrushBuddy("clicks");
-                return;
+                TriggerSubmit();
             }
         }
     }
 
-    void TriggerBrushBuddy(string reason)
+    IEnumerator HideAfterDelay(GameObject obj, float delay)
     {
-        brushBuddyTriggered = true;
-        brushBuddy.SetActive(true);
-        Debug.Log("BrushBuddy triggered via: " + reason);
-        onBrushBuddyTriggered.Invoke();
+        yield return new WaitForSeconds(delay);
+        if (obj != null) obj.SetActive(false);
     }
 
     void TriggerSubmit()
@@ -82,8 +88,6 @@ public class IntroTacker : MonoBehaviour
         Texture2D snapshot = drawingPad.GetCurrentTextureCopy();
         Texture2D cropped = drawingPad.CropToContent(snapshot);
         DrawingManager.Instance.SaveDrawing(cropped, "IntroDrawing");
-        Debug.Log("Saved count: " + DrawingManager.Instance.savedDrawings.Count);
-        Debug.Log("Drawing name: " + DrawingManager.Instance.savedDrawings[0].drawingName);
         SceneManager.LoadScene(1);
     }
 }
