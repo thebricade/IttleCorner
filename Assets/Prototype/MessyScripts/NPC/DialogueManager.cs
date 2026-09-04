@@ -180,13 +180,12 @@ public class DialogueManager : MonoBehaviour
                 break;
 
             case QuestType.IteratedDraw:
-                questConditionMet = DrawingManager.Instance.savedDrawings.Exists(
+                int count = DrawingManager.Instance.savedDrawings.FindAll(
                     d => d.drawingName == quest.requiredTag
-                );
+                ).Count;
+                questConditionMet = count >= quest.requiredIterations;
                 break;
         }
-
-        Debug.Log("Quest condition met: " + questConditionMet + " | type: " + quest.questType);
 
         if (!questConditionMet) { Debug.Log("Quest condition not met."); EndDialogue(); return; }
 
@@ -194,38 +193,16 @@ public class DialogueManager : MonoBehaviour
         {
             case QuestType.DrawSomething:
                 QuestManager.Instance.CompleteQuest(questId);
-
                 if (quest.currencyReward > 0)
                     Wallet.Instance.AddCurrency(quest.currencyReward);
-
                 NPCRuntimeState state = DrawingManager.Instance.GetNPCState(currentNPC);
                 state.currentConversationKey = quest.setConversationKey;
                 ShowLine(currentNPC.GetConversation(quest.setConversationKey));
                 break;
 
             case QuestType.IteratedDraw:
-                QuestManager.Instance.IncrementQuestAttempts(questId);
-                int attempts = QuestManager.Instance.GetQuestAttempts(questId);
-
-                Debug.Log("Attempt " + attempts + " of " + quest.requiredIterations);
-
-                if (attempts < quest.requiredIterations)
-                {
-                    string attemptKey = currentNPC.npcName.ToLower() + "_" + quest.requiredTag.ToLower() + "_attempt_" + attempts;
-                    Debug.Log("Looking for key: '" + attemptKey + "'");
-
-                    DialogueLine attemptLine = currentNPC.GetConversation(attemptKey);
-                    Debug.Log("Conversation found: " + (attemptLine != null));
-
-                    NPCRuntimeState npcState = DrawingManager.Instance.GetNPCState(currentNPC);
-                    npcState.currentConversationKey = attemptKey;
-                    ShowLine(attemptLine);
-                }
-                else
-                {
-                    EndDialogue();
-                    selectionScreen.Show(quest.requiredTag, questId);
-                }
+                EndDialogue();
+                selectionScreen.Show(quest.requiredTag, questId);
                 break;
         }
     }
