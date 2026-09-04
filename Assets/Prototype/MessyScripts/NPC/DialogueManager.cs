@@ -18,6 +18,8 @@ public class DialogueManager : MonoBehaviour
     private DialogueLine currentLine;
     private Vector3 currentNPCPosition;
     private float proximityRadius = 10000f;
+    
+    public GameObject eraserButton;
 
     void Awake()
     {
@@ -88,6 +90,13 @@ public class DialogueManager : MonoBehaviour
 
     void OnChoiceSelected(DialogueChoice choice)
     {
+        if (!string.IsNullOrEmpty(choice.setsConversationKey))
+        {
+            NPCRuntimeState npcState = DrawingManager.Instance.GetNPCState(currentNPC);
+            npcState.currentConversationKey = choice.setsConversationKey;
+            CheckConversationTriggers(choice.setsConversationKey); // check immediately after setting
+        }
+        
         Debug.Log("Choice selected: " + choice.choiceText + " | action: " + choice.action + " | actionParam: " + choice.actionParam);
 
         if (!string.IsNullOrEmpty(choice.setsConversationKey))
@@ -221,10 +230,26 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    void CheckConversationTriggers(string key)
+    {
+        Debug.Log("Checking triggers for key: " + key);
+    
+        if (key == "ittle_erasing_c")
+        {
+            UnlockPopup.Instance.Show(
+                "New Tool: Eraser!",
+                "You can now erase parts of your drawings.",
+                new GameObject[] { eraserButton }
+            );
+        }
+    }
+    
     void EndDialogue()
     {
+        
         Debug.Log("Ending dialogue");
         continueButton.SetActive(false);
         dialogueCanvas.SetActive(false);
+        
     }
 }

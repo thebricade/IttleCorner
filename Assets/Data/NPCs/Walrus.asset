@@ -1379,8 +1379,27 @@ MonoBehaviour:
     dialogueLine:
       npcText: See this? I call it a scrubber rubber. You can make pictures by getting
         rid of what's already there. Try for yourself and make some little spikies!
-      choices: []
-      nextLineKey: ittle_erasing_c
+      choices:
+      - choiceText: An eraser?
+        endsConversation: 0
+        setsConversationKey: ittle_erasing_c
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: An eraser? Doesn't really have that ring to it, but you do you.
+            At least y'know how to use it.
+          choices:
+          - choiceText: neat
+            endsConversation: 1
+            setsConversationKey: ittle_more_ittles_0
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: 
+              choices: []
+              nextLineKey: 
+          nextLineKey: 
+      nextLineKey: 
   - key: ittle_erasing_c
     dialogueLine:
       npcText: An eraser? Doesn't really have that ring to it, but you do you. At
@@ -1389,6 +1408,27 @@ MonoBehaviour:
       - choiceText: neat
         endsConversation: 1
         setsConversationKey: ittle_more_ittles_0
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: ittle_more_ittles_0
+    dialogueLine:
+      npcText: Y'know, none of my friends really believe in human creativity. But
+        here you are! I gotta show you off.
+      choices: []
+      nextLineKey: ittle_more_ittles_1
+  - key: ittle_more_ittles_1
+    dialogueLine:
+      npcText: I've asked some of them to stop by. Think you could make me, er, us
+        look good?
+      choices:
+      - choiceText: I'll say hi
+        endsConversation: 1
+        setsConversationKey: 
         action: 0
         actionParam: 
         nextLine:

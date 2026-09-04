@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b4da19336b54fa4ebf67db148f50e9c, type: 3}
+  m_Name: Lemon
+  m_EditorClassIdentifier: Assembly-CSharp::NPCData
+  npcName: Lemon
+  defaultConversationKey: default
+  conversations:
+  - key: default
+    dialogueLine:
+      npcText: Well well, humie. I'm sure you've heard of me. Creative folks like
+        us know how to fill the world with color, don't we? I'll bet you could make
+        a whole painting of a blue sky.
+      choices:
+      - choiceText: you want a blue painting?
+        endsConversation: 0
+        setsConversationKey: lemon_bluesky_1
+        action: 1
+        actionParam: lemon_sky_quest
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: lemon_bluesky_1
+    dialogueLine:
+      npcText: Hm, looks OK. But what good is a sky without some twinkling stars?
+        Oh, I'll bet you could do that, couldn't you?
+      choices:
+      - choiceText: Another one?
+        endsConversation: 0
+        setsConversationKey: lemon_bluesky_2
+        action: 1
+        actionParam: lemon_sky_quest
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: lemon_bluesky_2
+    dialogueLine:
+      npcText: OK, wow, fancy humie here doing their sky thing. Not like you could
+        really go for it with all kinds of special colors though, right?
+      choices:
+      - choiceText: Last one
+        endsConversation: 0
+        setsConversationKey: lemon_bluesky_3
+        action: 1
+        actionParam: lemon_sky_quest
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: lemon_bluesky_3
+    dialogueLine:
+      npcText: Not bad for a humie. Now, tell me, which of these do you think is
+        the best sky? Don't be shy...
+      choices:
+      - choiceText: Hmm
+        endsConversation: 0
+        setsConversationKey: 
+        action: 2
+        actionParam: lemon_sky_quest
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: lemon_bluesky_4
+    dialogueLine:
+      npcText: OK, yeah, humie here's got taste. Now I know you don't got the Scraps
+        to put this out there, which is why you came to me. I'll loan you everything
+        you need and come to collect my Scraps with interest later.
+      choices: []
+      nextLineKey: 
+  - key: lemon_bluesky_c
+    dialogueLine:
+      npcText: Pleasure doing business with you, humie! Be seeing you!
+      choices:
+      - choiceText: Thanks
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 

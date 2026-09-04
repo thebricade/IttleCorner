@@ -827,12 +827,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2265585062740713615, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
       propertyPath: m_Name
-      value: Bob
+      value: NPC_Lemon
       objectReference: {fileID: 0}
     - target: {fileID: 3852675877057951414, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
       propertyPath: npcData
       value: 
-      objectReference: {fileID: 11400000, guid: 68d6173d79c7e4d44a0916a54557d8f3, type: 2}
+      objectReference: {fileID: 11400000, guid: a5d24d874bf0044d0892ac386d092daa, type: 2}
     - target: {fileID: 5761180914863493613, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
       propertyPath: m_Size.x
       value: 5.15
@@ -844,7 +844,7 @@ PrefabInstance:
     - target: {fileID: 5761180914863493613, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 8aef1b3845302944ead364101cdc6dab, type: 3}
+      objectReference: {fileID: 21300000, guid: 57669fbe539e640eea55a22d6d40456a, type: 3}
     - target: {fileID: 5761180914863493613, guid: 63d5b711fe4cef142a621f4089a2f3d4, type: 3}
       propertyPath: m_Color.b
       value: 1
@@ -3423,7 +3423,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 354309776}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3505,9 +3505,9 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 406250344}
+  - {fileID: 354309777}
   - {fileID: 2087668581}
   - {fileID: 2080290723}
-  - {fileID: 354309777}
   m_Father: {fileID: 627315184}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7044,6 +7044,7 @@ MonoBehaviour:
   choiceButtonPrefab: {fileID: 6804513806250362239, guid: fa377b135f82f1f4288269568684f61f, type: 3}
   continueButton: {fileID: 2070069575}
   selectionScreen: {fileID: 433792488}
+  eraserButton: {fileID: 354309776}
 --- !u!4 &834763367
 Transform:
   m_ObjectHideFlags: 0
@@ -7085,6 +7086,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::QuestManager
   allQuests:
   - {fileID: 11400000, guid: aabe797d9538f4fd3bc82dc2ae9ae486, type: 2}
+  - {fileID: 11400000, guid: 29250b2e98deb4ea88f79543bf0c8b51, type: 2}
 --- !u!114 &834763370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11234,6 +11236,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1473957098}
   m_CullTransparentMesh: 1
+--- !u!1 &1480865377
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1480865379}
+  - component: {fileID: 1480865378}
+  m_Layer: 0
+  m_Name: 'PASTA SCRIPTS '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1480865378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1480865377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6b64b025fcd94082be21dadbc7eb5aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnlockPopup
+  popupPanel: {fileID: 354309776}
+--- !u!4 &1480865379
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1480865377}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 16.16103, y: 1.28, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1494256180
 GameObject:
   m_ObjectHideFlags: 0
@@ -14900,3 +14947,4 @@ SceneRoots:
   - {fileID: 137452135}
   - {fileID: 179186436}
   - {fileID: 1694896249}
+  - {fileID: 1480865379}
