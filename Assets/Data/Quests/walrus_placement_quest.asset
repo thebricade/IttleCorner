@@ -20,4 +20,4 @@ MonoBehaviour:
   setConversationKey: ittle_first_placement_c
   requiredIterations: 1
   rewardType: 0
-  currencyReward: 0
+  currencyReward: 100

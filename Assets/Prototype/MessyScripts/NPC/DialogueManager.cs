@@ -76,6 +76,7 @@ public class DialogueManager : MonoBehaviour
         if (!string.IsNullOrEmpty(currentLine.nextLineKey))
         {
             DialogueLine nextLine = currentNPC.GetConversation(currentLine.nextLineKey);
+            Debug.Log("Next line found: " + (nextLine != null));
             if (nextLine != null)
             {
                 ShowLine(nextLine);

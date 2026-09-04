@@ -30,6 +30,13 @@ public class PlacementController : MonoBehaviour
 
     void PlaceSticker(Vector3 position)
     {
+        if (!Wallet.Instance.TrySpend(Wallet.Instance.placementCost))
+        {
+            //can't afford nothing will be placed
+            GameModeManager.Instance.SetGameMode(GameMode.Explore);
+            return;
+        }
+        // if you can afford we just let the rest work.
         Drawing selected = DrawingManager.Instance.selectedDrawing;
 
         GameObject newSticker = Instantiate(stickerPrefab, position, Quaternion.identity);
