@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 
 public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
+    public AudioSource audioSource;
     public enum DrawingTool
     {
         Brush,
@@ -27,10 +28,12 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private BrushStyle currentBrushStyle = BrushStyle.Big;
     private int brushSize = 4;
     public int textureSize = 256;
-    [Header("Gel Glitter Brush Settings")] // Glitter Settings
-    [Range(0.01f, 0.4f)] public float glitterDensity = 0.14f; // Glitter Settings
-    [Range(5f, 120f)] public float glitterShininess = 35f; // Glitter Settings
-    public Color glitterGlintColor = Color.white; // Glitter Settings
+    // Glitter Settings
+    public float glitterDensity = 0.14f; // Range(0.01f, 0.4f)
+    public float glitterShininess = 35f; // Range(5f, 120f)
+    public Color glitterGlintColor = Color.white;
+    public Texture2D glitterTexture;
+    public float glitterTextureTiling = 4.0f;
     private Texture2D drawTexture;
     private RawImage rawImage;
     private RectTransform rectTransform;
@@ -38,6 +41,24 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private Color brushColor = Color.black; // starting brush color
     private bool isDrawing = false;
     private Camera pressCamera;
+    // Brush Audio Settings
+    public AudioClip[] bigBrushSounds = new AudioClip[4];
+    public AudioClip[] mediumBrushSounds = new AudioClip[4];
+    public AudioClip[] smallBrushSounds = new AudioClip[4];
+    public AudioClip[] watercolorSounds = new AudioClip[4];
+    public AudioClip[] watercolor2Sounds = new AudioClip[4];
+    public AudioClip[] gelGlitterSounds = new AudioClip[4];
+    public AudioClip[] eraserSounds = new AudioClip[4];
+    private int bigBrushSoundIndex = 0;
+    private int mediumBrushSoundIndex = 0;
+    private int smallBrushSoundIndex = 0;
+    private int watercolorSoundIndex = 0;
+    private int watercolor2SoundIndex = 0;
+    private int gelGlitterSoundIndex = 0;
+    private int eraserSoundIndex = 0;
+    private float soundCooldownTimer = 0f;
+    private const float SOUND_COOLDOWN_DURATION = 0.22f; // Cooldown limits rapid fire overlap noise
+
 
     [Tooltip("Optional stamp image for the watercolor brushes. Should be grayscale " +
              "(white = full opacity, black = none) - shape and texture come straight " +
@@ -77,7 +98,25 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        // Auto-load default sounds from Assets/Resources/Sound/ if they are not manually assigned in the Inspector
+        LoadDefaultSounds();
+    }
 
+    private void LoadDefaultSounds()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            // If the slot in the Inspector is empty, look for the file in Assets/Resources/Sound/
+            if (bigBrushSounds[i] == null) bigBrushSounds[i] = Resources.Load<AudioClip>($"Sound/Pencil{i}");
+            if (mediumBrushSounds[i] == null) mediumBrushSounds[i] = Resources.Load<AudioClip>($"Sound/Pencil{i}");
+            if (smallBrushSounds[i] == null) smallBrushSounds[i] = Resources.Load<AudioClip>($"Sound/Pencil{i}");
+
+            if (watercolorSounds[i] == null) watercolorSounds[i] = Resources.Load<AudioClip>($"Sound/Paint{i}");
+            if (watercolor2Sounds[i] == null) watercolor2Sounds[i] = Resources.Load<AudioClip>($"Sound/Paint{i}");
+
+            if (gelGlitterSounds[i] == null) gelGlitterSounds[i] = Resources.Load<AudioClip>($"Sound/GelGlitter{i}");
+            if (eraserSounds[i] == null) eraserSounds[i] = Resources.Load<AudioClip>($"Sound/Eraser{i}");
+        }
     }
 
     private void OnEnable()
@@ -124,6 +163,7 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         stationaryHoldTime = 0f;
         strokeDirectionAngle = 0f;
         strokeDabIndex = 0;
+        PlayDrawingSound();
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -156,10 +196,17 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 float moved = Vector2.Distance(lastLocalPoint.Value, localPoint);
                 stationaryHoldTime = moved < StationaryMoveThreshold ? stationaryHoldTime + Time.deltaTime : 0f;
                 PaintLine(lastLocalPoint.Value, localPoint, rectTransform);
+
+                // Play a sound cycle if the cursor has dragged far enough
+                if (moved > 0.5f)
+                {
+                    PlayDrawingSound();
+                }
             }
             else
             {
                 PaintAtLocalPoint(localPoint, rectTransform);
+                PlayDrawingSound(); // Play sound if we single click tap
             }
             lastLocalPoint = localPoint;
         }
@@ -548,7 +595,35 @@ void PaintEraser(int centerX, int centerY)
                 {
                     finalPixelColor = Color.Lerp(shadedGel, flakeColorValue, 0.95f);
                 }
+                // --- Dynamic Glitter Texture Overlay ---
+                if (glitterTexture != null)
+                {
+                    // Calculate tiled UV coordinates
+                    float texU = (float)px / textureSize * glitterTextureTiling;
+                    float texV = (float)py / textureSize * glitterTextureTiling;
 
+                    // Shift coordinates slightly over time to simulate reflecting light
+                    float animationSpeed = p.shimmerSpeed * 0.4f;
+                    float offsetX = Mathf.Sin(Time.time * animationSpeed + py * 0.12f) * 0.015f;
+                    float offsetY = Mathf.Cos(Time.time * animationSpeed + px * 0.12f) * 0.015f;
+
+                    // Sample the texture and calculate dynamic sparkle twinkle
+                    Color texColor = glitterTexture.GetPixelBilinear(Mathf.Repeat(texU + offsetX, 1.0f), Mathf.Repeat(texV + offsetY, 1.0f));
+                    float texBrightness = (texColor.r + texColor.g + texColor.b) / 3.0f;
+                    float twinkle = 0.4f + 0.6f * Mathf.Sin(Time.time * p.shimmerSpeed + (px * 0.2f) + (py * 0.2f));
+                    float textureGlitterStrength = texBrightness * texColor.a * twinkle * p.glitterDensity * 2.2f;
+
+                    if (textureGlitterStrength > 0.01f)
+                    {
+                        Color textureGlitterColor = Color.Lerp(baseColor, Color.white, 0.7f) * textureGlitterStrength;
+
+                        // Screen blend the texture glitter over the brush stroke
+                        finalPixelColor.r += textureGlitterColor.r * (1.0f - finalPixelColor.r);
+                        finalPixelColor.g += textureGlitterColor.g * (1.0f - finalPixelColor.g);
+                        finalPixelColor.b += textureGlitterColor.b * (1.0f - finalPixelColor.b);
+                        finalPixelColor.a = Mathf.Max(finalPixelColor.a, textureGlitterStrength);
+                    }
+                }
                 // Screen blend the brilliant flares over the paint surface
                 if (maxGlint > 0.0f)
                 {
@@ -864,10 +939,12 @@ void ApplyWatercolorTexel(int idx, int px, int py, float strength, WatercolorPar
     Color newColor;
     if (p.pigmentMix && existing.a > 0.05f)
     {
-        // subtractive-style pigment mixing when painting over existing color - this is
-        // what makes the underlying color show through as a mix rather than a flat tint
-        newColor = new Color(existing.r * paintColor.r, existing.g * paintColor.g, existing.b * paintColor.b, 1f);
-    }
+            // subtractive-style pigment mixing when painting over existing color - this is
+            // what makes the underlying color show through as a mix rather than a flat tint
+            // Reconstruct the background color against white paper so it doesn't default to black multiplication
+            Color paperColor = Color.Lerp(Color.white, existing, existing.a);
+            newColor = new Color(paperColor.r * paintColor.r, paperColor.g * paintColor.g, paperColor.b * paintColor.b, 1.0f);
+        }
     else
     {
         newColor = paintColor;
@@ -980,6 +1057,67 @@ void ApplyWatercolorTexel(int idx, int px, int py, float strength, WatercolorPar
         }
 
         return (float)nonTransparent / total;
+    }
+    void PlayDrawingSound()
+    {
+        if (audioSource == null) return;
+        if (soundCooldownTimer > 0f) return;
+
+        AudioClip[] activeClips = null;
+        int currentIndex = 0;
+
+        if (currentDrawingTool == DrawingTool.Eraser)
+        {
+            activeClips = eraserSounds;
+            eraserSoundIndex = (eraserSoundIndex + 1) % 4;
+            currentIndex = eraserSoundIndex;
+        }
+        else
+        {
+            switch (currentBrushStyle)
+            {
+                case BrushStyle.Big:
+                    activeClips = bigBrushSounds;
+                    bigBrushSoundIndex = (bigBrushSoundIndex + 1) % 4;
+                    currentIndex = bigBrushSoundIndex;
+                    break;
+                case BrushStyle.Medium:
+                    activeClips = mediumBrushSounds;
+                    mediumBrushSoundIndex = (mediumBrushSoundIndex + 1) % 4;
+                    currentIndex = mediumBrushSoundIndex;
+                    break;
+                case BrushStyle.Small:
+                    activeClips = smallBrushSounds;
+                    smallBrushSoundIndex = (smallBrushSoundIndex + 1) % 4;
+                    currentIndex = smallBrushSoundIndex;
+                    break;
+                case BrushStyle.Watercolor:
+                    activeClips = watercolorSounds;
+                    watercolorSoundIndex = (watercolorSoundIndex + 1) % 4;
+                    currentIndex = watercolorSoundIndex;
+                    break;
+                case BrushStyle.Watercolor2:
+                    activeClips = watercolor2Sounds;
+                    watercolor2SoundIndex = (watercolor2SoundIndex + 1) % 4;
+                    currentIndex = watercolor2SoundIndex;
+                    break;
+                case BrushStyle.GelGlitter:
+                    activeClips = gelGlitterSounds;
+                    gelGlitterSoundIndex = (gelGlitterSoundIndex + 1) % 4;
+                    currentIndex = gelGlitterSoundIndex;
+                    break;
+            }
+        }
+
+        if (activeClips != null && activeClips.Length > 0)
+        {
+            AudioClip clip = activeClips[currentIndex % activeClips.Length];
+            if (clip != null)
+            {
+                audioSource.PlayOneShot(clip);
+                soundCooldownTimer = SOUND_COOLDOWN_DURATION;
+            }
+        }
     }
 }
 
