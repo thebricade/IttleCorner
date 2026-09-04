@@ -113,3 +113,4 @@ ProjectSettings/ProjectSettings.asset
 
 # Unity asset meta files must be tracked (do not blanket-ignore *.meta)
 !/Assets/**/*.meta
+Assets/Prototype/.DS_Store
