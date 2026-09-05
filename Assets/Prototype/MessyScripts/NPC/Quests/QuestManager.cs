@@ -38,9 +38,13 @@ public class QuestManager : MonoBehaviour
 
     public void CompleteQuest(string questId)
     {
-        activeQuests.Remove(questId);
-        completedQuests.Add(questId);
-        Debug.Log("Quest completed: " + questId);
+        if (!completedQuests.Contains(questId))
+        {
+            completedQuests.Add(questId);
+            activeQuests.Remove(questId);
+            Debug.Log("Quest completed: " + questId);
+            NPCQueue.Instance.OnQuestCompleted(questId);
+        }
     }
 
     public bool IsQuestActive(string questId)
