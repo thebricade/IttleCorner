@@ -49,15 +49,15 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public AudioClip[] watercolor2Sounds = new AudioClip[4];
     public AudioClip[] gelGlitterSounds = new AudioClip[4];
     public AudioClip[] eraserSounds = new AudioClip[4];
-    private int bigBrushSoundIndex = 0;
-    private int mediumBrushSoundIndex = 0;
-    private int smallBrushSoundIndex = 0;
-    private int watercolorSoundIndex = 0;
-    private int watercolor2SoundIndex = 0;
-    private int gelGlitterSoundIndex = 0;
-    private int eraserSoundIndex = 0;
+    private int bigBrushSoundIndex = -1;
+    private int mediumBrushSoundIndex = -1;
+    private int smallBrushSoundIndex = -1;
+    private int watercolorSoundIndex = -1;
+    private int watercolor2SoundIndex = -1;
+    private int gelGlitterSoundIndex = -1;
+    private int eraserSoundIndex = -1;
     private float soundCooldownTimer = 0f;
-    private const float SOUND_COOLDOWN_DURATION = 0.22f; // Cooldown limits rapid fire overlap noise
+    private const float soundCooldownDuration = .61f; // Cooldown limits rapid fire overlap noise
 
 
     [Tooltip("Optional stamp image for the watercolor brushes. Should be grayscale " +
@@ -93,6 +93,18 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
+        InitializeSoundArrays();
+    }
+
+    private void InitializeSoundArrays()
+    {
+        if (bigBrushSounds == null || bigBrushSounds.Length != 4) bigBrushSounds = new AudioClip[4];
+        if (mediumBrushSounds == null || mediumBrushSounds.Length != 4) mediumBrushSounds = new AudioClip[4];
+        if (smallBrushSounds == null || smallBrushSounds.Length != 4) smallBrushSounds = new AudioClip[4];
+        if (watercolorSounds == null || watercolorSounds.Length != 4) watercolorSounds = new AudioClip[4];
+        if (watercolor2Sounds == null || watercolor2Sounds.Length != 4) watercolor2Sounds = new AudioClip[4];
+        if (gelGlitterSounds == null || gelGlitterSounds.Length != 4) gelGlitterSounds = new AudioClip[4];
+        if (eraserSounds == null || eraserSounds.Length != 4) eraserSounds = new AudioClip[4];
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -175,6 +187,10 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     // Update is called once per frame
     void Update()
     {
+        if (soundCooldownTimer > 0f)
+        {
+            soundCooldownTimer -= Time.deltaTime;
+        }
         if (!isDrawing)
         {
             return;
@@ -331,7 +347,7 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             }
             break;
         case DrawingTool.Eraser:
-            PaintEraser(x, y);
+                PaintEraser(x, y, localPoint);
             break;
         default:
             Debug.Log("invalid tool");
@@ -361,27 +377,48 @@ void PaintHard(int centerX, int centerY)
     drawTexture.Apply();
 }
 
-void PaintEraser(int centerX, int centerY)
-{
-    for (int i = -brushSize; i < brushSize; i++)
+    void PaintEraser(int centerX, int centerY, Vector2 localPoint)
     {
-        for (int j = -brushSize; j < brushSize; j++)
-        {
-            int px = centerX + i;
-            int py = centerY + j;
+        Color erasedColor = Color.clear;
+        bool foundColor = false;
 
-            if (px >= 0 && px < textureSize && py >= 0 && py < textureSize)
+        for (int i = -brushSize; i < brushSize; i++)
+        {
+            for (int j = -brushSize; j < brushSize; j++)
             {
-                float dist = Mathf.Sqrt(i * i + j * j);
-                if (dist <= brushSize)
+                int px = centerX + i;
+                int py = centerY + j;
+
+                if (px >= 0 && px < textureSize && py >= 0 && py < textureSize)
                 {
-                    drawTexture.SetPixel(px, py, Color.clear);
+                    float dist = Mathf.Sqrt(i * i + j * j);
+                    if (dist <= brushSize)
+                    {
+                        // Sample the color before erasing it
+                        if (!foundColor)
+                        {
+                            Color c = drawTexture.GetPixel(px, py);
+                            if (c.a > 0.15f)
+                            {
+                                erasedColor = c;
+                                foundColor = true;
+                            }
+                        }
+                        drawTexture.SetPixel(px, py, Color.clear);
+                    }
                 }
             }
         }
+        drawTexture.Apply();
+
+        // Only spawn crumbs if we actually erased some paint!
+        if (foundColor)
+        {
+            // This calls our spawner and passes both required parameters
+            SpawnEraserCrumbsLocal(localPoint, erasedColor);
+        }
     }
-    drawTexture.Apply();
-}
+
     void PaintGelGlitter(int centerX, int centerY)
     {
         PaintGelGlitterDab(centerX, centerY, GelGlitterPreset);
@@ -971,10 +1008,15 @@ void ApplyWatercolorTexel(int idx, int px, int py, float strength, WatercolorPar
 
     drawTexture.SetPixel(px, py, new Color(r, g, b, newAlpha));
 }
-    
+
     public void SetBrushColor(Color newColor)
     {
         brushColor = newColor;
+        // If they pick a color while using the eraser, autoswap tool back to last active brush style.
+        if (currentDrawingTool == DrawingTool.Eraser)
+        {
+            currentDrawingTool = DrawingTool.Brush;
+        }
     }
 
     public void SetDrawingTool(DrawingTool tool)
@@ -1069,8 +1111,10 @@ void ApplyWatercolorTexel(int idx, int px, int py, float strength, WatercolorPar
         if (currentDrawingTool == DrawingTool.Eraser)
         {
             activeClips = eraserSounds;
-            eraserSoundIndex = (eraserSoundIndex + 1) % 4;
-            currentIndex = eraserSoundIndex;
+            if (activeClips != null && activeClips.Length > 0)
+            {
+                currentIndex = GetNonRepeatingRandomIndex(ref eraserSoundIndex, activeClips.Length);
+            }
         }
         else
         {
@@ -1078,33 +1122,45 @@ void ApplyWatercolorTexel(int idx, int px, int py, float strength, WatercolorPar
             {
                 case BrushStyle.Big:
                     activeClips = bigBrushSounds;
-                    bigBrushSoundIndex = (bigBrushSoundIndex + 1) % 4;
-                    currentIndex = bigBrushSoundIndex;
+                    if (activeClips != null && activeClips.Length > 0)
+                    {
+                        currentIndex = GetNonRepeatingRandomIndex(ref bigBrushSoundIndex, activeClips.Length);
+                    }
                     break;
                 case BrushStyle.Medium:
                     activeClips = mediumBrushSounds;
-                    mediumBrushSoundIndex = (mediumBrushSoundIndex + 1) % 4;
-                    currentIndex = mediumBrushSoundIndex;
+                    if (activeClips != null && activeClips.Length > 0)
+                    {
+                        currentIndex = GetNonRepeatingRandomIndex(ref mediumBrushSoundIndex, activeClips.Length);
+                    }
                     break;
                 case BrushStyle.Small:
                     activeClips = smallBrushSounds;
-                    smallBrushSoundIndex = (smallBrushSoundIndex + 1) % 4;
-                    currentIndex = smallBrushSoundIndex;
+                    if (activeClips != null && activeClips.Length > 0)
+                    {
+                        currentIndex = GetNonRepeatingRandomIndex(ref smallBrushSoundIndex, activeClips.Length);
+                    }
                     break;
                 case BrushStyle.Watercolor:
                     activeClips = watercolorSounds;
-                    watercolorSoundIndex = (watercolorSoundIndex + 1) % 4;
-                    currentIndex = watercolorSoundIndex;
+                    if (activeClips != null && activeClips.Length > 0)
+                    {
+                        currentIndex = GetNonRepeatingRandomIndex(ref watercolorSoundIndex, activeClips.Length);
+                    }
                     break;
                 case BrushStyle.Watercolor2:
                     activeClips = watercolor2Sounds;
-                    watercolor2SoundIndex = (watercolor2SoundIndex + 1) % 4;
-                    currentIndex = watercolor2SoundIndex;
+                    if (activeClips != null && activeClips.Length > 0)
+                    {
+                        currentIndex = GetNonRepeatingRandomIndex(ref watercolor2SoundIndex, activeClips.Length);
+                    }
                     break;
                 case BrushStyle.GelGlitter:
                     activeClips = gelGlitterSounds;
-                    gelGlitterSoundIndex = (gelGlitterSoundIndex + 1) % 4;
-                    currentIndex = gelGlitterSoundIndex;
+                    if (activeClips != null && activeClips.Length > 0)
+                    {
+                        currentIndex = GetNonRepeatingRandomIndex(ref gelGlitterSoundIndex, activeClips.Length);
+                    }
                     break;
             }
         }
@@ -1115,8 +1171,52 @@ void ApplyWatercolorTexel(int idx, int px, int py, float strength, WatercolorPar
             if (clip != null)
             {
                 audioSource.PlayOneShot(clip);
-                soundCooldownTimer = SOUND_COOLDOWN_DURATION;
+                soundCooldownTimer = soundCooldownDuration; // Cooldown resets!
             }
+        }
+    }
+    private int GetNonRepeatingRandomIndex(ref int lastIndex, int arrayLength)
+    {
+        if (arrayLength <= 1) return 0;
+
+        int nextIndex = lastIndex;
+        // Keep picking a random number until it doesn't match the last played one
+        while (nextIndex == lastIndex)
+        {
+            nextIndex = UnityEngine.Random.Range(0, arrayLength);
+        }
+
+        lastIndex = nextIndex; // Remember this index for next time!
+        return nextIndex;
+    }
+    private void SpawnEraserCrumbsLocal(Vector2 localPoint, Color erasedColor)
+    {
+        int count = UnityEngine.Random.Range(1, 3);
+        for (int i = 0; i < count; i++)
+        {
+            GameObject crumbObj = new GameObject("EraserCrumb", typeof(RectTransform), typeof(Image), typeof(EraserCrumb));
+            crumbObj.transform.SetParent(transform, false);
+
+            RectTransform crumbRect = crumbObj.GetComponent<RectTransform>();
+            Vector2 randomOffset = new Vector2(UnityEngine.Random.Range(-12f, 12f), UnityEngine.Random.Range(-12f, 12f));
+            crumbRect.anchoredPosition = localPoint + randomOffset;
+
+            // --- Updated for Curly Rectangular Shape ---
+            // Make the crumb narrow and long (Width: 1.5 to 2.5 pixels, Height: 6 to 13 pixels)
+            float width = UnityEngine.Random.Range(1.5f, 2.5f);
+            float height = UnityEngine.Random.Range(6f, 13f);
+            crumbRect.sizeDelta = new Vector2(width, height);
+
+            // Give it a random starting angle on its Z-axis so they don't spawn facing the same direction
+            crumbRect.localRotation = Quaternion.Euler(0f, 0f, UnityEngine.Random.Range(0f, 360f));
+
+            Image crumbImage = crumbObj.GetComponent<Image>();
+
+            // Mix the paint color with a little white to look like real rubber eraser dust!
+            Color mixedColor = Color.Lerp(erasedColor, Color.white, UnityEngine.Random.Range(0.15f, 0.35f));
+            mixedColor.a = 0.95f; // Solid start
+
+            crumbImage.color = mixedColor;
         }
     }
 }
