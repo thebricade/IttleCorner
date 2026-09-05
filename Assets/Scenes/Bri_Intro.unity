@@ -5981,6 +5981,7 @@ GameObject:
   - component: {fileID: 1671210288}
   - component: {fileID: 1671210292}
   - component: {fileID: 1671210293}
+  - component: {fileID: 1671210294}
   m_Layer: 5
   m_Name: RawImage
   m_TagString: Untagged
@@ -6135,6 +6136,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IntroDrawingSetup
   drawingPad: {fileID: 1671210288}
   colorCycleSpeed: 0.5
+--- !u!114 &1671210294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1671210287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbcdcf5346c634695b4935c1fdb384a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SwipeHint
+  hintColor: {r: 0.126157, g: 0.65202636, b: 0.990566, a: 0.8}
+  circleSize: 60
+  trailCircleSize: 30
+  swipeDistance: 200
+  animationDuration: 1.5
+  pauseBetweenLoops: 0.5
+  trailCount: 6
+  idleTimeBeforeShow: 3
 --- !u!1 &1703523168
 GameObject:
   m_ObjectHideFlags: 0

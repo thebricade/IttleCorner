@@ -237,16 +237,34 @@ public class DialogueManager : MonoBehaviour
     {
         if (DrawingManager.Instance.savedDrawings.Count == 0) return;
 
-        // get the first drawing (the one from the intro)
         Drawing introDrawing = DrawingManager.Instance.savedDrawings[0];
-    
+
         Sprite drawingSprite = Sprite.Create(
             introDrawing.texture,
             new Rect(0, 0, introDrawing.texture.width, introDrawing.texture.height),
-            new Vector2(0.5f, 0.5f)
+            new Vector2(0.5f, 0.5f),
+            100f
         );
 
         walrusHatDrawingRenderer.sprite = drawingSprite;
+
+        // get the SpriteMask on the parent and match its size
+        SpriteMask mask = walrusHatDrawingRenderer.GetComponentInParent<SpriteMask>();
+        if (mask != null)
+        {
+            // scale the drawing renderer to match the mask's world size
+            Vector3 maskSize = mask.bounds.size;
+            Vector3 spriteSize = walrusHatDrawingRenderer.bounds.size;
+
+            if (spriteSize.x > 0 && spriteSize.y > 0)
+            {
+                walrusHatDrawingRenderer.transform.localScale = new Vector3(
+                    maskSize.x / spriteSize.x,
+                    maskSize.y / spriteSize.y,
+                    1f
+                );
+            }
+        }
     }
     
     void PlayVoice(NPCData npc)

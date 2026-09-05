@@ -11,13 +11,8 @@ public class NPCInteractable : MonoBehaviour
    
    private void OnMouseDown()
    {
-      if (GameModeManager.Instance.currentMode != GameMode.Explore)
-      {
-         return;
-      }
-
-      Debug.Log("NPC clicked, npcData: " + npcData);
-      Debug.Log("DialogueManager instance: " + DialogueManager.Instance);
+      if (GameModeManager.Instance.currentMode != GameMode.Explore) return;
+      if (DialogueManager.Instance.dialogueCanvas.activeSelf) return;
 
       DialogueManager.Instance.StartDialogue(npcData, transform.position);
    }

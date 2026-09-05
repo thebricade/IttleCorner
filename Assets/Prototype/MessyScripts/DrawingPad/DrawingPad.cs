@@ -156,6 +156,7 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             isDrawing = true;
             StartNewStroke();
             PaintAtLocalPoint(localPoint, rectTransform);
+            drawTexture.Apply();
             lastLocalPoint = localPoint;
         }
     }
@@ -222,6 +223,7 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             else
             {
                 PaintAtLocalPoint(localPoint, rectTransform);
+                drawTexture.Apply();
                 PlayDrawingSound(); // Play sound if we single click tap
             }
             lastLocalPoint = localPoint;
@@ -254,15 +256,22 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             // from == to (mouse hasn't moved since the last sample) - painting a "line" here
             // would divide by zero (step / steps), so just paint the single point.
             PaintAtLocalPoint(to, rt);
+            drawTexture.Apply();
             return;
         }
 
+        // dab functions only touch the pixel buffer now - Apply() (a real GPU texture
+        // upload) happens exactly once here per drag segment, instead of once per dab.
+        // With no spacing on the hard/eraser brushes, a fast swipe can queue up hundreds
+        // of dabs in a single frame; calling Apply() that many times was the actual cost,
+        // not the pixel math itself.
         for (int step = 0; step <= steps; step++)
         {
             float t = (float)step / steps;
             Vector2 point = Vector2.Lerp(from, to, t);
             PaintAtLocalPoint(point, rt);
         }
+        drawTexture.Apply();
     }
 
     float GetDabSpacingLocalUnits(RectTransform rt)
@@ -280,6 +289,9 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 break;
             case BrushStyle.Watercolor2:
                 factor = WatercolorPresetV2.dabSpacingFactor;
+                break;
+            case BrushStyle.GelGlitter:
+                factor = GelGlitterPreset.dabSpacingFactor;
                 break;
             default:
                 return 0f; // hard brush styles: dense, no spacing
@@ -342,7 +354,10 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             }
             else if (currentBrushStyle == BrushStyle.GelGlitter)
             {
-                SetBrushSize(8);
+                // no hardcoded SetBrushSize here (unlike the fixed-size presets above) -
+                // GelGlitter's size is meant to be driven externally, e.g. IntroDrawingSetup
+                // sets it to 13 for the rainbow brush; forcing it back to a fixed value on
+                // every dab would silently undo that.
                 PaintGelGlitter(x, y);
             }
             break;
@@ -357,6 +372,23 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
 void PaintHard(int centerX, int centerY)
 {
+    // Batch through one GetPixels/SetPixels pair instead of one SetPixel call per pixel -
+    // each Texture2D.SetPixel call carries real per-call overhead, and this is the most
+    // frequently-invoked brush (dense, unspaced dabs on every pixel of mouse movement).
+    int blockX0 = Mathf.Max(0, centerX - brushSize);
+    int blockX1 = Mathf.Min(textureSize - 1, centerX + brushSize - 1);
+    int blockY0 = Mathf.Max(0, centerY - brushSize);
+    int blockY1 = Mathf.Min(textureSize - 1, centerY + brushSize - 1);
+
+    if (blockX1 < blockX0 || blockY1 < blockY0)
+    {
+        return; // dab is entirely off-canvas
+    }
+
+    int blockWidth = blockX1 - blockX0 + 1;
+    int blockHeight = blockY1 - blockY0 + 1;
+    Color[] block = drawTexture.GetPixels(blockX0, blockY0, blockWidth, blockHeight);
+
     for (int i = -brushSize; i < brushSize; i++)
     {
         for (int j = -brushSize; j < brushSize; j++)
@@ -364,23 +396,43 @@ void PaintHard(int centerX, int centerY)
             int px = centerX + i;
             int py = centerY + j;
 
-            if (px >= 0 && px < textureSize && py >= 0 && py < textureSize)
+            int localX = px - blockX0;
+            int localY = py - blockY0;
+            if (localX < 0 || localX >= blockWidth || localY < 0 || localY >= blockHeight) continue;
+
+            float dist = Mathf.Sqrt(i * i + j * j);
+            if (dist <= brushSize)
             {
-                float dist = Mathf.Sqrt(i * i + j * j);
-                if (dist <= brushSize)
-                {
-                    drawTexture.SetPixel(px, py, brushColor);
-                }
+                block[localY * blockWidth + localX] = brushColor;
             }
         }
     }
-    drawTexture.Apply();
+
+    drawTexture.SetPixels(blockX0, blockY0, blockWidth, blockHeight, block);
+    // Apply() is deferred to the caller (PaintLine/OnPointerDown) so it only happens once
+    // per drag segment instead of once per dab.
 }
 
     void PaintEraser(int centerX, int centerY, Vector2 localPoint)
     {
         Color erasedColor = Color.clear;
         bool foundColor = false;
+
+        // Batch through one GetPixels/SetPixels pair instead of one GetPixel + one SetPixel
+        // call per pixel - same technique as PaintHard/PaintGelGlitterDab.
+        int blockX0 = Mathf.Max(0, centerX - brushSize);
+        int blockX1 = Mathf.Min(textureSize - 1, centerX + brushSize - 1);
+        int blockY0 = Mathf.Max(0, centerY - brushSize);
+        int blockY1 = Mathf.Min(textureSize - 1, centerY + brushSize - 1);
+
+        if (blockX1 < blockX0 || blockY1 < blockY0)
+        {
+            return; // dab is entirely off-canvas
+        }
+
+        int blockWidth = blockX1 - blockX0 + 1;
+        int blockHeight = blockY1 - blockY0 + 1;
+        Color[] block = drawTexture.GetPixels(blockX0, blockY0, blockWidth, blockHeight);
 
         for (int i = -brushSize; i < brushSize; i++)
         {
@@ -389,27 +441,33 @@ void PaintHard(int centerX, int centerY)
                 int px = centerX + i;
                 int py = centerY + j;
 
-                if (px >= 0 && px < textureSize && py >= 0 && py < textureSize)
+                int localX = px - blockX0;
+                int localY = py - blockY0;
+                if (localX < 0 || localX >= blockWidth || localY < 0 || localY >= blockHeight) continue;
+
+                float dist = Mathf.Sqrt(i * i + j * j);
+                if (dist <= brushSize)
                 {
-                    float dist = Mathf.Sqrt(i * i + j * j);
-                    if (dist <= brushSize)
+                    int blockIdx = localY * blockWidth + localX;
+
+                    // Sample the color before erasing it
+                    if (!foundColor)
                     {
-                        // Sample the color before erasing it
-                        if (!foundColor)
+                        Color c = block[blockIdx];
+                        if (c.a > 0.15f)
                         {
-                            Color c = drawTexture.GetPixel(px, py);
-                            if (c.a > 0.15f)
-                            {
-                                erasedColor = c;
-                                foundColor = true;
-                            }
+                            erasedColor = c;
+                            foundColor = true;
                         }
-                        drawTexture.SetPixel(px, py, Color.clear);
                     }
+                    block[blockIdx] = Color.clear;
                 }
             }
         }
-        drawTexture.Apply();
+
+        drawTexture.SetPixels(blockX0, blockY0, blockWidth, blockHeight, block);
+        // Apply() is deferred to the caller (PaintLine/OnPointerDown) so it only happens once
+        // per drag segment instead of once per dab.
 
         // Only spawn crumbs if we actually erased some paint!
         if (foundColor)
@@ -456,6 +514,24 @@ void PaintHard(int centerX, int centerY)
         // Tighter cell size (4.0f instead of 6.0f) packs the glitter closer together for a dense coat
         float cellSize = 4.0f;
 
+        // Batch all canvas reads/writes for this dab through one GetPixels/SetPixels pair
+        // instead of one GetPixel/SetPixel call per pixel - each Texture2D.GetPixel/SetPixel
+        // call carries real per-call overhead (bounds checks, marshaling) on top of the actual
+        // math, and this loop can touch thousands of pixels for a single dab.
+        int blockX0 = Mathf.Max(0, centerX - brushSize);
+        int blockX1 = Mathf.Min(drawTexture.width - 1, centerX + brushSize - 1);
+        int blockY0 = Mathf.Max(0, centerY - brushSize);
+        int blockY1 = Mathf.Min(drawTexture.height - 1, centerY + brushSize - 1);
+
+        if (blockX1 < blockX0 || blockY1 < blockY0)
+        {
+            return; // dab is entirely off-canvas
+        }
+
+        int blockWidth = blockX1 - blockX0 + 1;
+        int blockHeight = blockY1 - blockY0 + 1;
+        Color[] block = drawTexture.GetPixels(blockX0, blockY0, blockWidth, blockHeight);
+
         for (int i = -brushSize; i < brushSize; i++)
         {
             for (int j = -brushSize; j < brushSize; j++)
@@ -467,14 +543,18 @@ void PaintHard(int centerX, int centerY)
                 int px = centerX + i;
                 int py = centerY + j;
 
-                // Canvas bounds safety check
-                if (px < 0 || px >= drawTexture.width || py < 0 || py >= drawTexture.height) continue;
+                // Canvas bounds safety check (equivalent to the old px/py checks, but
+                // relative to the fetched block)
+                int localX = px - blockX0;
+                int localY = py - blockY0;
+                if (localX < 0 || localX >= blockWidth || localY < 0 || localY >= blockHeight) continue;
+                int blockIdx = localY * blockWidth + localX;
 
                 float dist = Mathf.Sqrt(distSq);
                 float normDist = dist / rMax;
 
-                // Retrieve the existing pixel color on the canvas
-                Color existingColor = drawTexture.GetPixel(px, py);
+                // Retrieve the existing pixel color from the batched block instead of the canvas
+                Color existingColor = block[blockIdx];
 
                 // ==========================================================
                 // COLOR-SIMILARITY THRESHOLD GUARD
@@ -671,12 +751,15 @@ void PaintHard(int centerX, int centerY)
                     finalPixelColor.a = Mathf.Max(finalPixelColor.a, maxGlint);
                 }
 
-                // Alpha-blend the final pixel over the existing canvas pixel
+                // Alpha-blend the final pixel over the existing canvas pixel, written into
+                // the batched block instead of a per-pixel SetPixel call
                 Color blendedColor = Color.Lerp(existingColor, finalPixelColor, finalPixelColor.a);
-                drawTexture.SetPixel(px, py, blendedColor);
+                block[blockIdx] = blendedColor;
             }
         }
-        drawTexture.Apply();
+        drawTexture.SetPixels(blockX0, blockY0, blockWidth, blockHeight, block);
+        // Apply() is deferred to the caller (PaintLine/OnPointerDown) so it only happens once
+        // per drag segment instead of once per dab.
     }
 
     float ShaderHash(int x, int y, int seed)
@@ -786,6 +869,10 @@ private static readonly WatercolorParams WatercolorPresetV2 = new WatercolorPara
         public float glitterShininess;      // Sharpness of glitter sparkles
         public float shimmerSpeed;          // Twinkle speed
         public float holographicShift;      // Holographic rainbow range (0.0 to 0.3)
+        public float dabSpacingFactor;      // min distance between dabs along a drag, as a
+                                             // fraction of brushSize - this is the expensive
+                                             // per-pixel brush, so throttling dab count during
+                                             // a fast drag matters a lot for frame time
     }
     private static readonly GelGlitterParams GelGlitterPreset = new GelGlitterParams
     {
@@ -795,7 +882,8 @@ private static readonly WatercolorParams WatercolorPresetV2 = new WatercolorPara
         glitterDensity = 0.08f,     // 8% metallic glitter flake coverage
         glitterShininess = 30.0f,   // Pinpoint intense specular sparkle
         shimmerSpeed = 3.8f,        // Smooth real-time twinkling speed
-        holographicShift = 0.12f    // Shifts flake color slightly around the brush color for deep luster
+        holographicShift = 0.12f,   // Shifts flake color slightly around the brush color for deep luster
+        dabSpacingFactor = 0.4f,
     };
 
     void PaintWatercolor(int centerX, int centerY)
@@ -924,7 +1012,8 @@ void PaintWatercolorDab(int centerX, int centerY, WatercolorParams p)
             }
         }
     }
-    drawTexture.Apply();
+    // Apply() is deferred to the caller (PaintLine/OnPointerDown) so it only happens once
+    // per drag segment instead of once per dab.
 }
 
 // Small random HSV drift off the base brush color, so consecutive dabs aren't
