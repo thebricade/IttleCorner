@@ -49,15 +49,15 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public AudioClip[] watercolor2Sounds = new AudioClip[4];
     public AudioClip[] gelGlitterSounds = new AudioClip[4];
     public AudioClip[] eraserSounds = new AudioClip[4];
-    private int bigBrushSoundIndex = 0;
-    private int mediumBrushSoundIndex = 0;
-    private int smallBrushSoundIndex = 0;
-    private int watercolorSoundIndex = 0;
-    private int watercolor2SoundIndex = 0;
-    private int gelGlitterSoundIndex = 0;
-    private int eraserSoundIndex = 0;
+    private int bigBrushSoundIndex = -1;
+    private int mediumBrushSoundIndex = -1;
+    private int smallBrushSoundIndex = -1;
+    private int watercolorSoundIndex = -1;
+    private int watercolor2SoundIndex = -1;
+    private int gelGlitterSoundIndex = -1;
+    private int eraserSoundIndex = -1;
     private float soundCooldownTimer = 0f;
-    private const float SOUND_COOLDOWN_DURATION = 0.22f; // Cooldown limits rapid fire overlap noise
+    private const float soundCooldownDuration = .61f; // Cooldown limits rapid fire overlap noise
 
 
     [Tooltip("Optional stamp image for the watercolor brushes. Should be grayscale " +
@@ -93,6 +93,18 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
+        InitializeSoundArrays();
+    }
+
+    private void InitializeSoundArrays()
+    {
+        if (bigBrushSounds == null || bigBrushSounds.Length != 4) bigBrushSounds = new AudioClip[4];
+        if (mediumBrushSounds == null || mediumBrushSounds.Length != 4) mediumBrushSounds = new AudioClip[4];
+        if (smallBrushSounds == null || smallBrushSounds.Length != 4) smallBrushSounds = new AudioClip[4];
+        if (watercolorSounds == null || watercolorSounds.Length != 4) watercolorSounds = new AudioClip[4];
+        if (watercolor2Sounds == null || watercolor2Sounds.Length != 4) watercolor2Sounds = new AudioClip[4];
+        if (gelGlitterSounds == null || gelGlitterSounds.Length != 4) gelGlitterSounds = new AudioClip[4];
+        if (eraserSounds == null || eraserSounds.Length != 4) eraserSounds = new AudioClip[4];
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -175,6 +187,10 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     // Update is called once per frame
     void Update()
     {
+        if (soundCooldownTimer > 0f)
+        {
+            soundCooldownTimer -= Time.deltaTime;
+        }
         if (!isDrawing)
         {
             return;
@@ -1069,8 +1085,10 @@ void ApplyWatercolorTexel(int idx, int px, int py, float strength, WatercolorPar
         if (currentDrawingTool == DrawingTool.Eraser)
         {
             activeClips = eraserSounds;
-            eraserSoundIndex = (eraserSoundIndex + 1) % 4;
-            currentIndex = eraserSoundIndex;
+            if (activeClips != null && activeClips.Length > 0)
+            {
+                currentIndex = GetNonRepeatingRandomIndex(ref eraserSoundIndex, activeClips.Length);
+            }
         }
         else
         {
@@ -1078,33 +1096,45 @@ void ApplyWatercolorTexel(int idx, int px, int py, float strength, WatercolorPar
             {
                 case BrushStyle.Big:
                     activeClips = bigBrushSounds;
-                    bigBrushSoundIndex = (bigBrushSoundIndex + 1) % 4;
-                    currentIndex = bigBrushSoundIndex;
+                    if (activeClips != null && activeClips.Length > 0)
+                    {
+                        currentIndex = GetNonRepeatingRandomIndex(ref bigBrushSoundIndex, activeClips.Length);
+                    }
                     break;
                 case BrushStyle.Medium:
                     activeClips = mediumBrushSounds;
-                    mediumBrushSoundIndex = (mediumBrushSoundIndex + 1) % 4;
-                    currentIndex = mediumBrushSoundIndex;
+                    if (activeClips != null && activeClips.Length > 0)
+                    {
+                        currentIndex = GetNonRepeatingRandomIndex(ref mediumBrushSoundIndex, activeClips.Length);
+                    }
                     break;
                 case BrushStyle.Small:
                     activeClips = smallBrushSounds;
-                    smallBrushSoundIndex = (smallBrushSoundIndex + 1) % 4;
-                    currentIndex = smallBrushSoundIndex;
+                    if (activeClips != null && activeClips.Length > 0)
+                    {
+                        currentIndex = GetNonRepeatingRandomIndex(ref smallBrushSoundIndex, activeClips.Length);
+                    }
                     break;
                 case BrushStyle.Watercolor:
                     activeClips = watercolorSounds;
-                    watercolorSoundIndex = (watercolorSoundIndex + 1) % 4;
-                    currentIndex = watercolorSoundIndex;
+                    if (activeClips != null && activeClips.Length > 0)
+                    {
+                        currentIndex = GetNonRepeatingRandomIndex(ref watercolorSoundIndex, activeClips.Length);
+                    }
                     break;
                 case BrushStyle.Watercolor2:
                     activeClips = watercolor2Sounds;
-                    watercolor2SoundIndex = (watercolor2SoundIndex + 1) % 4;
-                    currentIndex = watercolor2SoundIndex;
+                    if (activeClips != null && activeClips.Length > 0)
+                    {
+                        currentIndex = GetNonRepeatingRandomIndex(ref watercolor2SoundIndex, activeClips.Length);
+                    }
                     break;
                 case BrushStyle.GelGlitter:
                     activeClips = gelGlitterSounds;
-                    gelGlitterSoundIndex = (gelGlitterSoundIndex + 1) % 4;
-                    currentIndex = gelGlitterSoundIndex;
+                    if (activeClips != null && activeClips.Length > 0)
+                    {
+                        currentIndex = GetNonRepeatingRandomIndex(ref gelGlitterSoundIndex, activeClips.Length);
+                    }
                     break;
             }
         }
@@ -1115,9 +1145,23 @@ void ApplyWatercolorTexel(int idx, int px, int py, float strength, WatercolorPar
             if (clip != null)
             {
                 audioSource.PlayOneShot(clip);
-                soundCooldownTimer = SOUND_COOLDOWN_DURATION;
+                soundCooldownTimer = soundCooldownDuration; // Cooldown resets!
             }
         }
+    }
+    private int GetNonRepeatingRandomIndex(ref int lastIndex, int arrayLength)
+    {
+        if (arrayLength <= 1) return 0;
+
+        int nextIndex = lastIndex;
+        // Keep picking a random number until it doesn't match the last played one
+        while (nextIndex == lastIndex)
+        {
+            nextIndex = UnityEngine.Random.Range(0, arrayLength);
+        }
+
+        lastIndex = nextIndex; // Remember this index for next time!
+        return nextIndex;
     }
 }
 
