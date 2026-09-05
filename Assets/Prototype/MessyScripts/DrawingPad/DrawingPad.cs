@@ -347,7 +347,7 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             }
             break;
         case DrawingTool.Eraser:
-            PaintEraser(x, y);
+                PaintEraser(x, y, localPoint);
             break;
         default:
             Debug.Log("invalid tool");
@@ -377,27 +377,48 @@ void PaintHard(int centerX, int centerY)
     drawTexture.Apply();
 }
 
-void PaintEraser(int centerX, int centerY)
-{
-    for (int i = -brushSize; i < brushSize; i++)
+    void PaintEraser(int centerX, int centerY, Vector2 localPoint)
     {
-        for (int j = -brushSize; j < brushSize; j++)
-        {
-            int px = centerX + i;
-            int py = centerY + j;
+        Color erasedColor = Color.clear;
+        bool foundColor = false;
 
-            if (px >= 0 && px < textureSize && py >= 0 && py < textureSize)
+        for (int i = -brushSize; i < brushSize; i++)
+        {
+            for (int j = -brushSize; j < brushSize; j++)
             {
-                float dist = Mathf.Sqrt(i * i + j * j);
-                if (dist <= brushSize)
+                int px = centerX + i;
+                int py = centerY + j;
+
+                if (px >= 0 && px < textureSize && py >= 0 && py < textureSize)
                 {
-                    drawTexture.SetPixel(px, py, Color.clear);
+                    float dist = Mathf.Sqrt(i * i + j * j);
+                    if (dist <= brushSize)
+                    {
+                        // Sample the color before erasing it
+                        if (!foundColor)
+                        {
+                            Color c = drawTexture.GetPixel(px, py);
+                            if (c.a > 0.15f)
+                            {
+                                erasedColor = c;
+                                foundColor = true;
+                            }
+                        }
+                        drawTexture.SetPixel(px, py, Color.clear);
+                    }
                 }
             }
         }
+        drawTexture.Apply();
+
+        // Only spawn crumbs if we actually erased some paint!
+        if (foundColor)
+        {
+            // This calls our spawner and passes both required parameters
+            SpawnEraserCrumbsLocal(localPoint, erasedColor);
+        }
     }
-    drawTexture.Apply();
-}
+
     void PaintGelGlitter(int centerX, int centerY)
     {
         PaintGelGlitterDab(centerX, centerY, GelGlitterPreset);
@@ -1162,6 +1183,30 @@ void ApplyWatercolorTexel(int idx, int px, int py, float strength, WatercolorPar
 
         lastIndex = nextIndex; // Remember this index for next time!
         return nextIndex;
+    }
+    private void SpawnEraserCrumbsLocal(Vector2 localPoint, Color erasedColor)
+    {
+        int count = UnityEngine.Random.Range(1, 3);
+        for (int i = 0; i < count; i++)
+        {
+            GameObject crumbObj = new GameObject("EraserCrumb", typeof(RectTransform), typeof(Image), typeof(EraserCrumb));
+            crumbObj.transform.SetParent(transform, false);
+
+            RectTransform crumbRect = crumbObj.GetComponent<RectTransform>();
+            Vector2 randomOffset = new Vector2(UnityEngine.Random.Range(-12f, 12f), UnityEngine.Random.Range(-12f, 12f));
+            crumbRect.anchoredPosition = localPoint + randomOffset;
+
+            float size = UnityEngine.Random.Range(2f, 5f);
+            crumbRect.sizeDelta = new Vector2(size, size);
+
+            Image crumbImage = crumbObj.GetComponent<Image>();
+
+            // Mix the paint color with a little white to look like real rubber eraser dust!
+            Color mixedColor = Color.Lerp(erasedColor, Color.white, UnityEngine.Random.Range(0.15f, 0.35f));
+            mixedColor.a = 0.95f; // Solid start
+
+            crumbImage.color = mixedColor;
+        }
     }
 }
 
