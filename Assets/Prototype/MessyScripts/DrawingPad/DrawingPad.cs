@@ -1008,10 +1008,15 @@ void ApplyWatercolorTexel(int idx, int px, int py, float strength, WatercolorPar
 
     drawTexture.SetPixel(px, py, new Color(r, g, b, newAlpha));
 }
-    
+
     public void SetBrushColor(Color newColor)
     {
         brushColor = newColor;
+        // If they pick a color while using the eraser, autoswap tool back to last active brush style.
+        if (currentDrawingTool == DrawingTool.Eraser)
+        {
+            currentDrawingTool = DrawingTool.Brush;
+        }
     }
 
     public void SetDrawingTool(DrawingTool tool)
@@ -1196,8 +1201,14 @@ void ApplyWatercolorTexel(int idx, int px, int py, float strength, WatercolorPar
             Vector2 randomOffset = new Vector2(UnityEngine.Random.Range(-12f, 12f), UnityEngine.Random.Range(-12f, 12f));
             crumbRect.anchoredPosition = localPoint + randomOffset;
 
-            float size = UnityEngine.Random.Range(2f, 5f);
-            crumbRect.sizeDelta = new Vector2(size, size);
+            // --- Updated for Curly Rectangular Shape ---
+            // Make the crumb narrow and long (Width: 1.5 to 2.5 pixels, Height: 6 to 13 pixels)
+            float width = UnityEngine.Random.Range(1.5f, 2.5f);
+            float height = UnityEngine.Random.Range(6f, 13f);
+            crumbRect.sizeDelta = new Vector2(width, height);
+
+            // Give it a random starting angle on its Z-axis so they don't spawn facing the same direction
+            crumbRect.localRotation = Quaternion.Euler(0f, 0f, UnityEngine.Random.Range(0f, 360f));
 
             Image crumbImage = crumbObj.GetComponent<Image>();
 
