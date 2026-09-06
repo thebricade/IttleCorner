@@ -23,6 +23,7 @@ public class DialogueManager : MonoBehaviour
     private int currentVoiceIndex = 0; 
     
     public GameObject eraserButton;
+    public GameObject DrawboardEraser;
     public SpriteRenderer walrusHatDrawingRenderer; 
 
     void Awake()
@@ -219,6 +220,7 @@ public class DialogueManager : MonoBehaviour
     
         if (key == "ittle_erasing_c")
         {
+            DrawboardEraser.SetActive(true);
             UnlockPopup.Instance.Show(
                 "New Tool: Eraser!",
                 "You can now erase parts of your drawings.",

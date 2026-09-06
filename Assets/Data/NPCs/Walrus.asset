@@ -14,10 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPCData
   npcName: Walrus
   defaultConversationKey: default
-  voiceClips:
-  - {fileID: 8300000, guid: efd681c6d7f22044bb5bbb708f40079e, type: 3}
-  - {fileID: 8300000, guid: 1a3bbfe2e2eb5e148b601ac3f8bf9105, type: 3}
-  - {fileID: 8300000, guid: 701fa46bb2746b04e8918ce4e46c2227, type: 3}
+  voiceClips: []
   conversations:
   - key: default
     dialogueLine:
@@ -30,11 +27,12 @@ MonoBehaviour:
         action: 0
         actionParam: 
         nextLine:
-          npcText: You don't know about Scraps!? Pastels and paste...
+          npcText: Looking fantastic! Do you not know about  Scraps!? Pastels and
+            paste...
           choices:
-          - choiceText: wow that's a lot...
+          - choiceText: Is it like money?
             endsConversation: 0
-            setsConversationKey: 
+            setsConversationKey: ittle_first_placement_1
             action: 0
             actionParam: 
             nextLine:
@@ -42,7 +40,7 @@ MonoBehaviour:
                 makes it into something new. One Ittle Scrap is another Ittle masterpiece,
                 am I right?
               choices:
-              - choiceText: You want me to draw more?
+              - choiceText: so all my drawings?
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -52,7 +50,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -71,7 +69,7 @@ MonoBehaviour:
                       choices: []
                       nextLineKey: 
                   nextLineKey: 
-              - choiceText: Sure!
+              - choiceText: hmm okay
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -81,7 +79,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -100,7 +98,7 @@ MonoBehaviour:
                       choices: []
                       nextLineKey: 
                   nextLineKey: 
-              - choiceText: If the price is right
+              - choiceText: sure
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -110,7 +108,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -130,7 +128,7 @@ MonoBehaviour:
                       nextLineKey: 
                   nextLineKey: 
               nextLineKey: 
-          - choiceText: thank you
+          - choiceText: You paid me for art?
             endsConversation: 0
             setsConversationKey: 
             action: 0
@@ -140,7 +138,7 @@ MonoBehaviour:
                 makes it into something new. One Ittle Scrap is another Ittle masterpiece,
                 am I right?
               choices:
-              - choiceText: You want me to draw more?
+              - choiceText: so all my drawings?
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -150,7 +148,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -169,7 +167,7 @@ MonoBehaviour:
                       choices: []
                       nextLineKey: 
                   nextLineKey: 
-              - choiceText: Sure!
+              - choiceText: hmm okay
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -179,7 +177,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -198,7 +196,7 @@ MonoBehaviour:
                       choices: []
                       nextLineKey: 
                   nextLineKey: 
-              - choiceText: If the price is right
+              - choiceText: sure
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -208,7 +206,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -228,7 +226,7 @@ MonoBehaviour:
                       nextLineKey: 
                   nextLineKey: 
               nextLineKey: 
-          - choiceText: scrap?
+          - choiceText: Like junk?
             endsConversation: 0
             setsConversationKey: 
             action: 0
@@ -238,7 +236,7 @@ MonoBehaviour:
                 makes it into something new. One Ittle Scrap is another Ittle masterpiece,
                 am I right?
               choices:
-              - choiceText: You want me to draw more?
+              - choiceText: so all my drawings?
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -248,7 +246,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -267,7 +265,7 @@ MonoBehaviour:
                       choices: []
                       nextLineKey: 
                   nextLineKey: 
-              - choiceText: Sure!
+              - choiceText: hmm okay
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -277,7 +275,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -296,7 +294,7 @@ MonoBehaviour:
                       choices: []
                       nextLineKey: 
                   nextLineKey: 
-              - choiceText: If the price is right
+              - choiceText: sure
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -306,7 +304,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -333,11 +331,12 @@ MonoBehaviour:
         action: 0
         actionParam: 
         nextLine:
-          npcText: You don't know about Scraps!? Pastels and paste...
+          npcText: Looking fantastic! Do you not know about  Scraps!? Pastels and
+            paste...
           choices:
-          - choiceText: wow that's a lot...
+          - choiceText: Is it like money?
             endsConversation: 0
-            setsConversationKey: 
+            setsConversationKey: ittle_first_placement_1
             action: 0
             actionParam: 
             nextLine:
@@ -345,7 +344,7 @@ MonoBehaviour:
                 makes it into something new. One Ittle Scrap is another Ittle masterpiece,
                 am I right?
               choices:
-              - choiceText: You want me to draw more?
+              - choiceText: so all my drawings?
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -355,7 +354,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -374,7 +373,7 @@ MonoBehaviour:
                       choices: []
                       nextLineKey: 
                   nextLineKey: 
-              - choiceText: Sure!
+              - choiceText: hmm okay
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -384,7 +383,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -403,7 +402,7 @@ MonoBehaviour:
                       choices: []
                       nextLineKey: 
                   nextLineKey: 
-              - choiceText: If the price is right
+              - choiceText: sure
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -413,7 +412,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -433,7 +432,7 @@ MonoBehaviour:
                       nextLineKey: 
                   nextLineKey: 
               nextLineKey: 
-          - choiceText: thank you
+          - choiceText: You paid me for art?
             endsConversation: 0
             setsConversationKey: 
             action: 0
@@ -443,7 +442,7 @@ MonoBehaviour:
                 makes it into something new. One Ittle Scrap is another Ittle masterpiece,
                 am I right?
               choices:
-              - choiceText: You want me to draw more?
+              - choiceText: so all my drawings?
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -453,7 +452,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -472,7 +471,7 @@ MonoBehaviour:
                       choices: []
                       nextLineKey: 
                   nextLineKey: 
-              - choiceText: Sure!
+              - choiceText: hmm okay
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -482,7 +481,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -501,7 +500,7 @@ MonoBehaviour:
                       choices: []
                       nextLineKey: 
                   nextLineKey: 
-              - choiceText: If the price is right
+              - choiceText: sure
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -511,7 +510,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -531,7 +530,7 @@ MonoBehaviour:
                       nextLineKey: 
                   nextLineKey: 
               nextLineKey: 
-          - choiceText: scrap?
+          - choiceText: Like junk?
             endsConversation: 0
             setsConversationKey: 
             action: 0
@@ -541,7 +540,7 @@ MonoBehaviour:
                 makes it into something new. One Ittle Scrap is another Ittle masterpiece,
                 am I right?
               choices:
-              - choiceText: You want me to draw more?
+              - choiceText: so all my drawings?
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -551,7 +550,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -570,7 +569,7 @@ MonoBehaviour:
                       choices: []
                       nextLineKey: 
                   nextLineKey: 
-              - choiceText: Sure!
+              - choiceText: hmm okay
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -580,7 +579,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -599,7 +598,7 @@ MonoBehaviour:
                       choices: []
                       nextLineKey: 
                   nextLineKey: 
-              - choiceText: If the price is right
+              - choiceText: sure
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -609,7 +608,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -630,17 +629,18 @@ MonoBehaviour:
                   nextLineKey: 
               nextLineKey: 
           nextLineKey: 
-      - choiceText: I guess
+      - choiceText: scrap?
         endsConversation: 0
         setsConversationKey: ittle_first_placement_0
         action: 0
         actionParam: 
         nextLine:
-          npcText: You don't know about Scraps!? Pastels and paste...
+          npcText: Looking fantastic! Do you not know about  Scraps!? Pastels and
+            paste...
           choices:
-          - choiceText: wow that's a lot...
+          - choiceText: Is it like money?
             endsConversation: 0
-            setsConversationKey: 
+            setsConversationKey: ittle_first_placement_1
             action: 0
             actionParam: 
             nextLine:
@@ -648,7 +648,7 @@ MonoBehaviour:
                 makes it into something new. One Ittle Scrap is another Ittle masterpiece,
                 am I right?
               choices:
-              - choiceText: You want me to draw more?
+              - choiceText: so all my drawings?
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -658,7 +658,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -677,7 +677,7 @@ MonoBehaviour:
                       choices: []
                       nextLineKey: 
                   nextLineKey: 
-              - choiceText: Sure!
+              - choiceText: hmm okay
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -687,7 +687,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -706,7 +706,7 @@ MonoBehaviour:
                       choices: []
                       nextLineKey: 
                   nextLineKey: 
-              - choiceText: If the price is right
+              - choiceText: sure
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -716,7 +716,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -736,7 +736,7 @@ MonoBehaviour:
                       nextLineKey: 
                   nextLineKey: 
               nextLineKey: 
-          - choiceText: thank you
+          - choiceText: You paid me for art?
             endsConversation: 0
             setsConversationKey: 
             action: 0
@@ -746,7 +746,7 @@ MonoBehaviour:
                 makes it into something new. One Ittle Scrap is another Ittle masterpiece,
                 am I right?
               choices:
-              - choiceText: You want me to draw more?
+              - choiceText: so all my drawings?
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -756,7 +756,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -775,7 +775,7 @@ MonoBehaviour:
                       choices: []
                       nextLineKey: 
                   nextLineKey: 
-              - choiceText: Sure!
+              - choiceText: hmm okay
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -785,7 +785,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -804,7 +804,7 @@ MonoBehaviour:
                       choices: []
                       nextLineKey: 
                   nextLineKey: 
-              - choiceText: If the price is right
+              - choiceText: sure
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -814,7 +814,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -834,7 +834,7 @@ MonoBehaviour:
                       nextLineKey: 
                   nextLineKey: 
               nextLineKey: 
-          - choiceText: scrap?
+          - choiceText: Like junk?
             endsConversation: 0
             setsConversationKey: 
             action: 0
@@ -844,7 +844,7 @@ MonoBehaviour:
                 makes it into something new. One Ittle Scrap is another Ittle masterpiece,
                 am I right?
               choices:
-              - choiceText: You want me to draw more?
+              - choiceText: so all my drawings?
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -854,7 +854,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -873,7 +873,7 @@ MonoBehaviour:
                       choices: []
                       nextLineKey: 
                   nextLineKey: 
-              - choiceText: Sure!
+              - choiceText: hmm okay
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -883,7 +883,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -902,7 +902,7 @@ MonoBehaviour:
                       choices: []
                       nextLineKey: 
                   nextLineKey: 
-              - choiceText: If the price is right
+              - choiceText: sure
                 endsConversation: 0
                 setsConversationKey: 
                 action: 0
@@ -912,7 +912,7 @@ MonoBehaviour:
                     little Scrap. Here, I'll give you some of mine. Make  some art
                     and put it into the world!
                   choices:
-                  - choiceText: I'll make something
+                  - choiceText: I can do quick doodle
                     endsConversation: 1
                     setsConversationKey: ittle_wait_commission
                     action: 1
@@ -938,9 +938,9 @@ MonoBehaviour:
     dialogueLine:
       npcText: Looking fantastic! Do you not know about  Scraps!? Pastels and paste...
       choices:
-      - choiceText: wow that's a lot...
+      - choiceText: Is it like money?
         endsConversation: 0
-        setsConversationKey: 
+        setsConversationKey: ittle_first_placement_1
         action: 0
         actionParam: 
         nextLine:
@@ -948,7 +948,7 @@ MonoBehaviour:
             it into something new. One Ittle Scrap is another Ittle masterpiece,
             am I right?
           choices:
-          - choiceText: You want me to draw more?
+          - choiceText: so all my drawings?
             endsConversation: 0
             setsConversationKey: 
             action: 0
@@ -958,7 +958,7 @@ MonoBehaviour:
                 Scrap. Here, I'll give you some of mine. Make  some art and put it
                 into the world!
               choices:
-              - choiceText: I'll make something
+              - choiceText: I can do quick doodle
                 endsConversation: 1
                 setsConversationKey: ittle_wait_commission
                 action: 1
@@ -977,7 +977,7 @@ MonoBehaviour:
                   choices: []
                   nextLineKey: 
               nextLineKey: 
-          - choiceText: Sure!
+          - choiceText: hmm okay
             endsConversation: 0
             setsConversationKey: 
             action: 0
@@ -987,7 +987,7 @@ MonoBehaviour:
                 Scrap. Here, I'll give you some of mine. Make  some art and put it
                 into the world!
               choices:
-              - choiceText: I'll make something
+              - choiceText: I can do quick doodle
                 endsConversation: 1
                 setsConversationKey: ittle_wait_commission
                 action: 1
@@ -1006,7 +1006,7 @@ MonoBehaviour:
                   choices: []
                   nextLineKey: 
               nextLineKey: 
-          - choiceText: If the price is right
+          - choiceText: sure
             endsConversation: 0
             setsConversationKey: 
             action: 0
@@ -1016,7 +1016,7 @@ MonoBehaviour:
                 Scrap. Here, I'll give you some of mine. Make  some art and put it
                 into the world!
               choices:
-              - choiceText: I'll make something
+              - choiceText: I can do quick doodle
                 endsConversation: 1
                 setsConversationKey: ittle_wait_commission
                 action: 1
@@ -1036,7 +1036,7 @@ MonoBehaviour:
                   nextLineKey: 
               nextLineKey: 
           nextLineKey: 
-      - choiceText: thank you
+      - choiceText: You paid me for art?
         endsConversation: 0
         setsConversationKey: 
         action: 0
@@ -1046,7 +1046,7 @@ MonoBehaviour:
             it into something new. One Ittle Scrap is another Ittle masterpiece,
             am I right?
           choices:
-          - choiceText: You want me to draw more?
+          - choiceText: so all my drawings?
             endsConversation: 0
             setsConversationKey: 
             action: 0
@@ -1056,7 +1056,7 @@ MonoBehaviour:
                 Scrap. Here, I'll give you some of mine. Make  some art and put it
                 into the world!
               choices:
-              - choiceText: I'll make something
+              - choiceText: I can do quick doodle
                 endsConversation: 1
                 setsConversationKey: ittle_wait_commission
                 action: 1
@@ -1075,7 +1075,7 @@ MonoBehaviour:
                   choices: []
                   nextLineKey: 
               nextLineKey: 
-          - choiceText: Sure!
+          - choiceText: hmm okay
             endsConversation: 0
             setsConversationKey: 
             action: 0
@@ -1085,7 +1085,7 @@ MonoBehaviour:
                 Scrap. Here, I'll give you some of mine. Make  some art and put it
                 into the world!
               choices:
-              - choiceText: I'll make something
+              - choiceText: I can do quick doodle
                 endsConversation: 1
                 setsConversationKey: ittle_wait_commission
                 action: 1
@@ -1104,7 +1104,7 @@ MonoBehaviour:
                   choices: []
                   nextLineKey: 
               nextLineKey: 
-          - choiceText: If the price is right
+          - choiceText: sure
             endsConversation: 0
             setsConversationKey: 
             action: 0
@@ -1114,7 +1114,7 @@ MonoBehaviour:
                 Scrap. Here, I'll give you some of mine. Make  some art and put it
                 into the world!
               choices:
-              - choiceText: I'll make something
+              - choiceText: I can do quick doodle
                 endsConversation: 1
                 setsConversationKey: ittle_wait_commission
                 action: 1
@@ -1134,7 +1134,7 @@ MonoBehaviour:
                   nextLineKey: 
               nextLineKey: 
           nextLineKey: 
-      - choiceText: scrap?
+      - choiceText: Like junk?
         endsConversation: 0
         setsConversationKey: 
         action: 0
@@ -1144,7 +1144,7 @@ MonoBehaviour:
             it into something new. One Ittle Scrap is another Ittle masterpiece,
             am I right?
           choices:
-          - choiceText: You want me to draw more?
+          - choiceText: so all my drawings?
             endsConversation: 0
             setsConversationKey: 
             action: 0
@@ -1154,7 +1154,7 @@ MonoBehaviour:
                 Scrap. Here, I'll give you some of mine. Make  some art and put it
                 into the world!
               choices:
-              - choiceText: I'll make something
+              - choiceText: I can do quick doodle
                 endsConversation: 1
                 setsConversationKey: ittle_wait_commission
                 action: 1
@@ -1173,7 +1173,7 @@ MonoBehaviour:
                   choices: []
                   nextLineKey: 
               nextLineKey: 
-          - choiceText: Sure!
+          - choiceText: hmm okay
             endsConversation: 0
             setsConversationKey: 
             action: 0
@@ -1183,7 +1183,7 @@ MonoBehaviour:
                 Scrap. Here, I'll give you some of mine. Make  some art and put it
                 into the world!
               choices:
-              - choiceText: I'll make something
+              - choiceText: I can do quick doodle
                 endsConversation: 1
                 setsConversationKey: ittle_wait_commission
                 action: 1
@@ -1202,7 +1202,7 @@ MonoBehaviour:
                   choices: []
                   nextLineKey: 
               nextLineKey: 
-          - choiceText: If the price is right
+          - choiceText: sure
             endsConversation: 0
             setsConversationKey: 
             action: 0
@@ -1212,7 +1212,7 @@ MonoBehaviour:
                 Scrap. Here, I'll give you some of mine. Make  some art and put it
                 into the world!
               choices:
-              - choiceText: I'll make something
+              - choiceText: I can do quick doodle
                 endsConversation: 1
                 setsConversationKey: ittle_wait_commission
                 action: 1
@@ -1238,7 +1238,7 @@ MonoBehaviour:
       npcText: Every bit of creativity takes something from the world and makes it
         into something new. One Ittle Scrap is another Ittle masterpiece, am I right?
       choices:
-      - choiceText: You want me to draw more?
+      - choiceText: so all my drawings?
         endsConversation: 0
         setsConversationKey: 
         action: 0
@@ -1248,7 +1248,7 @@ MonoBehaviour:
             Scrap. Here, I'll give you some of mine. Make  some art and put it into
             the world!
           choices:
-          - choiceText: I'll make something
+          - choiceText: I can do quick doodle
             endsConversation: 1
             setsConversationKey: ittle_wait_commission
             action: 1
@@ -1267,7 +1267,7 @@ MonoBehaviour:
               choices: []
               nextLineKey: 
           nextLineKey: 
-      - choiceText: Sure!
+      - choiceText: hmm okay
         endsConversation: 0
         setsConversationKey: 
         action: 0
@@ -1277,7 +1277,7 @@ MonoBehaviour:
             Scrap. Here, I'll give you some of mine. Make  some art and put it into
             the world!
           choices:
-          - choiceText: I'll make something
+          - choiceText: I can do quick doodle
             endsConversation: 1
             setsConversationKey: ittle_wait_commission
             action: 1
@@ -1296,7 +1296,7 @@ MonoBehaviour:
               choices: []
               nextLineKey: 
           nextLineKey: 
-      - choiceText: If the price is right
+      - choiceText: sure
         endsConversation: 0
         setsConversationKey: 
         action: 0
@@ -1306,7 +1306,7 @@ MonoBehaviour:
             Scrap. Here, I'll give you some of mine. Make  some art and put it into
             the world!
           choices:
-          - choiceText: I'll make something
+          - choiceText: I can do quick doodle
             endsConversation: 1
             setsConversationKey: ittle_wait_commission
             action: 1
@@ -1331,7 +1331,7 @@ MonoBehaviour:
       npcText: Anything you create can be added into the world with a little Scrap.
         Here, I'll give you some of mine. Make  some art and put it into the world!
       choices:
-      - choiceText: I'll make something
+      - choiceText: I can do quick doodle
         endsConversation: 1
         setsConversationKey: ittle_wait_commission
         action: 1
