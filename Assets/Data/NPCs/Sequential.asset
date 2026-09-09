@@ -1,0 +1,144 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b4da19336b54fa4ebf67db148f50e9c, type: 3}
+  m_Name: Sequential
+  m_EditorClassIdentifier: Assembly-CSharp::NPCData
+  npcName: Sequential
+  defaultConversationKey: default
+  voiceClips: []
+  conversations:
+  - key: default
+    dialogueLine:
+      npcText: Let's make something together step by step! First - draw a simple
+        shape.
+      choices:
+      - choiceText: Let's go!
+        endsConversation: 0
+        setsConversationKey: sequential_wait_1
+        action: 1
+        actionParam: sequential_test_quest
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: sequential_wait_1
+    dialogueLine:
+      npcText: Great shape! Now show me.
+      choices:
+      - choiceText: Done
+        endsConversation: 0
+        setsConversationKey: 
+        action: 2
+        actionParam: sequential_test_quest
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      - choiceText: Still working
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: testshape_prompt_1
+    dialogueLine:
+      npcText: Nice! Now turn that shape into something. Add some details.
+      choices:
+      - choiceText: On it!
+        endsConversation: 0
+        setsConversationKey: sequential_wait_2
+        action: 1
+        actionParam: sequential_test_quest
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: sequential_wait_2
+    dialogueLine:
+      npcText: Ready to show me?
+      choices:
+      - choiceText: Done
+        endsConversation: 0
+        setsConversationKey: 
+        action: 2
+        actionParam: sequential_test_quest
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      - choiceText: Still working
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: testshape_prompt_2
+    dialogueLine:
+      npcText: Amazing! Last step - give it a face!
+      choices:
+      - choiceText: Here we go!
+        endsConversation: 0
+        setsConversationKey: sequential_wait_3
+        action: 1
+        actionParam: sequential_test_quest
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: sequential_wait_3
+    dialogueLine:
+      npcText: Let me see the final thing!
+      choices:
+      - choiceText: Done
+        endsConversation: 0
+        setsConversationKey: 
+        action: 2
+        actionParam: sequential_test_quest
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      - choiceText: Still working
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: sequential_done
+    dialogueLine:
+      npcText: You made a whole character from scratch! Incredible.
+      choices:
+      - choiceText: Thanks
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 

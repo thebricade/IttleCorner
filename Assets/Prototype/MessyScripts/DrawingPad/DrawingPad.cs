@@ -253,16 +253,7 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         gameDrawings.Add(drawing);
         Debug.Log("Loaded game drawing: " + tag);
     }
-
-    public Drawing GetGameDrawing(string tag) 
-    {
-        return gameDrawings.Find(d => d.drawingName == tag);
-    }
-
-    public Drawing GetSavedDrawing(string tag)
-    {
-        return savedDrawings.Find(d => d.drawingName == tag);
-    }
+    
 
 
     public void SetOneLineMode(bool enabled)

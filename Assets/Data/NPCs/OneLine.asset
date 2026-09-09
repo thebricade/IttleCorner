@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b4da19336b54fa4ebf67db148f50e9c, type: 3}
+  m_Name: OneLine
+  m_EditorClassIdentifier: Assembly-CSharp::NPCData
+  npcName: OneLine
+  defaultConversationKey: default
+  voiceClips: []
+  conversations:
+  - key: default
+    dialogueLine:
+      npcText: Here's a challenge - draw something without lifting your finger. One
+        line only!
+      choices:
+      - choiceText: Challenge accepted!
+        endsConversation: 0
+        setsConversationKey: oneline_wait
+        action: 1
+        actionParam: oneline_test_quest
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: oneline_wait
+    dialogueLine:
+      npcText: Let me see your one line masterpiece!
+      choices:
+      - choiceText: Here!
+        endsConversation: 0
+        setsConversationKey: 
+        action: 2
+        actionParam: oneline_test_quest
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      - choiceText: Still going
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: oneline_done
+    dialogueLine:
+      npcText: One line and look what you made! That's true skill.
+      choices:
+      - choiceText: Thanks!
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 

@@ -290,9 +290,14 @@ public class GameContentImporter : EditorWindow
     {
         switch (value)
         {
-            case "DrawSomething": return QuestType.DrawSomething;
-            case "CreateNPC":     return QuestType.CreateNPC;
-            case "IteratedDraw":  return QuestType.IteratedDraw;
+            case "DrawSomething":      return QuestType.DrawSomething;
+            case "CreateNPC":          return QuestType.CreateNPC;
+            case "IteratedDraw":       return QuestType.IteratedDraw;
+            case "ContinueDrawing":    return QuestType.ContinueDrawing;
+            case "SequentialPrompt":   return QuestType.SequentialPrompt;
+            case "NPCStartedDrawing":  return QuestType.NPCStartedDrawing;
+            case "NPCIterativeDrawing":return QuestType.NPCIterativeDrawing;
+            case "OneLineDrawing":     return QuestType.OneLineDrawing;
             default:
                 Debug.LogWarning("Unknown QuestType: " + value + " — defaulting to DrawSomething");
                 return QuestType.DrawSomething;

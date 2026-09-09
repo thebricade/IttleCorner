@@ -8,6 +8,11 @@ public enum QuestType
     DrawSomething,
     CreateNPC,
     IteratedDraw,
+    ContinueDrawing,
+    SequentialPrompt,
+    NPCStartedDrawing,
+    NPCIterativeDrawing,
+    OneLineDrawing
 }
 
 public enum QuestRewardType

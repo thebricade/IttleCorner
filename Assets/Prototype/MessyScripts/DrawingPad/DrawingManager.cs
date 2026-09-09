@@ -21,6 +21,7 @@ public class DrawingManager : MonoBehaviour
     public static DrawingManager Instance;
 
     public List<Drawing> savedDrawings = new List<Drawing>();
+    public List<Drawing> gameDrawings = new List<Drawing>(); // new
     public Drawing selectedDrawing;
     public string pendingDrawingTag = "";
     public string drawingForNPC = "";
@@ -44,8 +45,17 @@ public class DrawingManager : MonoBehaviour
         Drawing newDrawing = new Drawing();
         newDrawing.texture = texture;
         newDrawing.drawingName = name;
-        savedDrawings.Add(newDrawing);
+        savedDrawings.Add(newDrawing); 
         Debug.Log("Saved drawing: " + name);
+    }
+    
+    public void SaveGameDrawing(Texture2D texture, string tag)
+    {
+        Drawing drawing = new Drawing();
+        drawing.texture = texture;
+        drawing.drawingName = tag;
+        gameDrawings.Add(drawing);
+        Debug.Log("Loaded game drawing: " + tag);
     }
 
     public void SelectDrawing(Drawing drawing)
@@ -69,6 +79,15 @@ public class DrawingManager : MonoBehaviour
         placed.worldObject = obj;
         placedDrawings.Add(placed);
         Debug.Log("Registered placed drawing: " + tag + " at " + position);
+    }
+    public Drawing GetGameDrawing(string tag) 
+    {
+        return gameDrawings.Find(d => d.drawingName == tag); 
+    }
+
+    public Drawing GetSavedDrawing(string tag)
+    {
+        return savedDrawings.Find(d => d.drawingName == tag);
     }
 
     public NPCRuntimeState GetNPCState(NPCData npc)
