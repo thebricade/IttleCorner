@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
@@ -58,7 +59,8 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private int eraserSoundIndex = -1;
     private float soundCooldownTimer = 0f;
     private const float soundCooldownDuration = .61f; // Cooldown limits rapid fire overlap noise
-
+    private bool oneLineMode = false;
+    private bool oneLineUsed = false;
 
     [Tooltip("Optional stamp image for the watercolor brushes. Should be grayscale " +
              "(white = full opacity, black = none) - shape and texture come straight " +
@@ -183,6 +185,13 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         isDrawing = false;
         lastLocalPoint = null;
+
+        // one line mode - lock drawing after first stroke
+        if (oneLineMode && !oneLineUsed)
+        {
+            oneLineUsed = true;
+            onOneLineComplete?.Invoke();
+        }
     }
 
     // Update is called once per frame
@@ -232,6 +241,62 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         {
             lastLocalPoint = null;
         }
+    }
+    // separate list so game drawings don't appear in sticker list
+    public List<Drawing> gameDrawings = new List<Drawing>();
+
+    public void SaveGameDrawing(Texture2D texture, string tag)
+    {
+        Drawing drawing = new Drawing();
+        drawing.texture = texture;
+        drawing.drawingName = tag;
+        gameDrawings.Add(drawing);
+        Debug.Log("Loaded game drawing: " + tag);
+    }
+
+    public Drawing GetGameDrawing(string tag) 
+    {
+        return gameDrawings.Find(d => d.drawingName == tag);
+    }
+
+    public Drawing GetSavedDrawing(string tag)
+    {
+        return savedDrawings.Find(d => d.drawingName == tag);
+    }
+
+
+    public void SetOneLineMode(bool enabled)
+    {
+        oneLineMode = enabled;
+        oneLineUsed = false;
+    }
+    
+    public System.Action onOneLineComplete;
+    
+    public void LoadDrawing(Texture2D texture)
+    {
+        rawImage = GetComponent<RawImage>();
+        drawTexture = new Texture2D(textureSize, textureSize);
+
+        if (texture.width == textureSize && texture.height == textureSize)
+        {
+            drawTexture.SetPixels(texture.GetPixels());
+        }
+        else
+        {
+            for (int y = 0; y < textureSize; y++)
+            {
+                for (int x = 0; x < textureSize; x++)
+                {
+                    float u = (float)x / textureSize;
+                    float v = (float)y / textureSize;
+                    drawTexture.SetPixel(x, y, texture.GetPixelBilinear(u, v));
+                }
+            }
+        }
+
+        drawTexture.Apply();
+        rawImage.texture = drawTexture;
     }
     void PaintLine(Vector2 from, Vector2 to, RectTransform rt)
     {
@@ -316,7 +381,7 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         rawImage.texture = drawTexture; 
     }
     
-  void PaintAtLocalPoint(Vector2 localPoint, RectTransform rt)
+    void PaintAtLocalPoint(Vector2 localPoint, RectTransform rt)
 {
     float u = (localPoint.x / rt.rect.width) + 0.5f;
     float v = (localPoint.y / rt.rect.height) + 0.5f;
@@ -370,7 +435,7 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
 }
 
-void PaintHard(int centerX, int centerY)
+    void PaintHard(int centerX, int centerY)
 {
     // Batch through one GetPixels/SetPixels pair instead of one SetPixel call per pixel -
     // each Texture2D.SetPixel call carries real per-call overhead, and this is the most
@@ -891,12 +956,12 @@ private static readonly WatercolorParams WatercolorPresetV2 = new WatercolorPara
     PaintWatercolorDab(centerX, centerY, WatercolorPresetV1);
 }
 
-void PaintWatercolor2(int centerX, int centerY)
+    void PaintWatercolor2(int centerX, int centerY)
 {
     PaintWatercolorDab(centerX, centerY, WatercolorPresetV2);
 }
 
-void PaintWatercolorDab(int centerX, int centerY, WatercolorParams p)
+    void PaintWatercolorDab(int centerX, int centerY, WatercolorParams p)
 {
     bool useStamp = brushStampTexture != null;
     strokeDabIndex++;
@@ -1030,7 +1095,7 @@ Color ApplyColorDynamics(Color baseColor, WatercolorParams p)
     return result;
 }
 
-void ApplyWatercolorTexel(int idx, int px, int py, float strength, WatercolorParams p, Color dabColor, float dabCos, float dabSin, float smudgeAmount)
+    void ApplyWatercolorTexel(int idx, int px, int py, float strength, WatercolorParams p, Color dabColor, float dabCos, float dabSin, float smudgeAmount)
 {
     // clamp this texel's total build-up for the CURRENT stroke, so dragging back and
     // forth doesn't race the wash to full opacity - but holding the brush roughly still
