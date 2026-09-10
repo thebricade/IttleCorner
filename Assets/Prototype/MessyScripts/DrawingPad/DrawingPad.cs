@@ -61,6 +61,7 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private const float soundCooldownDuration = .61f; // Cooldown limits rapid fire overlap noise
     private bool oneLineMode = false;
     private bool oneLineUsed = false;
+    private bool skipNextClear = false;
 
     [Tooltip("Optional stamp image for the watercolor brushes. Should be grayscale " +
              "(white = full opacity, black = none) - shape and texture come straight " +
@@ -135,6 +136,11 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     private void OnEnable()
     {
+        if (skipNextClear)
+        {
+            skipNextClear = false;
+            return;
+        }
         isDrawing = false;
         lastLocalPoint = null;
         ClearDrawBoard();
@@ -185,6 +191,8 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         isDrawing = false;
         lastLocalPoint = null;
+
+        Debug.Log("OnPointerUp: oneLineMode = " + oneLineMode + " | oneLineUsed = " + oneLineUsed);
 
         // one line mode - lock drawing after first stroke
         if (oneLineMode && !oneLineUsed)
@@ -266,6 +274,7 @@ public class DrawingPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     
     public void LoadDrawing(Texture2D texture)
     {
+        skipNextClear = true;
         rawImage = GetComponent<RawImage>();
         drawTexture = new Texture2D(textureSize, textureSize);
 

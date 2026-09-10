@@ -26,6 +26,7 @@ public class DialogueManager : MonoBehaviour
     public GameObject DrawboardEraser;
     public SpriteRenderer walrusHatDrawingRenderer; 
     private string pendingOneLineQuestId = "";
+    private Texture2D pendingLoadTexture = null;
 
     void Awake()
     {
@@ -167,26 +168,37 @@ public class DialogueManager : MonoBehaviour
 
         case QuestType.ContinueDrawing:
             // load existing player drawing by tag
+            Debug.Log("ContinueDrawing: looking for tag " + quest.requiredTag + " | savedDrawings count: " + DrawingManager.Instance.savedDrawings.Count);
             Drawing existing = DrawingManager.Instance.GetSavedDrawing(quest.requiredTag);
-            if (existing != null && pad != null)
-                pad.LoadDrawing(existing.texture);
+            Debug.Log("ContinueDrawing: drawing found: " + (existing != null));
+            if (existing != null)
+                pendingLoadTexture = existing.texture;
             DrawingManager.Instance.drawingForNPC = "";
             break;
 
         case QuestType.NPCStartedDrawing:
+            Debug.Log("NPCStartedDrawing: looking for tag " + quest.requiredTag + " | gameDrawings count: " + DrawingManager.Instance.gameDrawings.Count);
+            Drawing startedPreset = DrawingManager.Instance.GetGameDrawing(quest.requiredTag);
+            Debug.Log("NPCStartedDrawing: drawing found: " + (startedPreset != null));
+            if (startedPreset != null)
+                pendingLoadTexture = startedPreset.texture;
+            DrawingManager.Instance.drawingForNPC = "";
+            break;
+
         case QuestType.NPCIterativeDrawing:
-            // load game-authored preset drawing by tag
+            Debug.Log("NPCIterativeDrawing: looking for tag " + quest.requiredTag + " | gameDrawings count: " + DrawingManager.Instance.gameDrawings.Count);
             Drawing preset = DrawingManager.Instance.GetGameDrawing(quest.requiredTag);
-            if (preset != null && pad != null)
-                pad.LoadDrawing(preset.texture);
+            Debug.Log("NPCIterativeDrawing: drawing found: " + (preset != null));
+            if (preset != null)
+                pendingLoadTexture = preset.texture;
             DrawingManager.Instance.drawingForNPC = "";
             break;
 
         case QuestType.SequentialPrompt:
             // load existing drawing if one exists, otherwise start fresh
             Drawing previous = DrawingManager.Instance.GetSavedDrawing(quest.requiredTag);
-            if (previous != null && pad != null)
-                pad.LoadDrawing(previous.texture);
+            if (previous != null)
+                pendingLoadTexture = previous.texture;
             DrawingManager.Instance.drawingForNPC = "";
             break;
 
@@ -204,6 +216,15 @@ public class DialogueManager : MonoBehaviour
 
     EndDialogue();
     GameModeManager.Instance.SetGameMode(GameMode.Drawing);
+
+    // apply pending texture after screen is active
+    if (pendingLoadTexture != null)
+    {
+        DrawingPad loadedPad = FindObjectOfType<DrawingPad>();
+        if (loadedPad != null)
+            loadedPad.LoadDrawing(pendingLoadTexture);
+        pendingLoadTexture = null;
+    }
 }
 
     void TryCompleteQuest(string questId)
@@ -216,7 +237,7 @@ public class DialogueManager : MonoBehaviour
     bool questConditionMet = false;
 
     switch (quest.questType)
-    {
+    { 
         case QuestType.DrawSomething:
         case QuestType.ContinueDrawing:
         case QuestType.NPCStartedDrawing:
@@ -229,12 +250,16 @@ public class DialogueManager : MonoBehaviour
             break;
 
         case QuestType.IteratedDraw:
-        case QuestType.NPCIterativeDrawing:
             // check saved drawings count meets required iterations
             int count = DrawingManager.Instance.savedDrawings.FindAll(
                 d => d.drawingName == quest.requiredTag
             ).Count;
             questConditionMet = count >= quest.requiredIterations;
+            break;
+
+        case QuestType.NPCIterativeDrawing:
+            // gated by attempt count in the completion switch below, not by a drawing count
+            questConditionMet = true;
             break;
 
         case QuestType.SequentialPrompt:
@@ -262,10 +287,32 @@ public class DialogueManager : MonoBehaviour
             break;
 
         case QuestType.IteratedDraw:
-        case QuestType.NPCIterativeDrawing:
             EndDialogue();
             selectionScreen.Show(quest.requiredTag, questId);
             break;
+
+        case QuestType.NPCIterativeDrawing:
+        {
+            QuestManager.Instance.IncrementQuestAttempts(questId);
+            int npcAttempts = QuestManager.Instance.GetQuestAttempts(questId);
+
+            if (npcAttempts < quest.requiredIterations)
+            {
+                NPCRuntimeState npcIterState = DrawingManager.Instance.GetNPCState(currentNPC);
+                npcIterState.currentConversationKey = quest.requiredTag.ToLower() + "_prompt_" + npcAttempts;
+                ShowLine(currentNPC.GetConversation(npcIterState.currentConversationKey));
+            }
+            else
+            {
+                QuestManager.Instance.CompleteQuest(questId);
+                if (quest.currencyReward > 0)
+                    Wallet.Instance.AddCurrency(quest.currencyReward);
+                NPCRuntimeState npcCompleteState = DrawingManager.Instance.GetNPCState(currentNPC);
+                npcCompleteState.currentConversationKey = quest.setConversationKey;
+                ShowLine(currentNPC.GetConversation(quest.setConversationKey));
+            }
+            break;
+        }
 
         case QuestType.SequentialPrompt:
             QuestManager.Instance.IncrementQuestAttempts(questId);
@@ -361,9 +408,11 @@ public class DialogueManager : MonoBehaviour
     {
         pendingOneLineQuestId = questId;
         DrawingPad pad = FindObjectOfType<DrawingPad>();
+        Debug.Log("StartOneLineQuest: pad found: " + (pad != null));
         if (pad != null)
         {
             pad.onOneLineComplete = () => OnOneLineComplete(pad);
+            Debug.Log("StartOneLineQuest: onOneLineComplete assigned: " + (pad.onOneLineComplete != null));
         }
     }
 
