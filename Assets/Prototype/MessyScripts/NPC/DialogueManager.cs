@@ -157,9 +157,6 @@ public class DialogueManager : MonoBehaviour
     QuestManager.Instance.ActivateQuest(questId);
     DrawingManager.Instance.SetPendingTag(quest.requiredTag);
 
-    // find the DrawingPad in the scene
-    DrawingPad pad = FindObjectOfType<DrawingPad>();
-
     switch (quest.questType)
     {
         case QuestType.CreateNPC:
@@ -203,11 +200,8 @@ public class DialogueManager : MonoBehaviour
             break;
 
         case QuestType.OneLineDrawing:
-            if (pad != null)
-                pad.SetOneLineMode(true);
             DrawingManager.Instance.drawingForNPC = "";
-            StartOneLineQuest(questId);
-            break;  
+            break;
 
         default:
             DrawingManager.Instance.drawingForNPC = "";
@@ -224,6 +218,12 @@ public class DialogueManager : MonoBehaviour
         if (loadedPad != null)
             loadedPad.LoadDrawing(pendingLoadTexture);
         pendingLoadTexture = null;
+    }
+
+    // set up one-line mode after screen is active, so the pad exists to configure
+    if (quest.questType == QuestType.OneLineDrawing)
+    {
+        StartOneLineQuest(questId);
     }
 }
 
@@ -411,6 +411,7 @@ public class DialogueManager : MonoBehaviour
         Debug.Log("StartOneLineQuest: pad found: " + (pad != null));
         if (pad != null)
         {
+            pad.SetOneLineMode(true);
             pad.onOneLineComplete = () => OnOneLineComplete(pad);
             Debug.Log("StartOneLineQuest: onOneLineComplete assigned: " + (pad.onOneLineComplete != null));
         }

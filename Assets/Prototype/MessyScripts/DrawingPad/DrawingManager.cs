@@ -87,7 +87,7 @@ public class DrawingManager : MonoBehaviour
 
     public Drawing GetSavedDrawing(string tag)
     {
-        return savedDrawings.Find(d => d.drawingName == tag);
+        return savedDrawings.FindLast(d => d.drawingName == tag);
     }
 
     public NPCRuntimeState GetNPCState(NPCData npc)
