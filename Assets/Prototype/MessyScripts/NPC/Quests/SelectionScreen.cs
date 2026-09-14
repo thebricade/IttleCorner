@@ -40,6 +40,7 @@ public class SelectionScreen : MonoBehaviour
         }
 
         selectionCanvas.SetActive(true);
+        GameModeManager.Instance.SetGameMode(GameMode.Selection);
     }
 
     void OnDrawingSelected(int index)

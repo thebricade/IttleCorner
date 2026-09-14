@@ -2831,6 +2831,7 @@ MonoBehaviour:
   drawingScreen: {fileID: 1527225294}
   stickerScreen: {fileID: 1244544267}
   placingScreen: {fileID: 299136500}
+  creationButton: {fileID: 406250343}
 --- !u!4 &335869509
 Transform:
   m_ObjectHideFlags: 0
