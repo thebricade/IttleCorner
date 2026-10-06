@@ -3,10 +3,12 @@ using UnityEngine;
 public class Wallet : MonoBehaviour
 {
     public static Wallet Instance;
-    private int balance = 20;
+    private int balance = 0;
 
     public int placementCost = 20; 
     
+    public int collectionThreshold = 5; // set in Inspector
+    public System.Action onThresholdReached;
     
     void Awake()
     {
@@ -18,8 +20,12 @@ public class Wallet : MonoBehaviour
     public void AddCurrency(int amount)
     {
         balance += amount;
-        Debug.Log("Currency balance: " + balance);
         onBalanceChanged?.Invoke(balance);
+    
+        if (balance >= collectionThreshold)
+        {
+            onThresholdReached?.Invoke();
+        }
     }
 
     public bool CanAfford(int amount)
