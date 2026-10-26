@@ -6,7 +6,9 @@ public enum GameMode
     Drawing, //player making drawings
     Placing, //player placing creations
     Sticker, //player browsing creations
-    Selection
+    Selection,
+    Dropper, //player is picking a color out of the world
+    Mixing //player is matching a picked color in the color mixer
 }
 public class GameModeManager : MonoBehaviour
 {
@@ -35,10 +37,10 @@ public class GameModeManager : MonoBehaviour
         currentMode = mode;
         Debug.Log("Switching to mode: " + mode);
         //dictating what is turned on based off the current mode you are working on
-        exploreScreen.SetActive(mode==GameMode.Explore || mode==GameMode.Sticker||mode==GameMode.Placing||mode==GameMode.Selection);
+        exploreScreen.SetActive(mode==GameMode.Explore || mode==GameMode.Sticker||mode==GameMode.Placing||mode==GameMode.Selection||mode==GameMode.Dropper);
         drawingScreen.SetActive(mode==GameMode.Drawing);
         stickerScreen.SetActive(mode==GameMode.Sticker);
         placingScreen.SetActive(mode==GameMode.Placing);
-        if (creationButton != null) creationButton.SetActive(mode != GameMode.Selection);
+        if (creationButton != null) creationButton.SetActive(mode != GameMode.Selection && mode != GameMode.Dropper && mode != GameMode.Mixing);
     }
 }
