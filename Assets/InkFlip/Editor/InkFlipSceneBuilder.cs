@@ -85,6 +85,13 @@ namespace InkFlip.EditorTools
             Box("Crate_C", room, Vector3.one * 0.8f, new Vector3(-4.4f, 1.2f, -4.8f), crate, Quaternion.Euler(0f, 20f, 0f));
             Box("Ramp", room, new Vector3(2f, 0.2f, 4f), new Vector3(3.2f, 0.5f, -3.6f), furniture, Quaternion.Euler(-14f, 0f, 0f));
 
+            // the glove can pick these up and resize them (the floor, walls and pillar stay put)
+            foreach (string grabbable in new[] { "Crate_A", "Crate_B", "Crate_C", "Ramp", "Cabinet", "Bookshelf", "Sofa", "Table", "Table/Ball" })
+            {
+                Transform prop = room.Find(grabbable);
+                if (prop != null) prop.gameObject.AddComponent<Grabbable>();
+            }
+
             BuildManagers(projectile, gunBody, gunInk);
 
             EditorSceneManager.SaveScene(scene, ScenePath);
@@ -187,12 +194,37 @@ namespace InkFlip.EditorTools
             ViewModelPart("Ferrule", pencilRoot, PrimitiveType.Cylinder, new Vector3(0.024f, 0.008f, 0.024f), new Vector3(0f, 0f, -0.104f), Quaternion.Euler(90f, 0f, 0f), gunBody);
             ViewModelPart("Eraser", pencilRoot, PrimitiveType.Cylinder, new Vector3(0.022f, 0.01f, 0.022f), new Vector3(0f, 0f, -0.12f), Quaternion.Euler(90f, 0f, 0f), eraser);
 
+            // glove viewmodel: a soft white glove with a coloured cuff
+            var gloveRoot = new GameObject("Glove").transform;
+            gloveRoot.SetParent(cameraObject.transform, false);
+            gloveRoot.localPosition = new Vector3(0.2f, -0.2f, 0.42f);
+            gloveRoot.localRotation = Quaternion.Euler(-20f, -12f, 0f);
+
+            Material gloveWhite = CreateMaterial("GloveFabric", lit, "#F4F1EA", 0.25f);
+            Material gloveCuff = CreateMaterial("GloveCuff", lit, "#FF3D8B", 0.3f);
+            ViewModelPart("Palm", gloveRoot, PrimitiveType.Cube, new Vector3(0.085f, 0.03f, 0.09f), Vector3.zero, Quaternion.identity, gloveWhite);
+            for (int finger = 0; finger < 4; finger++)
+            {
+                float x = -0.032f + finger * 0.0215f;
+                float length = finger == 1 || finger == 2 ? 0.05f : 0.042f;
+                ViewModelPart("Finger_" + finger, gloveRoot, PrimitiveType.Capsule, new Vector3(0.021f, length, 0.021f), new Vector3(x, 0.004f, 0.075f + length * 0.5f - 0.03f), Quaternion.Euler(90f, 0f, 0f), gloveWhite);
+            }
+            ViewModelPart("Thumb", gloveRoot, PrimitiveType.Capsule, new Vector3(0.024f, 0.04f, 0.024f), new Vector3(-0.058f, 0f, 0.02f), Quaternion.Euler(90f, 0f, 55f), gloveWhite);
+            ViewModelPart("Cuff", gloveRoot, PrimitiveType.Cylinder, new Vector3(0.095f, 0.022f, 0.095f), new Vector3(0f, 0f, -0.07f), Quaternion.Euler(90f, 0f, 0f), gloveCuff);
+
             // selection outline + draw mode
             var selectionObject = new GameObject("Selection");
             var highlighter = selectionObject.AddComponent<OutlineHighlighter>();
             highlighter.outlineShader = Shader.Find("InkFlip/Outline");
 
             var switcher = player.AddComponent<ToolSwitcher>();
+
+            // sculpt studio: B (or the on-screen button) opens it, Done drops the sculpture in front of you
+            var sculptStudio = new GameObject("SculptStudio").AddComponent<SculptStudio>();
+            sculptStudio.paintableShader = Shader.Find("InkFlip/PaintableLit");
+            sculptStudio.player = fps;
+            sculptStudio.tools = switcher;
+            sculptStudio.worldCamera = camera;
 
             var drawMode = selectionObject.AddComponent<SelectionDrawMode>();
             drawMode.drawCamera = camera;
@@ -206,11 +238,18 @@ namespace InkFlip.EditorTools
             pencil.highlighter = highlighter;
             pencil.drawMode = drawMode;
 
+            var glove = gloveRoot.gameObject.AddComponent<GloveTool>();
+            glove.aimCamera = camera;
+            glove.highlighter = highlighter;
+            glove.gloveModel = gloveRoot;
+
+            switcher.directKeys = new[] { UnityEngine.InputSystem.Key.Z, UnityEngine.InputSystem.Key.X, UnityEngine.InputSystem.Key.C, UnityEngine.InputSystem.Key.V };
             switcher.tools = new[]
             {
                 new PaintTool { name = "Ink Blaster", controls = "LMB: blast   RMB: roller", root = gunRoot.gameObject },
                 new PaintTool { name = "Paint Brush", controls = "Hold LMB and sweep", root = brushRoot.gameObject },
                 new PaintTool { name = "Pencil", controls = "Look at an object, LMB: draw on it", root = pencilRoot.gameObject },
+                new PaintTool { name = "Glove", controls = "Hold LMB: carry   Wheel: resize", root = gloveRoot.gameObject },
             };
             hud.tools = switcher;
             hud.drawMode = drawMode;

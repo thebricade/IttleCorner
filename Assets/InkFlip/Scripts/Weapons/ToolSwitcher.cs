@@ -14,14 +14,14 @@ namespace InkFlip
     }
 
     // Holds the player's tools and shows exactly one at a time.
-    //   Z / X / C: jump straight to tool 1 / 2 / 3
+    //   Z / X / C / V: jump straight to tool 1 / 2 / 3 / 4
     //   Tab / middle mouse / gamepad Y: next tool    Shift+Tab: previous tool
     public class ToolSwitcher : MonoBehaviour
     {
         public PaintTool[] tools;
 
         [Tooltip("Direct-select key for each tool, in the same order as Tools.")]
-        public Key[] directKeys = { Key.Z, Key.X, Key.C };
+        public Key[] directKeys = { Key.Z, Key.X, Key.C, Key.V };
 
         public int ActiveIndex { get; private set; }
         public PaintTool Active => tools[ActiveIndex];

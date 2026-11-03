@@ -62,7 +62,8 @@ namespace InkFlip
             }
 
             Mouse mouse = Mouse.current;
-            if (mouse != null && FirstPersonController.InputCaptured)
+            // the glove uses the wheel to resize what it's carrying
+            if (mouse != null && FirstPersonController.InputCaptured && !GloveTool.IsHolding)
             {
                 float scroll = mouse.scroll.ReadValue().y;
                 if (scroll > 0.01f) Step(-1);
@@ -70,7 +71,7 @@ namespace InkFlip
             }
 
             Gamepad pad = Gamepad.current;
-            if (pad != null)
+            if (pad != null && !GloveTool.IsHolding)
             {
                 if (pad.leftShoulder.wasPressedThisFrame) Step(-1);
                 if (pad.rightShoulder.wasPressedThisFrame) Step(1);
