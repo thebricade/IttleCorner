@@ -255,7 +255,7 @@ namespace InkFlip
         bool CanOpen()
         {
             Resolve();
-            return !IsActive && worldCamera != null && !(drawMode != null && drawMode.IsActive);
+            return !IsActive && worldCamera != null && Abilities.Can(Ability.Sculpt) && !(drawMode != null && drawMode.IsActive);
         }
 
         public void Open()
@@ -846,7 +846,7 @@ namespace InkFlip
             if (!IsActive)
             {
                 // the on-screen button is for touch (or whenever the mouse is free to click it)
-                ui.SetOpenButtonVisible(Touchscreen.current != null || !FirstPersonController.InputCaptured);
+                ui.SetOpenButtonVisible((Touchscreen.current != null || !FirstPersonController.InputCaptured) && Abilities.Can(Ability.Sculpt));
                 if (keyboard != null && keyboard[openKey].wasPressedThisFrame && FirstPersonController.InputCaptured) Open();
                 return;
             }

@@ -39,8 +39,8 @@ Material:
     - _PaintEdgeSoftness: 0.04
     - _PaintOpaqueAt: 0.5
     - _PaintSmoothness: 0.7
-    - _Smoothness: 0.25
+    - _Smoothness: 0.3
     m_Colors:
-    - _BaseColor: {r: 0.93333334, g: 0.9098039, b: 0.8745098, a: 1}
+    - _BaseColor: {r: 0.94509804, g: 0.95686275, b: 0.972549, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

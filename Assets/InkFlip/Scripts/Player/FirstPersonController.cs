@@ -22,7 +22,9 @@ namespace InkFlip
         public float maxPitch = 85f;
 
         // true while the mouse is locked to the game - other scripts (the ink gun) check this
-        public static bool InputCaptured => Cursor.lockState == CursorLockMode.Locked;
+        // (on a phone the cursor can't really be locked, so the touch controls use this script's own record instead)
+        public static bool InputCaptured => MobileControls.Active ? softCaptured : Cursor.lockState == CursorLockMode.Locked;
+        static bool softCaptured;
 
         // lets another system (e.g. leaving draw mode) use this frame's Esc press without it also releasing the mouse
         static int escapeConsumedFrame = -1;
@@ -106,6 +108,7 @@ namespace InkFlip
 
         public static void SetCursorCaptured(bool captured)
         {
+            softCaptured = captured;
             Cursor.lockState = captured ? CursorLockMode.Locked : CursorLockMode.None;
             Cursor.visible = !captured;
         }

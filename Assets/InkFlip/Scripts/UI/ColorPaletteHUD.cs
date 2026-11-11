@@ -24,6 +24,7 @@ namespace InkFlip
 
         RectTransform[] slots;
         Image[] slotRims;
+        Image[] slotInks;
         Image[] crosshairParts;
         Text nameLabel;
         float nameTimer;
@@ -56,17 +57,36 @@ namespace InkFlip
             BuildCanvas();
 
             colors.SelectionChanged += OnSelectionChanged;
-            if (tools != null) tools.ToolChanged += OnToolChanged;
+            colors.PaletteChanged += OnPaletteChanged;
+            if (tools != null)
+            {
+                tools.ToolChanged += OnToolChanged;
+                tools.ToolBlocked += OnToolBlocked;
+            }
             if (drawMode != null) drawMode.ModeChanged += OnDrawModeChanged;
+            Abilities.Changed += OnAbilitiesChanged;
+            RoomZone.Completed += OnRoomCompleted;
+            FinalGate.Unlocked += OnFinalGateUnlocked;
             Refresh(showName: true);
             RefreshTools(showName: false);
         }
 
         void OnDestroy()
         {
-            if (colors != null) colors.SelectionChanged -= OnSelectionChanged;
-            if (tools != null) tools.ToolChanged -= OnToolChanged;
+            if (colors != null)
+            {
+                colors.SelectionChanged -= OnSelectionChanged;
+                colors.PaletteChanged -= OnPaletteChanged;
+            }
+            if (tools != null)
+            {
+                tools.ToolChanged -= OnToolChanged;
+                tools.ToolBlocked -= OnToolBlocked;
+            }
             if (drawMode != null) drawMode.ModeChanged -= OnDrawModeChanged;
+            Abilities.Changed -= OnAbilitiesChanged;
+            RoomZone.Completed -= OnRoomCompleted;
+            FinalGate.Unlocked -= OnFinalGateUnlocked;
         }
 
         void Update()
@@ -85,7 +105,57 @@ namespace InkFlip
 
         void OnSelectionChanged(int index) => Refresh(showName: true);
 
+        void OnPaletteChanged()
+        {
+            if (slotInks == null) return;
+            for (int i = 0; i < slotInks.Length && i < colors.palette.Length; i++)
+            {
+                if (slotInks[i] != null) slotInks[i].color = colors.palette[i].color;
+            }
+        }
+
         void OnToolChanged(int index) => RefreshTools(showName: true);
+
+        void OnAbilitiesChanged() => RefreshTools(showName: false);
+
+        // the gate opens a moment before the room's own message arrives, so remember it and say both together
+        bool gateJustOpened;
+
+        void OnRoomCompleted(RoomZone zone)
+        {
+            string text = $"{zone.displayName} complete!  ({RoomZone.CountedComplete} / {RoomZone.CountedTotal})";
+            if (gateJustOpened) text += "\nThe final area is open!";
+            gateJustOpened = false;
+            ShowToast(text);
+        }
+
+        void OnFinalGateUnlocked()
+        {
+            gateJustOpened = true;
+            ShowToast("The final area is open!");
+        }
+
+        void OnToolBlocked(int index)
+        {
+            if (Abilities.IsLocked(tools.tools[index].requires))
+            {
+                string hint = tools.tools[index].requires == Ability.InkBlaster ? "Mix 3 colours in the Candy Factory" : "Try the Glove Room";
+                ShowToast($"You haven't earned the {tools.tools[index].name} yet\n{hint}");
+                return;
+            }
+
+            RoomZone zone = Abilities.CurrentZone;
+            string where = zone != null ? $"{zone.displayName} (allows: {Abilities.Current})" : "no room";
+            ShowToast($"{tools.tools[index].name} isn't available in this room\n[{where}]");
+        }
+
+        // reuses the big name label in the middle of the screen
+        void ShowToast(string text)
+        {
+            if (nameLabel == null) return;
+            nameLabel.text = text;
+            nameTimer = nameDisplaySeconds + 1f;
+        }
 
         void OnDrawModeChanged(bool drawing)
         {
@@ -99,16 +169,18 @@ namespace InkFlip
 
             for (int i = 0; i < toolNames.Length; i++)
             {
-                bool active = i == tools.ActiveIndex;
-                toolNames[i].color = active ? Color.white : new Color(1f, 1f, 1f, 0.4f);
+                bool allowed = tools.IsAllowed(i);
+                bool active = allowed && !tools.HandsEmpty && i == tools.ActiveIndex;
+                toolNames[i].text = ToolLabel(i, allowed);
+                toolNames[i].color = !allowed ? new Color(1f, 0.6f, 0.6f, 0.3f) : active ? Color.white : new Color(1f, 1f, 1f, 0.4f);
                 toolNames[i].fontSize = active ? 30 : 22;
                 toolControls[i].gameObject.SetActive(active);
             }
 
-            GameObject root = tools.Active.root;
+            GameObject root = tools.HandsEmpty ? null : tools.Active.root;
             activeBrush = root != null ? root.GetComponentInChildren<PaintBrush>(true) : null;
 
-            if (showName)
+            if (showName && !tools.HandsEmpty)
             {
                 nameLabel.text = tools.Active.name;
                 nameTimer = nameDisplaySeconds;
@@ -142,6 +214,7 @@ namespace InkFlip
             int count = colors.palette.Length;
             slots = new RectTransform[count];
             slotRims = new Image[count];
+            slotInks = new Image[count];
             float totalWidth = count * swatchSize + (count - 1) * swatchSpacing;
 
             for (int i = 0; i < count; i++)
@@ -159,7 +232,7 @@ namespace InkFlip
                 button.transition = Selectable.Transition.None;
                 button.onClick.AddListener(() => colors.Select(index));
 
-                HudFactory.CreateImage("Ink", slot, HudFactory.Circle, colors.palette[i].color, swatchSize - 4f);
+                slotInks[i] = HudFactory.CreateImage("Ink", slot, HudFactory.Circle, colors.palette[i].color, swatchSize - 4f);
 
                 Text key = HudFactory.CreateText("Key", slot, (i + 1).ToString(), 18, TextAnchor.MiddleCenter);
                 key.rectTransform.anchoredPosition = new Vector2(0f, -swatchSize * 0.5f - 14f);
@@ -228,14 +301,19 @@ namespace InkFlip
                 PlaceBottomLeft(controls.rectTransform, y, 420f);
                 toolControls[i] = controls;
 
-                string key = tools.KeyLabel(i);
-                string label = key.Length > 0 ? $"[{key}]  {tools.tools[i].name}" : tools.tools[i].name;
-                Text toolName = HudFactory.CreateText("Tool", root, label, 22, TextAnchor.LowerLeft);
+                Text toolName = HudFactory.CreateText("Tool", root, ToolLabel(i, tools.IsAllowed(i)), 22, TextAnchor.LowerLeft);
                 PlaceBottomLeft(toolName.rectTransform, y + 24f, 420f);
                 toolNames[i] = toolName;
 
                 y += 72f;
             }
+        }
+
+        string ToolLabel(int index, bool allowed)
+        {
+            string key = tools.KeyLabel(index);
+            string label = key.Length > 0 ? $"[{key}]  {tools.tools[index].name}" : tools.tools[index].name;
+            return allowed ? label : label + "  (locked)";
         }
 
         static void PlaceBottomLeft(RectTransform rect, float y, float width)

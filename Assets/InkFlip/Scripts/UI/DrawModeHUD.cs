@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -33,6 +34,15 @@ namespace InkFlip
         RectTransform cursorRing;
         Image cursorRingImage;
         Canvas canvas;
+        RectTransform turnPad;
+        int heldArrow = -1;
+        float heldTime;
+
+        // left arrow, right arrow, up, down: (yaw, tilt) - the same directions as the A / D / W / S keys
+        static readonly Vector2[] ArrowDirections = { new Vector2(1f, 0f), new Vector2(-1f, 0f), new Vector2(0f, 1f), new Vector2(0f, -1f) };
+        const float TapDegrees = 45f;
+        const float HoldSeconds = 0.25f;
+        const float HoldDegreesPerSecond = 150f;
 
         void Start()
         {
@@ -66,6 +76,7 @@ namespace InkFlip
 
         void Update()
         {
+            UpdateTurnPad();
             if (!drawMode.IsActive || Mouse.current == null) return;
 
             // brush-size ring follows the mouse
@@ -78,6 +89,74 @@ namespace InkFlip
             Color c = drawMode.brush == DrawBrush.Eraser ? Color.white : drawMode.CurrentColor;
             c.a = 0.9f;
             cursorRingImage.color = c;
+        }
+
+        // the arrows only show while drawing on something that can be turned
+        void UpdateTurnPad()
+        {
+            DrawTurntable turntable = drawMode.IsActive && drawMode.Target != null ? drawMode.Target.GetComponent<DrawTurntable>() : null;
+            if (turnPad.gameObject.activeSelf != (turntable != null)) turnPad.gameObject.SetActive(turntable != null);
+            if (turntable == null)
+            {
+                heldArrow = -1;
+                return;
+            }
+
+            if (heldArrow >= 0)
+            {
+                heldTime += Time.unscaledDeltaTime;
+                if (heldTime > HoldSeconds)
+                {
+                    Vector2 d = ArrowDirections[heldArrow] * HoldDegreesPerSecond * Time.unscaledDeltaTime;
+                    turntable.Nudge(d.x, d.y);
+                }
+            }
+        }
+
+        // tap = a quick 45 degree turn, hold = keep turning
+        void ReleaseArrow(int index)
+        {
+            if (heldArrow != index) return;
+            if (heldTime <= HoldSeconds && drawMode.Target != null)
+            {
+                DrawTurntable turntable = drawMode.Target.GetComponent<DrawTurntable>();
+                if (turntable != null) turntable.Nudge(ArrowDirections[index].x * TapDegrees, ArrowDirections[index].y * TapDegrees);
+            }
+            heldArrow = -1;
+        }
+
+        void BuildTurnPad()
+        {
+            turnPad = HudFactory.CreateGroup("TurnPad", content);
+            string[] labels = { "\u25C4", "\u25BA", "\u25B2", "\u25BC" };
+            Vector2[] positions = { new Vector2(60f, 0f), new Vector2(200f, 0f), new Vector2(130f, 75f), new Vector2(130f, -75f) };
+
+            Text title = HudFactory.CreateText("TurnTitle", turnPad, "Turn it", 24, TextAnchor.MiddleCenter);
+            title.rectTransform.anchorMin = title.rectTransform.anchorMax = new Vector2(0f, 0.5f);
+            title.rectTransform.anchoredPosition = new Vector2(130f, 0f);
+            title.rectTransform.sizeDelta = new Vector2(100f, 40f);
+
+            for (int i = 0; i < 4; i++)
+            {
+                int index = i;
+                HudFactory.CreateButton("Turn" + i, turnPad, labels[i], new Vector2(78f, 78f), () => { }, out Image background, out Text label);
+                label.fontSize = 36;
+                RectTransform rect = background.rectTransform;
+                rect.anchorMin = rect.anchorMax = new Vector2(0f, 0.5f);
+                rect.anchoredPosition = positions[i];
+
+                var trigger = background.gameObject.AddComponent<EventTrigger>();
+                var down = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
+                down.callback.AddListener(_ => { heldArrow = index; heldTime = 0f; });
+                var up = new EventTrigger.Entry { eventID = EventTriggerType.PointerUp };
+                up.callback.AddListener(_ => ReleaseArrow(index));
+                var exit = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
+                exit.callback.AddListener(_ => { if (heldArrow == index && heldTime > HoldSeconds) heldArrow = -1; });
+                trigger.triggers.Add(down);
+                trigger.triggers.Add(up);
+                trigger.triggers.Add(exit);
+            }
+            turnPad.gameObject.SetActive(false);
         }
 
         void Refresh()
@@ -137,11 +216,13 @@ namespace InkFlip
 
             // controls hint along the top
             Text hint = HudFactory.CreateText("Hint", content,
-                "Drag to paint the selected object   |   Scroll: brush size   |   1-9 or click a swatch: color   |   Esc: done",
+                "Drag to paint the selected object   |   Scroll: brush size   |   1-9 or click a swatch: color   |   Arrows or right-drag: turn it   |   Esc: done",
                 20, TextAnchor.MiddleCenter);
             hint.rectTransform.anchorMin = hint.rectTransform.anchorMax = new Vector2(0.5f, 1f);
             hint.rectTransform.sizeDelta = new Vector2(1400f, 40f);
             hint.rectTransform.anchoredPosition = new Vector2(0f, -40f);
+
+            BuildTurnPad();
 
             // brush-size ring under the cursor
             cursorRingImage = HudFactory.CreateImage("BrushCursor", content, HudFactory.Ring, Color.white, 20f);

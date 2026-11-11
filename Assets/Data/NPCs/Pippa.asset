@@ -1,0 +1,192 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b4da19336b54fa4ebf67db148f50e9c, type: 3}
+  m_Name: Pippa
+  m_EditorClassIdentifier: Assembly-CSharp::NPCData
+  npcName: Pippa
+  defaultConversationKey: default
+  voiceClips: []
+  conversations:
+  - key: default
+    dialogueLine:
+      npcText: Oh no, oh no! My cat Biscuit climbed the tree and now she can't get
+        down! Can you help? You'll have to build a way up to her.
+      choices:
+      - choiceText: How do I build?
+        endsConversation: 0
+        setsConversationKey: pippa_howto
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 'Your glove can do more in here: look at the floor, hold the button
+            and drag to draw a square, let go, then pull up to make it tall and click
+            to place it. Then grab the block with your glove and use the mouse wheel
+            to make it bigger or smaller. Stack blocks like steps!'
+          choices:
+          - choiceText: Got it!
+            endsConversation: 1
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: You can put a block on top of another block. Climb up next
+                to the branch and press F to bring Biscuit down. She is up about
+                two and a half metres.
+              choices:
+              - choiceText: Thanks!
+                endsConversation: 1
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: 
+                  choices: []
+                  nextLineKey: 
+              nextLineKey: 
+          - choiceText: Any tips?
+            endsConversation: 0
+            setsConversationKey: pippa_tips
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: You can put a block on top of another block. Climb up next
+                to the branch and press F to bring Biscuit down. She is up about
+                two and a half metres.
+              choices:
+              - choiceText: Thanks!
+                endsConversation: 1
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: 
+                  choices: []
+                  nextLineKey: 
+              nextLineKey: 
+          nextLineKey: 
+      - choiceText: On it!
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 'Your glove can do more in here: look at the floor, hold the button
+            and drag to draw a square, let go, then pull up to make it tall and click
+            to place it. Then grab the block with your glove and use the mouse wheel
+            to make it bigger or smaller. Stack blocks like steps!'
+          choices:
+          - choiceText: Got it!
+            endsConversation: 1
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: You can put a block on top of another block. Climb up next
+                to the branch and press F to bring Biscuit down. She is up about
+                two and a half metres.
+              choices:
+              - choiceText: Thanks!
+                endsConversation: 1
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: 
+                  choices: []
+                  nextLineKey: 
+              nextLineKey: 
+          - choiceText: Any tips?
+            endsConversation: 0
+            setsConversationKey: pippa_tips
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: You can put a block on top of another block. Climb up next
+                to the branch and press F to bring Biscuit down. She is up about
+                two and a half metres.
+              choices:
+              - choiceText: Thanks!
+                endsConversation: 1
+                setsConversationKey: 
+                action: 0
+                actionParam: 
+                nextLine:
+                  npcText: 
+                  choices: []
+                  nextLineKey: 
+              nextLineKey: 
+          nextLineKey: 
+      nextLineKey: 
+  - key: pippa_howto
+    dialogueLine:
+      npcText: 'Your glove can do more in here: look at the floor, hold the button
+        and drag to draw a square, let go, then pull up to make it tall and click
+        to place it. Then grab the block with your glove and use the mouse wheel
+        to make it bigger or smaller. Stack blocks like steps!'
+      choices:
+      - choiceText: Got it!
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: You can put a block on top of another block. Climb up next to
+            the branch and press F to bring Biscuit down. She is up about two and
+            a half metres.
+          choices:
+          - choiceText: Thanks!
+            endsConversation: 1
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: 
+              choices: []
+              nextLineKey: 
+          nextLineKey: 
+      - choiceText: Any tips?
+        endsConversation: 0
+        setsConversationKey: pippa_tips
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: You can put a block on top of another block. Climb up next to
+            the branch and press F to bring Biscuit down. She is up about two and
+            a half metres.
+          choices:
+          - choiceText: Thanks!
+            endsConversation: 1
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: 
+              choices: []
+              nextLineKey: 
+          nextLineKey: 
+      nextLineKey: 
+  - key: pippa_tips
+    dialogueLine:
+      npcText: You can put a block on top of another block. Climb up next to the
+        branch and press F to bring Biscuit down. She is up about two and a half
+        metres.
+      choices:
+      - choiceText: Thanks!
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 

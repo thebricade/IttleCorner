@@ -39,6 +39,17 @@ namespace InkFlip
         public Color CurrentColor => palette[SelectedIndex].color;
 
         public event Action<int> SelectionChanged;
+        // fired when a colour in the palette has been replaced (see SetColor)
+        public event Action PaletteChanged;
+
+        // swap one of the palette's inks for a new colour (the Hand Mix Studio's palette station does this)
+        public void SetColor(int index, Color color, string inkName)
+        {
+            if (index < 0 || index >= palette.Length) return;
+            palette[index] = new InkColor { name = inkName, color = color };
+            PaletteChanged?.Invoke();
+            SelectionChanged?.Invoke(SelectedIndex); // so the blaster and the HUD pick up the change if it was the current ink
+        }
 
         static readonly Key[] NumberKeys =
         {

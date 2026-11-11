@@ -141,6 +141,10 @@ namespace InkFlip
             if (Target == null) { Exit(); return; } // selected object was destroyed
             if (mouse == null) return;
 
+            // objects with a DrawTurntable can be turned (right-drag, A/D, W/S) to reach their other sides
+            DrawTurntable turntable = Target.GetComponent<DrawTurntable>();
+            if (turntable != null) turntable.Turn(mouse, keyboard, pad, drawCamera != null ? drawCamera.transform : null);
+
             float scroll = mouse.scroll.ReadValue().y;
             if (scroll > 0.01f) ChangeSize(sizeScrollStep);
             else if (scroll < -0.01f) ChangeSize(-sizeScrollStep);
