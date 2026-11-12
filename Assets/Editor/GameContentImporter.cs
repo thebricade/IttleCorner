@@ -77,7 +77,7 @@ public class GameContentImporter : EditorWindow
     }
 }
 
-   static void ImportDialogue()
+   public static void ImportDialogue()
 {
     string path = Path.Combine(Application.streamingAssetsPath, "Dialogue.csv");
 
@@ -310,6 +310,9 @@ public class GameContentImporter : EditorWindow
         {
             case "OpenDrawingQuest":  return ChoiceAction.OpenDrawingQuest;
             case "TriggerQuestCheck": return ChoiceAction.TriggerQuestCheck;
+            case "CompleteRoom":      return ChoiceAction.CompleteRoom;
+            case "GrantAbility":      return ChoiceAction.GrantAbility;
+            case "StartGame":         return ChoiceAction.StartGame;
             case "None":              return ChoiceAction.None;
             default:
                 Debug.LogWarning("Unknown ChoiceAction: " + value + " — defaulting to None");

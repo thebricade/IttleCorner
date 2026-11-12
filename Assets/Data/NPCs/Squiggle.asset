@@ -1,0 +1,204 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b4da19336b54fa4ebf67db148f50e9c, type: 3}
+  m_Name: Squiggle
+  m_EditorClassIdentifier: Assembly-CSharp::NPCData
+  npcName: Squiggle
+  defaultConversationKey: default
+  voiceClips: []
+  conversations:
+  - key: default
+    dialogueLine:
+      npcText: 'Hi hi! I''m Squiggle! This is the Nanobot Track - but the power is
+        out. Use your paint brush on the wall panel to trace the dotted lines - across,
+        down and slanted! Then you build the nanobots: a round body and up to four
+        legs, and we race them!'
+      choices:
+      - choiceText: Let's race!
+        endsConversation: 1
+        setsConversationKey: squiggle_again
+        action: 5
+        actionParam: line_race
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      - choiceText: What else is in here?
+        endsConversation: 0
+        setsConversationKey: squiggle_info
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 'The wall panel is line practice: hold the brush and trace each
+            dotted line, dot to dot, nice and straight. Trace them all and the power
+            comes on, then you can build nanobots! Oh, and the light switch... flip
+            it, draw ONE glowing line to the far light, and don''t touch your own
+            line. Or the ghosts! The colouring-book pictures are out in the main
+            hall now.'
+          choices:
+          - choiceText: Race first!
+            endsConversation: 1
+            setsConversationKey: squiggle_again
+            action: 5
+            actionParam: line_race
+            nextLine:
+              npcText: 
+              choices: []
+              nextLineKey: 
+          - choiceText: Got it!
+            endsConversation: 1
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: 
+              choices: []
+              nextLineKey: 
+          nextLineKey: 
+      - choiceText: Maybe later
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 'The wall panel is line practice: hold the brush and trace each
+            dotted line, dot to dot, nice and straight. Trace them all and the power
+            comes on, then you can build nanobots! Oh, and the light switch... flip
+            it, draw ONE glowing line to the far light, and don''t touch your own
+            line. Or the ghosts! The colouring-book pictures are out in the main
+            hall now.'
+          choices:
+          - choiceText: Race first!
+            endsConversation: 1
+            setsConversationKey: squiggle_again
+            action: 5
+            actionParam: line_race
+            nextLine:
+              npcText: 
+              choices: []
+              nextLineKey: 
+          - choiceText: Got it!
+            endsConversation: 1
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: 
+              choices: []
+              nextLineKey: 
+          nextLineKey: 
+      nextLineKey: 
+  - key: squiggle_info
+    dialogueLine:
+      npcText: 'The wall panel is line practice: hold the brush and trace each dotted
+        line, dot to dot, nice and straight. Trace them all and the power comes on,
+        then you can build nanobots! Oh, and the light switch... flip it, draw ONE
+        glowing line to the far light, and don''t touch your own line. Or the ghosts!
+        The colouring-book pictures are out in the main hall now.'
+      choices:
+      - choiceText: Race first!
+        endsConversation: 1
+        setsConversationKey: squiggle_again
+        action: 5
+        actionParam: line_race
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      - choiceText: Got it!
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: squiggle_again
+    dialogueLine:
+      npcText: Want to race again? New nanobots are always welcome!
+      choices:
+      - choiceText: Race again!
+        endsConversation: 1
+        setsConversationKey: 
+        action: 5
+        actionParam: line_race
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      - choiceText: Tell me about the room
+        endsConversation: 0
+        setsConversationKey: squiggle_info
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 'The wall panel is line practice: hold the brush and trace each
+            dotted line, dot to dot, nice and straight. Trace them all and the power
+            comes on, then you can build nanobots! Oh, and the light switch... flip
+            it, draw ONE glowing line to the far light, and don''t touch your own
+            line. Or the ghosts! The colouring-book pictures are out in the main
+            hall now.'
+          choices:
+          - choiceText: Race first!
+            endsConversation: 1
+            setsConversationKey: squiggle_again
+            action: 5
+            actionParam: line_race
+            nextLine:
+              npcText: 
+              choices: []
+              nextLineKey: 
+          - choiceText: Got it!
+            endsConversation: 1
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: 
+              choices: []
+              nextLineKey: 
+          nextLineKey: 
+      - choiceText: Bye!
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 'The wall panel is line practice: hold the brush and trace each
+            dotted line, dot to dot, nice and straight. Trace them all and the power
+            comes on, then you can build nanobots! Oh, and the light switch... flip
+            it, draw ONE glowing line to the far light, and don''t touch your own
+            line. Or the ghosts! The colouring-book pictures are out in the main
+            hall now.'
+          choices:
+          - choiceText: Race first!
+            endsConversation: 1
+            setsConversationKey: squiggle_again
+            action: 5
+            actionParam: line_race
+            nextLine:
+              npcText: 
+              choices: []
+              nextLineKey: 
+          - choiceText: Got it!
+            endsConversation: 1
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: 
+              choices: []
+              nextLineKey: 
+          nextLineKey: 
+      nextLineKey: 

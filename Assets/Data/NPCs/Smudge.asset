@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b4da19336b54fa4ebf67db148f50e9c, type: 3}
+  m_Name: Smudge
+  m_EditorClassIdentifier: Assembly-CSharp::NPCData
+  npcName: Smudge
+  defaultConversationKey: default
+  voiceClips: []
+  conversations:
+  - key: default
+    dialogueLine:
+      npcText: Welcome to the Candy Factory! Click a sample on the shelf and a mixing
+        pool pops up. Pour paint on it, swirl it with the mouse like it's your finger,
+        then pick a colour that looks the same - close is good enough! Match three
+        and the Ink Blaster is yours. The machine in the corner lets you make your
+        own ink colours.
+      choices:
+      - choiceText: How do I pick?
+        endsConversation: 0
+        setsConversationKey: smudge_howto
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: Pour drops paint onto the pool. Swirl drags it around and blends
+            it. Pick checks the colour under your finger - let go when the circle
+            looks like the sample! At the palette machine, pick a colour and click
+            one of the slots to make it one of your inks.
+          choices:
+          - choiceText: Got it!
+            endsConversation: 1
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: 
+              choices: []
+              nextLineKey: 
+          nextLineKey: 
+      - choiceText: Let me try!
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: Pour drops paint onto the pool. Swirl drags it around and blends
+            it. Pick checks the colour under your finger - let go when the circle
+            looks like the sample! At the palette machine, pick a colour and click
+            one of the slots to make it one of your inks.
+          choices:
+          - choiceText: Got it!
+            endsConversation: 1
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: 
+              choices: []
+              nextLineKey: 
+          nextLineKey: 
+      nextLineKey: 
+  - key: smudge_howto
+    dialogueLine:
+      npcText: Pour drops paint onto the pool. Swirl drags it around and blends it.
+        Pick checks the colour under your finger - let go when the circle looks like
+        the sample! At the palette machine, pick a colour and click one of the slots
+        to make it one of your inks.
+      choices:
+      - choiceText: Got it!
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 

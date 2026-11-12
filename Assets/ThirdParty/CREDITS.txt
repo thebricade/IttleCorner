@@ -1,0 +1,36 @@
+IttleCorner - Third-party asset credits
+=======================================
+
+Every model, texture or sound that did not come from this project is listed here,
+with where it came from and its license. Add a line when you import something new.
+Folder names are where the files live inside Assets/ThirdParty/.
+
+STATUS KEY:  [imported] in the project   [planned] chosen but not downloaded yet
+
+-----------------------------------------------------------------------------
+Quaternius - LowPoly Modular Sci-Fi Environments            [imported]  Quaternius_SciFi
+  Source:  https://opengameart.org/content/lowpoly-modular-sci-fi-environments
+  Author:  Quaternius (https://quaternius.com)
+  License: CC0 1.0 (public domain), per the download page
+  Used for: walls, floors and props for the hero institute rooms
+
+Kenney - Modular Space Kit                                  [imported]  Kenney_ModularSpace
+  Source:  https://opengameart.org/content/modular-space-kit
+  Author:  Kenney (https://kenney.nl)
+  License: CC0 1.0 (public domain)
+  Used for: snap-together wall and floor pieces
+
+Kenney - Space Station Kit                                  [imported]  Kenney_SpaceStation
+  Source:  https://opengameart.org/content/space-station-kit
+  Author:  Kenney (https://kenney.nl)
+  License: CC0 1.0 (public domain)
+  Used for: entry hall props (hologram table, lockers, reception desk) via the scene builder
+
+Kenney - Furniture Kit                                      [imported]  Kenney_Furniture
+  Source:  https://opengameart.org/content/furniture-kit
+  Author:  Kenney (https://kenney.nl)
+  License: CC0 1.0 (public domain)
+  Used for: lockers, desks, lounge furniture
+
+-----------------------------------------------------------------------------
+CC0 needs no credit, but we list it anyway to say thank you.

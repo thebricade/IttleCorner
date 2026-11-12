@@ -1,0 +1,116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b4da19336b54fa4ebf67db148f50e9c, type: 3}
+  m_Name: Penny
+  m_EditorClassIdentifier: Assembly-CSharp::NPCData
+  npcName: Penny
+  defaultConversationKey: default
+  voiceClips: []
+  conversations:
+  - key: default
+    dialogueLine:
+      npcText: Welcome to the Institute! I'm Penny, the secretary. Nobody goes through
+        the doors without signing in first, so how about it?
+      choices:
+      - choiceText: Sign me in!
+        endsConversation: 0
+        setsConversationKey: penny_signed
+        action: 5
+        actionParam: open_doors
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      - choiceText: What is this place?
+        endsConversation: 0
+        setsConversationKey: penny_info
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      - choiceText: Not right now
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: penny_info
+    dialogueLine:
+      npcText: This is the Super Institute, where everybody learns to use their powers.
+        Every room has its own challenge, and when you have finished them all the
+        elevator takes you up to the planetarium.
+      choices:
+      - choiceText: Sign me in!
+        endsConversation: 0
+        setsConversationKey: penny_signed
+        action: 5
+        actionParam: open_doors
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      - choiceText: Maybe later
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: penny_signed
+    dialogueLine:
+      npcText: There you go, you're all signed in! Every door is open. Finish each
+        room's challenge and the elevator will take you to the planetarium. Have
+        fun!
+      choices:
+      - choiceText: Thanks!
+        endsConversation: 1
+        setsConversationKey: penny_again
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: penny_again
+    dialogueLine:
+      npcText: The doors are all open. Finish every room and the elevator will take
+        you up to the planetarium!
+      choices:
+      - choiceText: Thanks!
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      - choiceText: Tell me about the Institute
+        endsConversation: 0
+        setsConversationKey: penny_info
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 

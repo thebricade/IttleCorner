@@ -1,0 +1,201 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b4da19336b54fa4ebf67db148f50e9c, type: 3}
+  m_Name: Mitten
+  m_EditorClassIdentifier: Assembly-CSharp::NPCData
+  npcName: Mitten
+  defaultConversationKey: default
+  voiceClips: []
+  conversations:
+  - key: default
+    dialogueLine:
+      npcText: Oh! A visitor! I'm Mitten. Look at this poor blank glove... would
+        you decorate it for me? Pop on your pencil and draw all over it! Then you
+        can keep it.
+      choices:
+      - choiceText: How do I do that?
+        endsConversation: 0
+        setsConversationKey: mitten_howto
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: Press C for your pencil, look at the glove and click it, then
+            draw! When it looks great, finish drawing and press F on the glove to
+            take it. After that, hold the mouse button to carry things and scroll
+            to resize them. Put something on all three switches!
+          choices:
+          - choiceText: Got it!
+            endsConversation: 1
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Ha! Okay, since you asked so nicely... consider it done. Here,
+                take the glove.
+              choices:
+              - choiceText: Thanks!
+                endsConversation: 1
+                setsConversationKey: mitten_after
+                action: 3
+                actionParam: glove_room
+                nextLine:
+                  npcText: 
+                  choices: []
+                  nextLineKey: 
+              nextLineKey: 
+          - choiceText: Can you just do it for me?
+            endsConversation: 0
+            setsConversationKey: mitten_skip
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Ha! Okay, since you asked so nicely... consider it done. Here,
+                take the glove.
+              choices:
+              - choiceText: Thanks!
+                endsConversation: 1
+                setsConversationKey: mitten_after
+                action: 3
+                actionParam: glove_room
+                nextLine:
+                  npcText: 
+                  choices: []
+                  nextLineKey: 
+              nextLineKey: 
+          nextLineKey: 
+      - choiceText: On it!
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: Press C for your pencil, look at the glove and click it, then
+            draw! When it looks great, finish drawing and press F on the glove to
+            take it. After that, hold the mouse button to carry things and scroll
+            to resize them. Put something on all three switches!
+          choices:
+          - choiceText: Got it!
+            endsConversation: 1
+            setsConversationKey: 
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Ha! Okay, since you asked so nicely... consider it done. Here,
+                take the glove.
+              choices:
+              - choiceText: Thanks!
+                endsConversation: 1
+                setsConversationKey: mitten_after
+                action: 3
+                actionParam: glove_room
+                nextLine:
+                  npcText: 
+                  choices: []
+                  nextLineKey: 
+              nextLineKey: 
+          - choiceText: Can you just do it for me?
+            endsConversation: 0
+            setsConversationKey: mitten_skip
+            action: 0
+            actionParam: 
+            nextLine:
+              npcText: Ha! Okay, since you asked so nicely... consider it done. Here,
+                take the glove.
+              choices:
+              - choiceText: Thanks!
+                endsConversation: 1
+                setsConversationKey: mitten_after
+                action: 3
+                actionParam: glove_room
+                nextLine:
+                  npcText: 
+                  choices: []
+                  nextLineKey: 
+              nextLineKey: 
+          nextLineKey: 
+      nextLineKey: 
+  - key: mitten_howto
+    dialogueLine:
+      npcText: Press C for your pencil, look at the glove and click it, then draw!
+        When it looks great, finish drawing and press F on the glove to take it.
+        After that, hold the mouse button to carry things and scroll to resize them.
+        Put something on all three switches!
+      choices:
+      - choiceText: Got it!
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: Ha! Okay, since you asked so nicely... consider it done. Here,
+            take the glove.
+          choices:
+          - choiceText: Thanks!
+            endsConversation: 1
+            setsConversationKey: mitten_after
+            action: 3
+            actionParam: glove_room
+            nextLine:
+              npcText: 
+              choices: []
+              nextLineKey: 
+          nextLineKey: 
+      - choiceText: Can you just do it for me?
+        endsConversation: 0
+        setsConversationKey: mitten_skip
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: Ha! Okay, since you asked so nicely... consider it done. Here,
+            take the glove.
+          choices:
+          - choiceText: Thanks!
+            endsConversation: 1
+            setsConversationKey: mitten_after
+            action: 3
+            actionParam: glove_room
+            nextLine:
+              npcText: 
+              choices: []
+              nextLineKey: 
+          nextLineKey: 
+      nextLineKey: 
+  - key: mitten_skip
+    dialogueLine:
+      npcText: Ha! Okay, since you asked so nicely... consider it done. Here, take
+        the glove.
+      choices:
+      - choiceText: Thanks!
+        endsConversation: 1
+        setsConversationKey: mitten_after
+        action: 3
+        actionParam: glove_room
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 
+  - key: mitten_after
+    dialogueLine:
+      npcText: All done! Head back out and try the other rooms. The elevator opens
+        once they're all finished.
+      choices:
+      - choiceText: See you!
+        endsConversation: 1
+        setsConversationKey: 
+        action: 0
+        actionParam: 
+        nextLine:
+          npcText: 
+          choices: []
+          nextLineKey: 
+      nextLineKey: 

@@ -1,0 +1,105 @@
+using System;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+namespace InkFlip
+{
+    [Serializable]
+    public struct InkColor
+    {
+        public string name;
+        public Color color;
+
+        public InkColor(string name, string hex)
+        {
+            this.name = name;
+            ColorUtility.TryParseHtmlString(hex, out color);
+        }
+    }
+
+    // Owns the palette and which ink is selected.
+    //   1-9: pick a colour    Mouse wheel / Q E / gamepad shoulders: previous / next
+    public class PaintColorSelector : MonoBehaviour
+    {
+        public InkColor[] palette =
+        {
+            new InkColor("Bubblegum", "#FF3D8B"),
+            new InkColor("Tangerine", "#FF8A1F"),
+            new InkColor("Sunflower", "#FFD21A"),
+            new InkColor("Lime", "#7ED321"),
+            new InkColor("Teal", "#16C6B0"),
+            new InkColor("Sky", "#2D8CFF"),
+            new InkColor("Violet", "#8A4DFF"),
+            new InkColor("Chalk", "#F4F1EA"),
+            new InkColor("Charcoal", "#2B2B30"),
+        };
+
+        public int SelectedIndex { get; private set; }
+        public InkColor Current => palette[SelectedIndex];
+        public Color CurrentColor => palette[SelectedIndex].color;
+
+        public event Action<int> SelectionChanged;
+        // fired when a colour in the palette has been replaced (see SetColor)
+        public event Action PaletteChanged;
+
+        // swap one of the palette's inks for a new colour (the Hand Mix Studio's palette station does this)
+        public void SetColor(int index, Color color, string inkName)
+        {
+            if (index < 0 || index >= palette.Length) return;
+            palette[index] = new InkColor { name = inkName, color = color };
+            PaletteChanged?.Invoke();
+            SelectionChanged?.Invoke(SelectedIndex); // so the blaster and the HUD pick up the change if it was the current ink
+        }
+
+        static readonly Key[] NumberKeys =
+        {
+            Key.Digit1, Key.Digit2, Key.Digit3, Key.Digit4, Key.Digit5,
+            Key.Digit6, Key.Digit7, Key.Digit8, Key.Digit9,
+        };
+
+        void Update()
+        {
+            if (palette == null || palette.Length == 0) return;
+
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard != null)
+            {
+                for (int i = 0; i < NumberKeys.Length && i < palette.Length; i++)
+                {
+                    if (keyboard[NumberKeys[i]].wasPressedThisFrame) Select(i);
+                }
+                if (keyboard.qKey.wasPressedThisFrame) Step(-1);
+                if (keyboard.eKey.wasPressedThisFrame) Step(1);
+            }
+
+            Mouse mouse = Mouse.current;
+            // the glove uses the wheel to resize what it's carrying
+            if (mouse != null && FirstPersonController.InputCaptured && !GloveTool.IsHolding)
+            {
+                float scroll = mouse.scroll.ReadValue().y;
+                if (scroll > 0.01f) Step(-1);
+                else if (scroll < -0.01f) Step(1);
+            }
+
+            Gamepad pad = Gamepad.current;
+            if (pad != null && !GloveTool.IsHolding)
+            {
+                if (pad.leftShoulder.wasPressedThisFrame) Step(-1);
+                if (pad.rightShoulder.wasPressedThisFrame) Step(1);
+            }
+        }
+
+        public void Step(int direction)
+        {
+            int count = palette.Length;
+            Select(((SelectedIndex + direction) % count + count) % count);
+        }
+
+        public void Select(int index)
+        {
+            if (index < 0 || index >= palette.Length || index == SelectedIndex) return;
+            SelectedIndex = index;
+            SelectionChanged?.Invoke(index);
+        }
+    }
+}
