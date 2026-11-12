@@ -38,7 +38,8 @@ namespace InkFlip
         public ToolSwitcher tools;
         public Camera worldCamera;
 
-        public Key openKey = Key.B;
+        [Tooltip("Not used while the studio is switched off.")]
+        public Key openKey = Key.None;
 
         [Header("Clay")]
         [Tooltip("Quads along each side of a shape. More = finer detail but slower sculpting.")]
@@ -846,8 +847,8 @@ namespace InkFlip
             if (!IsActive)
             {
                 // the on-screen button is for touch (or whenever the mouse is free to click it)
-                ui.SetOpenButtonVisible((Touchscreen.current != null || !FirstPersonController.InputCaptured) && Abilities.Can(Ability.Sculpt));
-                if (keyboard != null && keyboard[openKey].wasPressedThisFrame && FirstPersonController.InputCaptured) Open();
+                // the sculpt studio is switched off for now: no key and no button open it
+                ui.SetOpenButtonVisible(false);
                 return;
             }
 
