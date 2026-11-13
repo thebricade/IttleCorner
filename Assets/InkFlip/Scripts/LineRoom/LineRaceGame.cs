@@ -31,6 +31,10 @@ namespace InkFlip
         public int racerCount = 4;
         [Tooltip("Seconds an average racer needs for the whole track.")]
         public float averageRaceSeconds = 9f;
+        [Tooltip("1 = normal speed, lower = the race plays in slow motion (0.5 is half speed).")]
+        [Range(0.1f, 1.5f)] public float raceSpeed = 0.65f;
+        [Tooltip("Press this to run the same race again once it has finished. The nanobots stay on the table until the next race.")]
+        public Key replayKey = Key.R;
 
         [Header("Nanobot")]
         [Tooltip("Size of the robot in the world: metres for each pixel of the drawing board.")]
@@ -167,8 +171,22 @@ namespace InkFlip
             if (id == GameId) pending = true;
         }
 
+        // run the finished race again with the same nanobots (also callable from the inspector's right-click menu)
+        [ContextMenu("Replay race")]
+        public void Replay()
+        {
+            if (phase != Phase.Idle || racers.Count == 0 || LineRoomUI.Busy) return;
+            StartRace();
+        }
+
         void Update()
         {
+            if (phase == Phase.Idle && racers.Count > 0 && replayKey != Key.None && Keyboard.current != null
+                && Keyboard.current[replayKey].wasPressedThisFrame && FirstPersonController.InputCaptured)
+            {
+                Replay();
+            }
+
             // wait for the conversation to close, so it doesn't hand control back over our board
             if (pending && (DialogueRunner.Instance == null || !DialogueRunner.Instance.IsActive))
             {
@@ -883,13 +901,17 @@ namespace InkFlip
             {
                 racer.finished = false;
                 racer.distance = 0f;
+                racer.dashIndex = 0;
+                racer.dashTimer = 0f;
+                racer.atRest = false;
             }
             LineRoomUI.Instance.Say("Ready... set... GO!", 1.6f);
         }
 
         void UpdateRace()
         {
-            raceTime += Time.deltaTime;
+            float dt = Time.deltaTime * raceSpeed;
+            raceTime += dt;
             int running = 0;
 
             for (int i = 0; i < racers.Count; i++)
@@ -912,9 +934,9 @@ namespace InkFlip
                     float dash = 1f;
                     if (racer.dashTimer > 0f)
                     {
-                        racer.dashTimer -= Time.deltaTime;
+                        racer.dashTimer -= dt;
                         dash = 1f + dashBoost * (0.4f + racer.score);
-                        racer.emitTimer -= Time.deltaTime;
+                        racer.emitTimer -= dt;
                         if (racer.emitTimer <= 0f)
                         {
                             SpawnStreaks(racer);
@@ -922,8 +944,8 @@ namespace InkFlip
                         }
                     }
 
-                    racer.distance += racer.speed * Mathf.Max(0.15f, surge) * push * dash * Time.deltaTime;
-                    racer.phase += Time.deltaTime * stepsPerSecond * dash * Mathf.PI * 2f;
+                    racer.distance += racer.speed * Mathf.Max(0.15f, surge) * push * dash * dt;
+                    racer.phase += dt * stepsPerSecond * dash * Mathf.PI * 2f;
 
                     if (racer.distance >= trackLength)
                     {
