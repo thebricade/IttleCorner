@@ -460,10 +460,10 @@ namespace InkFlip.EditorTools
 
             RoomZone zone = MakeZone(room, "ink_room", "Ink Room", "Cover the wall with ink",
                                      new Color(0.2f, 0.55f, 1f), new Vector3(3.1f, 0f, 9.1f), Ability.InkBlaster | Ability.PaintBrush);
-            var objective = zone.gameObject.AddComponent<ManualObjective>();
+            var objective = zone.gameObject.AddComponent<InkCoverageObjective>();
             objective.title = "Cover the wall";
-            objective.description = "Placeholder: needs a paint-coverage measure on PaintTarget.";
-            objective.testKey = UnityEngine.InputSystem.Key.K;
+            objective.description = "Cover the walls with ink.";
+            objective.zone = zone;
             zone.objective = objective;
         }
 
@@ -476,7 +476,7 @@ namespace InkFlip.EditorTools
             Box("Wall_DrawingRoom_E", group, new Vector3(0.2f, 3.2f, 6.2f), new Vector3(0.1f, 1.6f, -9.1f), wall);
             Box("Wall_DrawingRoom_S", group, new Vector3(6.4f, 3.2f, 0.2f), new Vector3(-3f, 1.6f, -12.2f), wall);
 
-            RoomZone zone = MakeZone(room, "drawing_room", "Line Room", "Power the room, race your nanobots, then turn off the lights",
+            RoomZone zone = MakeZone(room, "drawing_room", "Line Room", "Power the room, then race your nanobots",
                                      new Color(1f, 0.55f, 0.15f), new Vector3(-3f, 0f, -9.1f), Ability.Pencil | Ability.PaintBrush | Ability.Glove);
             BuildLineRoomContents(group, zone, floor, wall, furniture);
         }

@@ -130,6 +130,18 @@ namespace InkFlip
             if (!IsUnlocked) Unlock();
         }
 
+        // right-click the component while playing: prints which rooms the gate is waiting on
+        [ContextMenu("Log status")]
+        void LogStatus()
+        {
+            CountRooms(out int done, out int total);
+            Debug.Log($"FinalGate: {done} / {total} rooms done, unlocked = {IsUnlocked}", this);
+            foreach (RoomZone zone in FindObjectsByType<RoomZone>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                Debug.Log($"  {zone.roomId} ({zone.displayName}): counts = {zone.countsForFinalArea}, complete = {zone.IsComplete}, enabled = {zone.isActiveAndEnabled}", zone);
+            }
+        }
+
         void Update()
         {
             if (debugOpen && !IsUnlocked) Unlock();

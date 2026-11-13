@@ -59,11 +59,19 @@ namespace InkFlip
 
             if (signs == null) return;
             string text = secretaryOk ? lockedText : secretaryText;
-            foreach (TextMesh sign in signs)
+            Camera cam = Camera.main;
+            for (int i = 0; i < signs.Length; i++)
             {
+                TextMesh sign = signs[i];
                 if (sign == null) continue;
-                if (sign.gameObject.activeSelf == open) sign.gameObject.SetActive(!open);
-                if (!open && sign.text != text) sign.text = text;
+                // each sign is only drawn for someone standing on its own face of the door (the text mesh draws from
+                // both sides, so the far sign would show through, mirrored)
+                float side = i == 0 ? 1f : -1f;
+                Vector3 faceNormal = transform.TransformDirection(signFacing * side);
+                bool visibleSide = cam == null || Vector3.Dot(cam.transform.position - sign.transform.position, faceNormal) > 0f;
+                bool show = !open && visibleSide;
+                if (sign.gameObject.activeSelf != show) sign.gameObject.SetActive(show);
+                if (show && sign.text != text) sign.text = text;
             }
         }
     }

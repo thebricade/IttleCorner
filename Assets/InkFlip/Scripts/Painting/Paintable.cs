@@ -46,6 +46,38 @@ namespace InkFlip
             }
         }
 
+        [Tooltip("Swap in an InkFlip/PaintableLit material (keeping the texture and colour) and add a collider if the object has none. " +
+                 "Lets imported models like the Kenney walls work with just this component.")]
+        public bool autoSetup = true;
+        [Tooltip("Optional: assign so the shader is included in builds.")]
+        public Shader paintableShader;
+
+        void Awake()
+        {
+            if (!autoSetup) return;
+            if (!TryGetComponent(out Collider _) && TryGetComponent(out MeshFilter meshFilter) && meshFilter.sharedMesh != null)
+            {
+                gameObject.AddComponent<MeshCollider>();
+            }
+
+            Shader shader = paintableShader != null ? paintableShader : Shader.Find("InkFlip/PaintableLit");
+            if (shader == null) return;
+            Material[] materials = Renderer.sharedMaterials;
+            bool changed = false;
+            for (int i = 0; i < materials.Length; i++)
+            {
+                Material old = materials[i];
+                if (old == null || old.shader == shader) continue;
+                var swapped = new Material(shader) { name = old.name + " (paintable)" };
+                if (old.HasProperty("_BaseMap")) swapped.SetTexture("_BaseMap", old.GetTexture("_BaseMap"));
+                if (old.HasProperty("_BaseColor")) swapped.SetColor("_BaseColor", old.GetColor("_BaseColor"));
+                else if (old.HasProperty("_Color")) swapped.SetColor("_BaseColor", old.GetColor("_Color"));
+                materials[i] = swapped;
+                changed = true;
+            }
+            if (changed) Renderer.sharedMaterials = materials;
+        }
+
         void Start()
         {
             Mesh mesh = GetMesh();

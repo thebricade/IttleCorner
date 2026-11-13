@@ -105,7 +105,13 @@ namespace InkFlip
                 return;
             }
             GameProgress.MarkComplete(roomId);
+            LogComplete();
             Completed?.Invoke(this);
+        }
+
+        void LogComplete()
+        {
+            Debug.Log($"Room complete: {displayName} ({roomId}) - {CountedComplete} / {CountedTotal} rooms toward the final door", this);
         }
 
         void OnEnable()
@@ -162,6 +168,7 @@ namespace InkFlip
         void OnObjectiveCompleted(RoomObjective finished)
         {
             GameProgress.MarkComplete(roomId);
+            LogComplete();
             Completed?.Invoke(this);
         }
 
