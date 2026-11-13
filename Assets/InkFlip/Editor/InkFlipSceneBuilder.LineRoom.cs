@@ -153,10 +153,11 @@ namespace InkFlip.EditorTools
 
             var objective = zone.gameObject.AddComponent<LineRoomObjective>();
             objective.title = "Line Room";
-            objective.description = "Power the room on the wall panel, race your nanobots, and draw the neon line in the dark.";
+            objective.description = "Power the room on the wall panel, then race your nanobots.";
             objective.race = race;
             objective.power = flow;
-            objective.neonLights = neon;
+            // the neon lights game isn't developed yet: left out of the objective and switched off
+            neon.enabled = false;
             objective.zone = zone;
             zone.objective = objective;
         }
